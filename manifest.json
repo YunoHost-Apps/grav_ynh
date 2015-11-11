@@ -18,7 +18,7 @@
 			{
 				"name": "domain",
 				"ask": {
-					"en": "Choose a domain for SPIP"
+					"en": "Choose a domain for Grav"
 				},
 				"example": "domain.org"
 			},
