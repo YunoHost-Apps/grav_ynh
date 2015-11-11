@@ -1,0 +1,10 @@
+#!/bin/bash
+
+domain=$(sudo yunohost app setting grav domain)
+
+sudo rm -rf /var/www/grav
+sudo rm -f /etc/nginx/conf.d/$domain.d/grav.conf
+sudo rm -f /etc/php5/fpm/pool.d/grav.conf
+
+sudo service php5-fpm restart
+sudo service nginx reload

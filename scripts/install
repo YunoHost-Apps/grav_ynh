@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# Retrieve arguments
+domain=$1
+path=$2
+admin_grav=$3
+
+# Check if admin exists
+sudo yunohost user list --json | grep -q "\"username\": \"$admin_grav\""
+if [[ ! $? -eq 0 ]]; then
+    echo "Wrong admin"
+    exit 1
+fi
+sudo yunohost app setting grav admin -v $admin_grav
+
+# Check domain/path availability
+sudo yunohost app checkurl $domain$path -a grav
+if [[ ! $? -eq 0 ]]; then
+    exit 1
+fi
+
+# Generate random DES key & password
+db_pwd=$(dd if=/dev/urandom bs=1 count=200 2> /dev/null | tr -c -d '[A-Za-z0-9]' | sed -n 's/\(.\{24\}\).*/\1/p')
+
+# Use 'grav' as database name and user
+db_user=grav
+
+# Copy files to the right place
+final_path=/var/www/grav
+sudo mkdir -p $final_path
+sudo cp -a ../sources/* $final_path
+
+# Set permissions to roundcube directory
+sudo chown -R www-data: $final_path
+
+# Modify Nginx configuration file and copy it to Nginx conf directory
+sed -i "s@PATHTOCHANGE@$path@g" ../conf/nginx.conf
+sed -i "s@ALIASTOCHANGE@$final_path@g" ../conf/nginx.conf
+sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/grav.conf
+
+sed -i "s@NAMETOCHANGE@grav@g" ../conf/php-fpm.conf
+finalphpconf=/etc/php5/fpm/pool.d/grav.conf
+sudo cp ../conf/php-fpm.conf $finalphpconf
+sudo chown root: $finalphpconf
+sudo chmod 644 $finalphpconf
+sudo cd $final_path
+sudo bin/grav install
+
+# Reload Nginx and regenerate SSOwat conf
+sudo service php5-fpm restart
+sudo service nginx reload
+sudo yunohost app setting grav skipped_uris -v "/"
+sudo yunohost app ssowatconf

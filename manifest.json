@@ -1,0 +1,44 @@
+{
+	"name": "Grav",
+	"id": "grav",
+	"description": {
+		"en": "Grav - Grav is a modern open source flat-file CMS",
+		"fr": "Grav - Grav is a modern open source flat-file CMS"
+	},
+	"license": "GPL-3",
+	"developer": {
+		"name": "cyp",
+		"email": "cyp@rouquin.me",
+		"url": "http://rouquin.me"
+	},
+	"url": "http://www.getgrav.org/",
+	"multi_instance": "true",
+	"arguments": {
+		"install" : [
+			{
+				"name": "domain",
+				"ask": {
+					"en": "Choose a domain for SPIP"
+				},
+				"example": "domain.org"
+			},
+			{
+				"name": "path",
+				"ask": {
+					"en": "Choose a path for Grav"
+				},
+				"example": "/grav",
+				"default": "/grav"
+			},
+			{
+				"name": "admin",
+				"type": "user",
+				"ask": {
+					"en": "Choose the Grav administrator (must be an existing YunoHost user)",
+					"fr": "Administrateur du site (doit être un utilisateur YunoHost existant)"
+				},
+				"example": "homer"
+			}
+		]
+	}
+}

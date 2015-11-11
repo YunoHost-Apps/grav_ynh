@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Retrieve arguments
+domain=$(sudo yunohost app setting grav domain)
+path=$(sudo yunohost app setting grav path)
+admin_grav=$(sudo yunohost app setting grav admin)
+language=$(sudo yunohost app setting grav language)
+is_public=$(sudo yunohost app setting grav is_public)
+
+final_path=/var/www/grav
+
+# Check if admin is not null
+if [[ "$admin_grav" = "" || "$is_public" = "" || "$language" = "" ]]; then
+    echo "Unable to upgrade, please contact support"
+    exit 1
+fi
+
+
+# Modify Nginx configuration file and copy it to Nginx conf directory
+sed -i "s@PATHTOCHANGE@$path@g" ../conf/nginx.conf*
+sed -i "s@ALIASTOCHANGE@$final_path/@g" ../conf/nginx.conf*
+
+if [ $is_public = "Yes" ];
+then
+    sudo cp ../conf/nginx.conf-public /etc/nginx/conf.d/$domain.d/grav.conf
+else
+    sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/grav.conf
+fi
+
+# Reload Nginx
+sudo service nginx reload
