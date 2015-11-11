@@ -1,0 +1,170 @@
+<?php
+/**
+ * Upgrades the Vork framework and installs Vork Apps
+ */
+class vorkInstaller {
+    /**
+     * ID of the upload-form field
+     */
+    const fileId = 'file';
+
+    /**
+     * Path to the install log - default is in the root of the Vork installation (one level below webroot)
+     */
+    const logFile = '../.install.log';
+
+    /**
+     * Cache of the vorkInstall object contained in the install/upgrade package
+     * @var vorkInstall
+     */
+    public $vorkInstall;
+
+    /**
+     * Copy instance-scope temp file into a regular persistant temp-file
+     * @return string Filename of the new temp-file
+     */
+    protected function _makeUploadPersist() {
+        $persistantName = $_FILES[self::fileId]['tmp_name'] . '.vorkcache';
+        copy($_FILES[self::fileId]['tmp_name'], $persistantName);
+        return $persistantName;
+    }
+
+    /**
+     * Install/upgrade engine
+     */
+    protected function _install($file = null) {
+        $iniFilename = 'vork.ini';
+        $za = new ZipArchive();
+        $za->open(!$file ? $_FILES[self::fileId]['tmp_name'] : $file);
+        if (!($fileCount = $za->numFiles) || !($this->vorkInstall = $za->statName($iniFilename))) {
+            $_POST['errors'][self::fileId] = 'Not a valid Vork app or Vork upgrade file (missing the ' . $iniFilename
+                                           . ' file), try re-downloading from www.Vork.us';
+            return;
+        }
+
+        $fp = $za->getStream($iniFilename);
+        while (!feof($fp)) {
+            $contents[] = fread($fp, 8192);
+        }
+        fclose($fp);
+        if (isset($contents)) {
+            $contents = implode($contents);
+            if (function_exists('parse_ini_string')) { //PHP 5.3+
+                $ini = parse_ini_string($contents);
+            } else {
+                $tmpName = tempnam(sys_get_temp_dir(), 'ini_');
+                file_put_contents($tmpName, $contents);
+                $ini = parse_ini_file($tmpName);
+                unlink($tmpName);
+            }
+            $ini['ts'] = time();
+        } else {
+            $_POST['errors'][self::fileId] = 'The ' . $iniFilename . ' file in this Vork app is invalid';
+            return false;
+        }
+
+        if (!$file && $za->statName('.installer')) { //upgrade installer, then re-run using the newest installer
+            $za->extractTo('..', '.installer');
+            $file = $this->_makeUploadPersist();
+            load::redirect('/vork?install=' . urlencode($file));
+            return;
+        }
+
+        $this->vorkInstall = new vorkInstall;
+        for ($i = 0; $i < $fileCount; $i++) {
+            $filepath = str_replace('\\', '/', $za->getNameIndex($i));
+            $filepathParts = explode('/', $filepath);
+            $fileName = array_pop($filepathParts);
+            $path = '';
+            foreach ($filepathParts as $part) {
+                $path .= $part;
+                if (!file_exists('../' . $path)) {
+                    mkdir('../' . $path); //.. to drop back from webroot to Vork base directory
+                }
+                $path .= '/';
+            }
+            if ($fileName && $path . $fileName != $iniFilename && $path . $fileName != '.installer') {
+                $files[] = $path . $fileName; //directories are skipped since they have an empty string for $fileName
+            }
+        }
+        if (isset($files)) {
+            $za->extractTo('..', $files);
+        }
+        $za->close();
+        if ($file) {
+            unlink($file);
+        }
+        file_put_contents(self::logFile, json_encode($ini) . PHP_EOL, FILE_APPEND);
+    }
+
+    /**
+     * Verify file upload
+     */
+    protected function _fileUploaded() {
+        if ($_FILES[self::fileId]['error'] == UPLOAD_ERR_OK && !$_FILES[self::fileId]['size']) {
+            $_FILES[self::fileId]['error'] = UPLOAD_ERR_NO_FILE;
+        }
+        switch ($_FILES[self::fileId]['error']) {
+            case UPLOAD_ERR_INI_SIZE:
+                $ini = 'upload_max_filesize';
+                //break intentionally omitted
+            case UPLOAD_ERR_FORM_SIZE:
+                $error = 'Error: file is too large to be uploaded - increase the '
+                       . (isset($ini) ? $ini : 'MAX_FILE_SIZE') . '  setting in your php.ini file';
+                break;
+            case UPLOAD_ERR_PARTIAL:
+            case UPLOAD_ERR_NO_FILE:
+                $error = 'Error: the upload did not complete, please try again';
+                break;
+            case UPLOAD_ERR_NO_TMP_DIR:
+                $error = 'Error: your PHP installation has no temp-directory, create a folder at'
+                       . realpath(sys_get_temp_dir()) . ' and grant PHP read/write access';
+                break;
+            case UPLOAD_ERR_CANT_WRITE:
+                $error = 'Error: cannot write to temp-directory, adjust your file-write permissions';
+                break;
+            case UPLOAD_ERR_OK:
+                $this->_install();
+                break;
+        }
+        if (isset($error)) {
+            $_POST['errors'][self::fileId] = $error;
+        }
+    }
+
+    /**
+     * View
+     */
+    public function __construct() {
+        $html = get::helper('html');
+        $form = get::helper('form');
+        $title = 'Vork Installer + Upgrader';
+        echo $html->header(array('title' => $title, 'cssInline' =>
+            'body {background: #feeebd url(http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/sunny/images/'
+                . 'ui-bg_highlight-soft_100_feeebd_1x100.png) 50% top repeat-x; font-family: "Arial";} '
+          . 'fieldset {border: 0px solid;} h1 {margin: 0px;} .errormessage {color: #ff0000;}'));
+        echo $html->h1($title);
+        $formArgs['enctype'] = 'multipart/form-data';
+
+        if (isset($_FILES[self::fileId])) {
+            $this->_fileUploaded();
+        } else if (isset($_GET['install'])) {
+            $this->_install($_GET['install']);
+        }
+        if (!isset($_POST['errors']) && $this->vorkInstall) {
+            $formArgs['alert'] = 'Install/upgrade of ' . $this->vorkInstall->meta['package'] . ' '
+                               . $this->vorkInstall->meta['version'] . ' completed';
+        }
+
+        echo $form->getFormOpen($formArgs);
+        echo $html->div($form->getInput(array('name' => self::fileId, 'type' => 'file',
+                                              'label' => 'Upload Vork App or Vork Framework Upgrade'))
+                      . $form->getInput(array('type' => 'submit', 'value' => 'Install app/upgade')));
+        echo $form->getFormClose();
+
+        echo $html->footer();
+    }
+}
+
+new vorkInstaller;
+exit(0);

@@ -28,7 +28,7 @@ db_user=grav
 # Copy files to the right place
 final_path=/var/www/grav
 sudo mkdir -p $final_path
-sudo cp -a ../sources/* $final_path
+sudo cp -a ../src/* $final_path
 
 # Set permissions to roundcube directory
 sudo chown -R www-data: $final_path

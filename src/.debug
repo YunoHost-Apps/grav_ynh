@@ -1,0 +1,221 @@
+<?php
+/**
+ * Valid output methods are: auto, FirePHP, html and text
+ * The auto mode will select FirePHP if it is available, otherwise it will use html
+ * Using FirePHP requires FireBug with the FirePHP extension enabled in FireFox (instructions at firephp.org)
+ */
+define('DEBUG_OUTPUT_METHOD', 'auto');
+
+/**
+ * Powers the debug system
+ */
+class debug {
+    /**
+     * Internal buffer exposing data between methods
+     * @var float $_timeStart
+     * @var string $_mode, $_modeStatic
+     */
+    protected $_timeStart, $_mode;
+    protected static $_modeStatic;
+
+    /**
+     * Time storage for the timer
+     * @var array
+     */
+    public static $timer = array();
+
+    /**
+     * Internal buffer to store SQL queries and log messages
+     * @var array
+     */
+    private static $_queries = array(), $_log = array(), $_initTime = null;
+
+    /**
+     * Get the PHP microtime() relative to the start of the instance
+     * @return float
+     */
+    public static function microtime() {
+        $now = microtime(true);
+        if (!self::$_initTime) {
+            self::$_initTime = $now;
+        }
+        return ($now - self::$_initTime);
+    }
+
+    /**
+     * Timer - sets breakpoints (aka. split times) and returns time since last breakpoint
+     *
+     * @param mixed $breakpointId Optional, any vector type is valid
+     * @param mixed $id Optional, any vector type is valid
+     * @return string Nicely formatted float
+     */
+    public static function timer($breakpointId = null, $id = 'default') {
+        if (!isset(self::$timer[$id])) {
+            $return = 0;
+        }
+        if (!$breakpointId) {
+            self::$timer[$id][] = self::microtime();
+        } else {
+            self::$timer[$id][$breakpointId] = self::microtime();
+        }
+        if (!isset($return)) {
+            $return = (end(self::$timer[$id]) - prev(self::$timer[$id]));
+        }
+        return number_format($return, 5);
+    }
+
+    /**
+     * Return the total execution time for a timer - minimum of two breakpoints required for a non-zero return
+     *
+     * @param mixed $id Optional, any vector type is valid
+     * @return string Nicely formatted float
+     */
+    public static function timerTotal($id = 'default') {
+        $return = 0;
+        if (isset(self::$timer[$id]) && count(self::$timer[$id]) > 1) {
+            $return = (end(self::$timer[$id]) - reset(self::$timer[$id]));
+        }
+        return number_format($return, 5);
+    }
+
+    /**
+     * Reports the total time table for a timer via the debug output mode
+     *
+     * @param mixed $id Optional, any vector type is valid
+     * @return string Nicely formatted float
+     */
+    public static function timerReport($id = 'default') {
+        if (!isset(self::$timer[$id])) {
+            return null;
+        }
+        $last = reset(self::$timer[$id]);
+        if (self::$_modeStatic == 'FirePHP') {
+            $FirePHP = FirePHP::getInstance(true);
+            foreach (self::$timer[$id] as $breakpointId => $val) {
+                $FirePHP->info((string) $breakpointId, number_format(($val - $last), 5));
+                $last = $val;
+            }
+        } else {
+            foreach (self::$timer[$id] as $breakpointId => $val) {
+                $return[] = number_format(($val - $last), 5) . ' - ' . $breakpointId;
+                $last = $val;
+            }
+            if (self::$_modeStatic == 'html' || self::$_modeStatic == 'text') {
+                $recordDelimiter = PHP_EOL . PHP_EOL;
+                if (self::$_modeStatic == 'html') {
+                    $recordDelimiter .= '<hr />';
+                }
+                echo $recordDelimiter . implode($recordDelimiter, $return) . $recordDelimiter;
+            }
+            return $return;
+        }
+    }
+
+    /**
+     * Logs a SQL query
+     *
+     * @param string $query
+     * @param float $executionTime Optional
+     * @param string $error Optional
+     */
+    public static function logQuery($query, $executionTime = null, $error = null) {
+        self::$_queries[] = array('query' => $query, 'executionTime' => $executionTime, 'error' => $error);
+    }
+
+    /**
+     * Logs a message
+     *
+     * @param str $data
+     * @param str $type Valid options are log, info, warn and error
+     */
+    public static function log($data, $type = 'log') {
+        self::$_log[] = array('data' => $data, 'method' => $type, 'time' => self::microtime());
+    }
+
+    /**
+     * Initializes the debug system
+     *
+     * @param string $mode Optional. Mode of output by default is html, but the framework automatically overrides
+     * this with your DEBUG_OUTPUT_METHOD setting
+     */
+    public function __construct($mode = 'html') {
+        if ($mode == 'auto') {
+            $mode = (strpos($_SERVER['HTTP_USER_AGENT'], 'FirePHP') !== false ? 'FirePHP' : 'html');
+        }
+        if ($mode == 'FirePHP' && !class_exists('FirePHP')) {
+            $configInit = new configInit;
+            $firephpDir = $configInit->packagesPath() . 'FirePHPCore' . $configInit->DS;
+            if (is_dir($firephpDir)) {
+                require_once $firephpDir . 'FirePHP.class.php';
+            }
+            if (!class_exists('FirePHP')) {
+                $mode = 'html';
+            }
+        }
+        if ($mode == 'FirePHP' && ini_get('output_buffering') != 'On') {
+            ob_start();
+        }
+        self::$_modeStatic = $this->_mode = $mode;
+        $this->_timeStart = self::microtime();
+    }
+
+    /**
+     * Tallies up the debug info and outputs it
+     */
+    public function __destruct() {
+        $execTime = 'Page execution time: ' . number_format(self::microtime() - $this->_timeStart, 5);
+        $sqlExecString = 'Execution time of previous SQL: ';
+        if ($this->_mode == 'FirePHP') {
+            $FirePHP = FirePHP::getInstance(true);
+            $FirePHP->info($execTime);
+            if (!empty(self::$_log)) {
+                $timeLast = $this->_timeStart;
+                foreach (self::$_log as $logArray) {
+                    $data = '(' . number_format($logArray['time'] - $timeLast, 5) . ') ' . $logArray['data'];
+                    $FirePHP->{$logArray['method']}($data);
+                    $timeLast = $logArray['time'];
+                }
+            }
+            if (!empty(self::$_queries)) {
+                foreach (self::$_queries as $queryArray) {
+                    $FirePHP->group('SQL');
+                    $FirePHP->log($queryArray['query']);
+                    if ($queryArray['executionTime'] !== null) {
+                        $FirePHP->info($sqlExecString . $queryArray['executionTime']);
+                    }
+                    if ($queryArray['error'] !== null) {
+                        $FirePHP->error($queryArray['error']);
+                    }
+                    $FirePHP->groupEnd();
+                }
+            }
+        } else {
+            $recordDelimiter = PHP_EOL . PHP_EOL;
+            $lineDelimiter = PHP_EOL;
+            if ($this->_mode == 'html') {
+                echo '<br style="clear: both;" />';
+                $recordDelimiter .= '<hr />';
+                $lineDelimiter .= '<br />';
+            }
+            echo $recordDelimiter . $execTime;
+            if (!empty(self::$_log)) {
+                foreach (self::$_log as $logArray) {
+                    echo $lineDelimiter . $logArray['method'] . ': ' . get::htmlentities($logArray['data']);
+                }
+            }
+            if (!empty(self::$_queries)) {
+                foreach (self::$_queries as $queryArray) {
+                    echo $recordDelimiter . ($this->_mode == 'html' ? get::htmlentities($queryArray['query'])
+                                                                    : $queryArray['query']);
+                    if ($queryArray['executionTime'] !== null) {
+                        echo $lineDelimiter . $sqlExecString . $queryArray['executionTime'];
+                    }
+                    if ($queryArray['error'] !== null) {
+                        echo $lineDelimiter . $queryArray['error'];
+                    }
+                }
+            }
+        }
+    }
+}
+$debugObject = new debug(DEBUG_OUTPUT_METHOD);
