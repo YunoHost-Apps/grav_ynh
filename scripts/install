@@ -19,12 +19,6 @@ if [[ ! $? -eq 0 ]]; then
     exit 1
 fi
 
-# Generate random DES key & password
-db_pwd=$(dd if=/dev/urandom bs=1 count=200 2> /dev/null | tr -c -d '[A-Za-z0-9]' | sed -n 's/\(.\{24\}\).*/\1/p')
-
-# Use 'grav' as database name and user
-db_user=grav
-
 # Copy files to the right place
 final_path=/var/www/grav
 sudo mkdir -p $final_path
@@ -43,7 +37,7 @@ finalphpconf=/etc/php5/fpm/pool.d/grav.conf
 sudo cp ../conf/php-fpm.conf $finalphpconf
 sudo chown root: $finalphpconf
 sudo chmod 644 $finalphpconf
-sudo $final_path/bin/grav install
+# sudo $final_path/bin/grav install
 
 # Reload Nginx and regenerate SSOwat conf
 sudo service php5-fpm restart
