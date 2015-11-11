@@ -43,7 +43,7 @@ finalphpconf=/etc/php5/fpm/pool.d/grav.conf
 sudo cp ../conf/php-fpm.conf $finalphpconf
 sudo chown root: $finalphpconf
 sudo chmod 644 $finalphpconf
-$final_path/bin/grav install
+sudo $final_path/bin/grav install
 
 # Reload Nginx and regenerate SSOwat conf
 sudo service php5-fpm restart
