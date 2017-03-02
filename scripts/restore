@@ -1,0 +1,53 @@
+#!/bin/bash
+# This restore script is adapted to Yunohost >=2.4
+
+# Exit on command errors and treat unset variables as an error
+set -eu
+
+# The parameter $1 is the backup directory location dedicated to the app
+backup_dir=$1
+
+# The parameter $2 is the id of the app instance ex: ynhexample__2
+app=$2
+
+# Source app helpers
+source /usr/share/yunohost/helpers
+
+# Get old parameter of the app
+domain=$(ynh_app_setting_get $app domain)
+path=$(ynh_app_setting_get $app path)
+is_public=$(ynh_app_setting_get $app is_public)
+final_path=$(ynh_app_setting_get $app final_path)
+
+if [ -d $final_path ]; then
+    ynh_die "There is already a directory: $final_path"
+fi
+
+conf=/etc/nginx/conf.d/$domain.d/$app.conf
+if [ -f $conf ]; then
+    ynh_die "There is already a nginx conf file at this path: $conf"
+fi
+# Restore conf files
+sudo cp -a "${backup_dir}/conf/nginx.conf" $conf
+
+# Reload Nginx
+sudo service nginx reload
+
+sudo cp -a "${backup_dir}/var/www/$app" $final_path
+
+# Set permissions
+# Les fichiers appartiennent à www-data, pour permettre les mises à jour.
+sudo chown -R www-data: $final_path
+
+# Copy dedicated php-fpm process from backup folder to the right location
+sudo cp -a $backup_dir/conf/php-fpm.conf /etc/php5/fpm/pool.d/$app.conf
+sudo cp -a $backup_dir/conf/php-fpm.ini /etc/php5/fpm/conf.d/20-$app.ini
+# And restart service
+sudo service php5-fpm reload
+
+# Set ssowat config
+if [ "$is_public" = "No" ];
+then
+	ynh_app_setting_delete $app skipped_uris
+fi
+sudo yunohost app ssowatconf

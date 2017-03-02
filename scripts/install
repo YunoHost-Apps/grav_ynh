@@ -1,46 +1,95 @@
 #!/bin/bash
 
-# Retrieve arguments
-domain=$1
-path=$2
-admin_grav=$3
+# Exit on command errors and treat unset variables as an error
+set -eu
 
-# Check if admin exists
-sudo yunohost user list --json | grep -q "\"username\": \"$admin_grav\""
-if [[ ! $? -eq 0 ]]; then
-    echo "Wrong admin"
-    exit 1
-fi
-sudo yunohost app setting grav admin -v $admin_grav
+source .fonctions	# Charge les fonctions génériques habituellement utilisées dans le script
 
-# Check domain/path availability
-sudo yunohost app checkurl $domain$path -a grav
-if [[ ! $? -eq 0 ]]; then
-    exit 1
-fi
+CLEAN_SETUP () {
+# Nettoyage des résidus d'installation non pris en charge par le script remove.
+	# Clean hosts
+	sudo sed -i '/#GRAV/d' /etc/hosts
+}
+TRAP_ON	# Active trap pour arrêter le script si une erreur est détectée.
 
-# Copy files to the right place
-final_path=/var/www/grav
-sudo mkdir -p $final_path
-sudo cp -aR ../src/* $final_path
+domain=$YNH_APP_ARG_DOMAIN
+path=$YNH_APP_ARG_PATH
+admin_grav=$YNH_APP_ARG_ADMIN
+language=$YNH_APP_ARG_LANGUAGE
+multisite=$YNH_APP_ARG_MULTISITE
+is_public=$YNH_APP_ARG_IS_PUBLIC
 
-# Set permissions to roundcube directory
+app=$YNH_APP_INSTANCE_NAME
+
+# Source app helpers
+source /usr/share/yunohost/helpers
+
+CHECK_VAR "$app" "app name not set"
+
+CHECK_USER "$admin_grav"
+
+CHECK_PATH
+
+CHECK_DOMAINPATH
+
+CHECK_FINALPATH
+
+ynh_app_setting_set $app domain $domain
+ynh_app_setting_set $app path $path
+ynh_app_setting_set $app admin $admin_grav
+ynh_app_setting_set $app is_public $is_public
+ynh_app_setting_set $app language $language
+ynh_app_setting_set $app multisite $multisite
+
+GENERATE_DB $app	# Créer une base de données et un utilisateur dédié au nom de l'app.
+
+# Crée le repertoire de destination et stocke son emplacement.
+sudo mkdir "$final_path"
+ynh_app_setting_set $app final_path $final_path
+
+SETUP_SOURCE "grav-admin-v1.1.17.zip"
+
+# Set permissions to grav directory
 sudo chown -R www-data: $final_path
 
-# Modify Nginx configuration file and copy it to Nginx conf directory
-sed -i "s@PATHTOCHANGE@$path@g" ../conf/nginx.conf
-sed -i "s@ALIASTOCHANGE@$final_path@g" ../conf/nginx.conf
-sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/grav.conf
+echo -e "127.0.0.1 $domain #GRAV" | sudo tee -a /etc/hosts
 
-sed -i "s@NAMETOCHANGE@grav@g" ../conf/php-fpm.conf
-finalphpconf=/etc/php5/fpm/pool.d/grav.conf
-sudo cp ../conf/php-fpm.conf $finalphpconf
-sudo chown root: $finalphpconf
-sudo chmod 644 $finalphpconf
-# sudo $final_path/bin/grav install
+# Et copie le fichier de config nginx
+sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/$app.conf
+
+# Modifie les variables dans le fichier de configuration nginx
+sudo sed -i "s@__PATHTOCHANGE__@$path@g" /etc/nginx/conf.d/$domain.d/$app.conf
+sudo sed -i "s@__FINALPATH__@$final_path@g" /etc/nginx/conf.d/$domain.d/$app.conf
+sudo sed -i "s@__NAMETOCHANGE__@$app@g" /etc/nginx/conf.d/$domain.d/$app.conf
+
+if [ "$multisite" = "Yes" ];
+then
+	sudo sed -i "s@#--MULTISITE--@@g" /etc/nginx/conf.d/$domain.d/$app.conf
+fi
+
+if [ "$is_public" = "Yes" ];
+then
+	sudo sed -i "s@#--PRIVATE--@@g" /etc/nginx/conf.d/$domain.d/$app.conf
+fi
+
+POOL_FPM
+
+# Donne un accès public pour curl
+ynh_app_setting_set $app unprotected_uris "/"
+
+# Régénère la configuration de SSOwat
+sudo yunohost app ssowatconf
 
 # Reload Nginx and regenerate SSOwat conf
 sudo service php5-fpm restart
 sudo service nginx reload
-sudo yunohost app setting grav skipped_uris -v "/"
-sudo yunohost app ssowatconf
+
+if [ "$is_public" = "No" ];
+then
+	# Retire l'accès public
+	ynh_app_setting_delete $app unprotected_uris
+	sudo yunohost app ssowatconf
+fi
+
+# Nettoyer hosts
+sudo sed -i '/#GRAV/d' /etc/hosts

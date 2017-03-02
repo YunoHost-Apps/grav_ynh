@@ -1,10 +1,26 @@
 #!/bin/bash
 
-domain=$(sudo yunohost app setting grav domain)
+# Exit on command errors and treat unset variables as an error
+set -u
 
-sudo rm -rf /var/www/grav
-sudo rm -f /etc/nginx/conf.d/$domain.d/grav.conf
-sudo rm -f /etc/php5/fpm/pool.d/grav.conf
+source .fonctions	# Charge les fonctions génériques habituellement utilisées dans le script
 
-sudo service php5-fpm restart
-sudo service nginx reload
+# Source app helpers
+source /usr/share/yunohost/helpers
+
+# Récupère les infos de l'application.
+app=$YNH_APP_INSTANCE_NAME
+domain=$(ynh_app_setting_get $app domain)
+
+REMOVE_BDD $app	# Suppression de la base de donnée et de l'utilisateur associé.
+
+SECURE_REMOVE '/var/www/$app'	# Suppression du dossier de l'application
+
+REMOVE_NGINX_CONF	# Suppression de la configuration nginx
+
+REMOVE_FPM_CONF	# Suppression de la configuration du pool php-fpm
+
+# Régénère la configuration de SSOwat
+sudo yunohost app ssowatconf
+
+echo -e "\e[0m"	# Restore normal color

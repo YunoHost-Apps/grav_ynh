@@ -1,7 +1,0 @@
-title: PLUGIN_ADMIN.FILE_STREAMS
-
-form:
-  validation: loose
-  fields:
-    schemes.xxx:
-      type: array
