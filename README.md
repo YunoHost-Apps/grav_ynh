@@ -1,6 +1,9 @@
-# GRAV_ynh
+# Grav for YunoHost
 
-## Grav for YunoHost
+BUILD FASTER WEBSITES
+Grav is a modern open source flat-file CMS
+
+[getgrav.org](https://www.getgrav.org/)
 
 ## Versionning
 
