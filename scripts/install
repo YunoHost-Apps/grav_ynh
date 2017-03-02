@@ -49,7 +49,10 @@ ynh_app_setting_set $app final_path $final_path
 
 SETUP_SOURCE "grav-admin-v1.1.17.zip"
 
-# Set permissions to grav directory
+# Installation de grav
+sudo $final_path/bin/grav
+
+# Attribuer les bonnes permissions
 sudo chown -R www-data: $final_path
 
 echo -e "127.0.0.1 $domain #GRAV" | sudo tee -a /etc/hosts
