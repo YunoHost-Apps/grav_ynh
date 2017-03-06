@@ -17,7 +17,9 @@ EXIT_PROPERLY () {	# Provoque l'arrêt du script en cas d'erreur. Et nettoye les
 	echo -e "\e[91m \e[1m"	# Shell in light red bold
 	echo -e "!!\n  $app install's script has encountered an error. Installation was cancelled.\n!!" >&2
 
-	CLEAN_SETUP	# Appel la fonction de nettoyage spécifique du script install.
+	if type -t CLEAN_SETUP > /dev/null; then	# Vérifie l'existance de la fonction avant de l'exécuter.
+		CLEAN_SETUP	# Appel la fonction de nettoyage spécifique du script install.
+	fi
 
 	# Compense le bug de ssowat qui ne supprime pas l'entrée de l'app en cas d'erreur d'installation.
 	sudo sed -i "\@\"$domain$path/\":@d" /etc/ssowat/conf.json
