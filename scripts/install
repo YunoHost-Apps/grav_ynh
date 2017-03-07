@@ -3,14 +3,15 @@
 # Exit on command errors and treat unset variables as an error
 set -eu
 
-source .fonctions	# Charge les fonctions génériques habituellement utilisées dans le script
+source .fonctions	# Loads the generic functions usually used in the script
+source /usr/share/yunohost/helpers # Source app helpers
 
 CLEAN_SETUP () {
-# Nettoyage des résidus d'installation non pris en charge par le script remove.
+	# Clean installation residues that are not supported by the remove script.
 	# Clean hosts
 	sudo sed -i '/#GRAV/d' /etc/hosts
 }
-TRAP_ON	# Active trap pour arrêter le script si une erreur est détectée.
+TRAP_ON	# Active trap to stop the script if an error is detected.
 
 domain=$YNH_APP_ARG_DOMAIN
 path=$YNH_APP_ARG_PATH
@@ -20,9 +21,6 @@ multisite=$YNH_APP_ARG_MULTISITE
 is_public=$YNH_APP_ARG_IS_PUBLIC
 
 app=$YNH_APP_INSTANCE_NAME
-
-# Source app helpers
-source /usr/share/yunohost/helpers
 
 CHECK_VAR "$app" "app name not set"
 
@@ -41,26 +39,24 @@ ynh_app_setting_set $app is_public $is_public
 ynh_app_setting_set $app language $language
 ynh_app_setting_set $app multisite $multisite
 
-GENERATE_DB $app	# Créer une base de données et un utilisateur dédié au nom de l'app.
-
-# Crée le repertoire de destination et stocke son emplacement.
+# Creates the destination directory and stores its location.
 sudo mkdir "$final_path"
 ynh_app_setting_set $app final_path $final_path
 
 SETUP_SOURCE "grav-admin-v1.1.17.zip"
 
-# Installation de grav
+# Grav install
 sudo $final_path/bin/grav
 
-# Attribuer les bonnes permissions
+# Set permissions
 sudo chown -R www-data: $final_path
 
 echo -e "127.0.0.1 $domain #GRAV" | sudo tee -a /etc/hosts
 
-# Et copie le fichier de config nginx
+# Copy nginx config
 sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/$app.conf
 
-# Modifie les variables dans le fichier de configuration nginx
+# Modif the variables in the nginx configuration file
 sudo sed -i "s@__PATHTOCHANGE__@$path@g" /etc/nginx/conf.d/$domain.d/$app.conf
 sudo sed -i "s@__FINALPATH__@$final_path@g" /etc/nginx/conf.d/$domain.d/$app.conf
 sudo sed -i "s@__NAMETOCHANGE__@$app@g" /etc/nginx/conf.d/$domain.d/$app.conf
@@ -77,22 +73,19 @@ fi
 
 POOL_FPM
 
-# Donne un accès public pour curl
-ynh_app_setting_set $app unprotected_uris "/"
+# Setup SSOwat
+ynh_app_setting_set "$app" is_public "$is_public"
+if [ "$is_public" = "Yes" ];
+then
+  ynh_app_setting_set "$app" unprotected_uris "/"
+fi
 
-# Régénère la configuration de SSOwat
+# Reload SSOwat configuration
 sudo yunohost app ssowatconf
 
 # Reload Nginx and regenerate SSOwat conf
 sudo service php5-fpm restart
 sudo service nginx reload
-
-if [ "$is_public" = "No" ];
-then
-	# Retire l'accès public
-	ynh_app_setting_delete $app unprotected_uris
-	sudo yunohost app ssowatconf
-fi
 
 # Nettoyer hosts
 sudo sed -i '/#GRAV/d' /etc/hosts

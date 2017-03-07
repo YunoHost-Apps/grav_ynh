@@ -3,24 +3,22 @@
 # Exit on command errors and treat unset variables as an error
 set -u
 
-source .fonctions	# Charge les fonctions génériques habituellement utilisées dans le script
+source .fonctions	# Loads the generic functions usually used in the script
+source /usr/share/yunohost/helpers # Source app helpers
 
-# Source app helpers
-source /usr/share/yunohost/helpers
-
-# Récupère les infos de l'application.
+# Retrieves application info.
 app=$YNH_APP_INSTANCE_NAME
 domain=$(ynh_app_setting_get $app domain)
 
-REMOVE_BDD $app	# Suppression de la base de donnée et de l'utilisateur associé.
+REMOVE_BDD $app	# Deleting the database and the associated user.
 
-SECURE_REMOVE '/var/www/$app'	# Suppression du dossier de l'application
+SECURE_REMOVE '/var/www/$app'	# Removing the application folder
 
-REMOVE_NGINX_CONF	# Suppression de la configuration nginx
+REMOVE_NGINX_CONF	# Deleting the nginx configuration
 
-REMOVE_FPM_CONF	# Suppression de la configuration du pool php-fpm
+REMOVE_FPM_CONF	# Deleting the php-fpm pool configuration
 
-# Régénère la configuration de SSOwat
+# Reload SSOwat configuration
 sudo yunohost app ssowatconf
 
 echo -e "\e[0m"	# Restore normal color
