@@ -3,26 +3,22 @@
 # Exit on command errors and treat unset variables as an error
 set -eu
 
-# The parameter $1 is the backup directory location dedicated to the app
-backup_dir=$1
-
-# The parameter $2 is theid of the app instance
-app=$2
+# Get multi-instances specific variables
+app=$YNH_APP_INSTANCE_NAME
 
 # Source app helpers
 source /usr/share/yunohost/helpers
 
-domain=$(ynh_app_setting_get $app domain)
-final_path=$(ynh_app_setting_get $app final_path)
+# Retrieve app settings
+domain=$(ynh_app_setting_get "$app" domain)
+with_mysql=$(ynh_app_setting_get "$app" with_mysql)
 
 # Copy the app files
-sudo mkdir -p ${backup_dir}/var/www
-sudo cp -a $final_path "${backup_dir}/var/www/$app"
+final_path="/var/www/${app}"
+ynh_backup "$final_path" "sources" 1
 
-# Copy the conf files
-sudo mkdir -p "${backup_dir}/conf"
-sudo cp -a /etc/nginx/conf.d/$domain.d/$app.conf "${backup_dir}/conf/nginx.conf"
-
-# Copy dedicated php-fpm process to backup folder
-sudo cp -a /etc/php5/fpm/pool.d/$app.conf "${backup_dir}/conf/php-fpm.conf"
-sudo cp -a /etc/php5/fpm/conf.d/20-$app.ini "${backup_dir}/conf/php-fpm.ini"
+# Copy the nginx conf files
+ynh_backup "/etc/nginx/conf.d/${domain}.d/${app}.conf" "nginx.conf"
+# Copy the php-fpm conf files
+ynh_backup "/etc/php5/fpm/pool.d/${app}.conf" "php-fpm.conf"
+ynh_backup "/etc/php5/fpm/conf.d/20-${app}.ini" "php-fpm.ini"

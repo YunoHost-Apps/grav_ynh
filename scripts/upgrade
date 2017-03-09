@@ -26,24 +26,15 @@ fi
 
 final_path=/var/www/$app
 
-db_name=$app
-
 # Modify Nginx configuration file and copy it to Nginx conf directory
-sed -i "s@PATHTOCHANGE@$path@g" ../conf/nginx.conf*
-sed -i "s@ALIASTOCHANGE@$final_path/@g" ../conf/nginx.conf*
-
-if [ $is_public = "Yes" ];
-then
-	sudo cp ../conf/nginx.conf-public /etc/nginx/conf.d/$domain.d/$app.conf
-else
-	sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/$app.conf
-fi
+sed -i "s@__PATHTOCHANGE__@$app@g" ../conf/nginx.conf*
+sed -i "s@__FINALPATH__@$final_path/@g" ../conf/nginx.conf*
 
 # If app is public, add url to SSOWat conf as skipped_uris
-if [[ $is_public -eq 1 ]]; then
-	# See install script
+if [ $is_public = "Yes" ];
+then
 	ynh_app_setting_set "$app" unprotected_uris "/"
-	sudo cp ../conf/nginx.conf-public /etc/nginx/conf.d/$domain.d/$app.conf
+	sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/$app.conf
 else
 	sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/$app.conf
 fi

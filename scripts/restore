@@ -4,11 +4,8 @@
 # Exit on command errors and treat unset variables as an error
 set -eu
 
-# The parameter $1 is the backup directory location dedicated to the app
-backup_dir=$1
-
 # The parameter $2 is the id of the app instance ex: ynhexample__2
-app=$2
+app=$YNH_APP_INSTANCE_NAME
 
 # Source app helpers
 source /usr/share/yunohost/helpers
@@ -17,36 +14,38 @@ source /usr/share/yunohost/helpers
 domain=$(ynh_app_setting_get $app domain)
 path=$(ynh_app_setting_get $app path)
 is_public=$(ynh_app_setting_get $app is_public)
-final_path=$(ynh_app_setting_get $app final_path)
 
-if [ -d $final_path ]; then
-    ynh_die "There is already a directory: $final_path"
-fi
+# Check domain/path availability
+sudo yunohost app checkurl "${domain}${path}" -a "$app" \
+    || ynh_die "Path not available: ${domain}${path}"
 
-conf=/etc/nginx/conf.d/$domain.d/$app.conf
-if [ -f $conf ]; then
-    ynh_die "There is already a nginx conf file at this path: $conf"
-fi
-# Restore conf files
-sudo cp -a "${backup_dir}/conf/nginx.conf" $conf
+# Check configuration files php-fpm
+nginx_conf="/etc/nginx/conf.d/${domain}.d/${app}.conf"
+[[ -f $nginx_conf ]] && ynh_die \
+"The NGINX configuration already exists at '${nginx_conf}'.
+ You should safely delete it before restoring this app."
+phpfpm_conf="/etc/php5/fpm/pool.d/${app}.conf"
+[[ -f $phpfpm_conf ]] && ynh_die \
+"The PHP FPM configuration already exists at '${phpfpm_conf}'.
+ You should safely delete it before restoring this app."
+phpfpm_ini="/etc/php5/fpm/conf.d/20-${app}.ini"
+[[ -f $phpfpm_ini ]] && ynh_die \
+"The PHP FPM INI configuration already exists at '${phpfpm_ini}'.
+ You should safely delete it before restoring this app."
 
-# Reload Nginx
-sudo service nginx reload
-
-sudo cp -a "${backup_dir}/var/www/$app" $final_path
+ # Restore sources & data
+final_path="/var/www/${app}"
+sudo cp -a ./sources "$final_path"
 
 # Set permissions
 sudo chown -R www-data: $final_path
 
-# Copy dedicated php-fpm process from backup folder to the right location
-sudo cp -a $backup_dir/conf/php-fpm.conf /etc/php5/fpm/pool.d/$app.conf
-sudo cp -a $backup_dir/conf/php-fpm.ini /etc/php5/fpm/conf.d/20-$app.ini
-# And restart service
-sudo service php5-fpm reload
+# Restore nginx configuration files
+sudo cp -a ./nginx.conf   "$nginx_conf"
+# Restore php-fpm configuration files
+sudo cp -a ./php-fpm.conf "$phpfpm_conf"
+sudo cp -a ./php-fpm.ini "$phpfpm_ini"
 
-# Set ssowat config
-if [ "$is_public" = "No" ];
-then
-	ynh_app_setting_delete $app skipped_uris
-fi
-sudo yunohost app ssowatconf
+# Reload services
+sudo service php5-fpm reload || true
+sudo service nginx reload || true
