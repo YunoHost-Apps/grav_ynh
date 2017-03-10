@@ -3,22 +3,31 @@
 # Exit on command errors and treat unset variables as an error
 set -u
 
-source .fonctions	# Loads the generic functions usually used in the script
-source /usr/share/yunohost/helpers # Source app helpers
-
-# Retrieves application info.
+# Get multi-instances specific variables
 app=$YNH_APP_INSTANCE_NAME
-domain=$(ynh_app_setting_get $app domain)
 
-REMOVE_BDD $app	# Deleting the database and the associated user.
+# Source app helpers
+. /usr/share/yunohost/helpers
 
-SECURE_REMOVE '/var/www/$app'	# Removing the application folder
+# Retrieve app settings
+domain=$(ynh_app_setting_get "$app" domain)
+with_mysql=$(ynh_app_setting_get "$app" with_mysql)
 
-REMOVE_NGINX_CONF	# Deleting the nginx configuration
+# Drop MySQL database and user as needed
+if [[ $with_mysql -eq 1 ]]; then
+    dbname=$app
+    dbuser=$app
+    dbpass=$(ynh_app_setting_get "$app" mysqlpwd)
+    ynh_mysql_drop_db $dbname || true
+    ynh_mysql_drop_user $dbuser || true
+fi
 
-REMOVE_FPM_CONF	# Deleting the php-fpm pool configuration
+# Delete app directory and configurations
+sudo rm -rf "/var/www/${app}"
+sudo rm -f "/etc/php5/fpm/pool.d/${app}.conf"
+sudo rm -f "/etc/php5/fpm/conf.d/20-${app}.ini"
+[[ -n $domain ]] && sudo rm -f "/etc/nginx/conf.d/${domain}.d/${app}.conf"
 
-# Reload SSOwat configuration
-sudo yunohost app ssowatconf
-
-echo -e "\e[0m"	# Restore normal color
+# Reload services
+sudo service php5-fpm restart || true
+sudo service nginx reload || true
