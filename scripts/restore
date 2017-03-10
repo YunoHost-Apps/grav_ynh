@@ -54,5 +54,6 @@ sudo cp -a ./php-fpm.conf "$phpfpm_conf"
 sudo cp -a ./php-fpm.ini "$phpfpm_ini"
 
 # Reload services
-sudo service php5-fpm reload 
 sudo service nginx reload
+sudo service php5-fpm reload
+sudo yunohost app ssowatconf
