@@ -11,16 +11,6 @@ app=$YNH_APP_INSTANCE_NAME
 
 # Retrieve app settings
 domain=$(ynh_app_setting_get "$app" domain)
-with_mysql=$(ynh_app_setting_get "$app" with_mysql)
-
-# Drop MySQL database and user as needed
-if [[ $with_mysql -eq 1 ]]; then
-    dbname=$app
-    dbuser=$app
-    dbpass=$(ynh_app_setting_get "$app" mysqlpwd)
-    ynh_mysql_drop_db $dbname || true
-    ynh_mysql_drop_user $dbuser || true
-fi
 
 # Delete app directory and configurations
 sudo rm -rf "/var/www/${app}"
