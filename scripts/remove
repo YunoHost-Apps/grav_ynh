@@ -12,7 +12,7 @@ domain=$(ynh_app_setting_get $app domain)
 
 REMOVE_BDD $app	# Deleting the database and the associated user.
 
-SECURE_REMOVE '/var/www/$app'	# Removing the application folder
+SECURE_REMOVE '/var/www/${app}'	# Removing the application folder
 
 REMOVE_NGINX_CONF	# Deleting the nginx configuration
 
