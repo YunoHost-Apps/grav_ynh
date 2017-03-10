@@ -11,7 +11,6 @@ source /usr/share/yunohost/helpers
 
 # Retrieve app settings
 domain=$(ynh_app_setting_get "$app" domain)
-with_mysql=$(ynh_app_setting_get "$app" with_mysql)
 
 # Copy the app files
 final_path="/var/www/${app}"

@@ -19,22 +19,29 @@ is_public=$(ynh_app_setting_get $app is_public)
 sudo yunohost app checkurl "${domain}${path}" -a "$app" \
     || ynh_die "Path not available: ${domain}${path}"
 
-# Check configuration files php-fpm
+# Check $final_path
+final_path="/var/www/${app}"
+if [ -d $final_path ]; then
+	ynh_die "There is already a directory: $final_path"
+fi
+
+# Check configuration files nginx
 nginx_conf="/etc/nginx/conf.d/${domain}.d/${app}.conf"
-[[ -f $nginx_conf ]] && ynh_die \
-"The NGINX configuration already exists at '${nginx_conf}'.
- You should safely delete it before restoring this app."
+if [ -f $nginx_conf ]; then
+	ynh_die "The NGINX configuration already exists at '${nginx_conf}'. You should safely delete it before restoring this app."
+
+# Check configuration files php-fpm
 phpfpm_conf="/etc/php5/fpm/pool.d/${app}.conf"
-[[ -f $phpfpm_conf ]] && ynh_die \
-"The PHP FPM configuration already exists at '${phpfpm_conf}'.
- You should safely delete it before restoring this app."
+if [ -f $phpfpm_conf ]; then 
+	ynh_die "The PHP FPM configuration already exists at '${phpfpm_conf}'. You should safely delete it before restoring this app."
+fi
+
 phpfpm_ini="/etc/php5/fpm/conf.d/20-${app}.ini"
-[[ -f $phpfpm_ini ]] && ynh_die \
-"The PHP FPM INI configuration already exists at '${phpfpm_ini}'.
- You should safely delete it before restoring this app."
+if [ -f $phpfpm_ini ]; then
+	ynh_die "The PHP FPM INI configuration already exists at '${phpfpm_ini}'. You should safely delete it before restoring this app."
+fi
 
  # Restore sources & data
-final_path="/var/www/${app}"
 sudo cp -a ./sources "$final_path"
 
 # Set permissions
