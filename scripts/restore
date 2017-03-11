@@ -4,7 +4,7 @@
 # Exit on command errors and treat unset variables as an error
 set -eu
 
-# The parameter $2 is the id of the app instance ex: ynhexample__2
+# The parameter $app is the id of the app instance ex: ynhexample__2
 app=$YNH_APP_INSTANCE_NAME
 
 # Source app helpers
@@ -57,3 +57,4 @@ sudo cp -a ./php-fpm.ini "$phpfpm_ini"
 sudo service nginx reload
 sudo service php5-fpm reload
 sudo yunohost app ssowatconf
+
