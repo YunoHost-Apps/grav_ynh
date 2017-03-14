@@ -8,6 +8,10 @@ Grav is a modern open source flat-file CMS
 
 ## Versionning
 
+### Version 1.1.1 (13/03/17)
+
+- Fix package_check [source](https://github.com/YunoHost/package_check)
+
 ### Version 1.1.0 (02/03/17)
 
 - Fix Packaging [Source](https://forum.yunohost.org/t/news-about-app-management-and-packaging-in-yunohost-2-4/1379/1)
