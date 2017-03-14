@@ -26,17 +26,17 @@ if [ -d $final_path ]; then
 fi
 
 # Check configuration files nginx
-nginx_conf="/etc/nginx/conf.d/${domain}.d/${app}.conf"
+nginx_conf="/etc/nginx/conf.d/${domain}.d/nginx.conf"
 if [ -f $nginx_conf ]; then
 	ynh_die "The NGINX configuration already exists at '${nginx_conf}'. You should safely delete it before restoring this app."
 
 # Check configuration files php-fpm
-phpfpm_conf="/etc/php5/fpm/pool.d/${app}.conf"
+phpfpm_conf="/etc/php5/fpm/pool.d/php-fpm.conf"
 if [ -f $phpfpm_conf ]; then 
 	ynh_die "The PHP FPM configuration already exists at '${phpfpm_conf}'. You should safely delete it before restoring this app."
 fi
 
-phpfpm_ini="/etc/php5/fpm/conf.d/20-${app}.ini"
+phpfpm_ini="/etc/php5/fpm/conf.d/php-fpm.ini"
 if [ -f $phpfpm_ini ]; then
 	ynh_die "The PHP FPM INI configuration already exists at '${phpfpm_ini}'. You should safely delete it before restoring this app."
 fi
@@ -57,4 +57,3 @@ sudo cp -a ./php-fpm.ini "${phpfpm_ini}"
 sudo service nginx reload
 sudo service php5-fpm reload
 sudo yunohost app ssowatconf
-
