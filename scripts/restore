@@ -21,7 +21,7 @@ sudo yunohost app checkurl "${domain}${path}" -a "${app}" \
 
 # Check $final_path
 final_path="/var/www/${app}"
-if [ -d $final_path ]; then
+if [ -d "${final_path}" ]; then
 	ynh_die "There is already a directory: ${final_path}"
 fi
 
@@ -29,6 +29,7 @@ fi
 nginx_conf="/etc/nginx/conf.d/${domain}.d/${app}.conf"
 if [ -f "${nginx_conf}" ]; then
 	ynh_die "The NGINX configuration already exists at '${nginx_conf}'. You should safely delete it before restoring this app."
+fi
 
 # Check configuration files php-fpm
 phpfpm_conf="/etc/php5/fpm/pool.d/${app}.conf"
