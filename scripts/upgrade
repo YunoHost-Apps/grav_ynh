@@ -14,6 +14,7 @@ domain=$(ynh_app_setting_get "$app" domain)
 path=$(ynh_app_setting_get "$app" path)
 admin=$(ynh_app_setting_get "$app" admin)
 is_public=$(ynh_app_setting_get "$app" is_public)
+multisite=$(ynh_app_setting_get "$app" multisite)
 language=$(ynh_app_setting_get "$app" language)
 
 CHECK_PATH	# Checks and corrects the syntax of the path.
@@ -27,16 +28,25 @@ fi
 final_path=/var/www/$app
 
 # Modify Nginx configuration file and copy it to Nginx conf directory
-sed -i "s@__PATHTOCHANGE__@$app@g" ../conf/nginx.conf*
-sed -i "s@__FINALPATH__@$final_path/@g" ../conf/nginx.conf*
+sudo sed -i "s@__PATHTOCHANGE__@$path@g" /etc/nginx/conf.d/$domain.d/$app.conf
+sudo sed -i "s@__FINALPATH__@$final_path@g" /etc/nginx/conf.d/$domain.d/$app.conf
+sudo sed -i "s@__NAMETOCHANGE__@$app@g" /etc/nginx/conf.d/$domain.d/$app.conf
 
-# If app is public, add url to SSOWat conf as skipped_uris
-if [ $is_public = "Yes" ];
+if [ "$multisite" = "Yes" ];
 then
-	ynh_app_setting_set "$app" unprotected_uris "/"
-	sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/$app.conf
-else
-	sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/$app.conf
+	sudo sed -i "s@#--MULTISITE--@@g" /etc/nginx/conf.d/$domain.d/$app.conf
+fi
+
+if [ "$is_public" = "Yes" ];
+then
+	sudo sed -i "s@#--PRIVATE--@@g" /etc/nginx/conf.d/$domain.d/$app.conf
+fi
+
+# Setup SSOwat
+ynh_app_setting_set "$app" is_public "$is_public"
+if [ "$is_public" = "Yes" ];
+then
+  ynh_app_setting_set "$app" unprotected_uris "/"
 fi
 
 # Reload Nginx
