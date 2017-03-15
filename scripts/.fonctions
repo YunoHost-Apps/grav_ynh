@@ -80,7 +80,7 @@ GENERATE_DB () {	# Create a database and a dedicated user in the name of the app
 
 SETUP_SOURCE () {	# Download source, decompress and copu into $final_path
 	# $1 = Nom de l'archive téléchargée.
-	sudo wget -nv --show-progress -i ../sources/source_url -O $1
+	sudo wget -nv -i ../sources/source_url -O $1
 	# Checks the checksum of the downloaded source.
 	# md5sum -c ../sources/source_md5 --status
 	# Decompress source
