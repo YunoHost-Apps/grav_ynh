@@ -1,8 +1,5 @@
 # Grav for YunoHost
 
-**Attention:** ne pas utiliser cette version, mais la version sur [YunoHost-Apps](https://github.com/YunoHost-Apps/spip_ynh)                                                                 
-**Forbidden:** Don't use this version, but a version on [YunoHost-Apps](https://github.com/YunoHost-Apps/spip_ynh)  
-
 BUILD FASTER WEBSITES
 Grav is a modern open source flat-file CMS
 
