@@ -18,12 +18,6 @@ language=$(ynh_app_setting_get "$app" language)
 
 CHECK_PATH	# Checks and corrects the syntax of the path.
 
-# Check if admin is not null
-if [[ "$admin" = "" || "$is_public" = "" || "$language" = "" ]]; then
-    echo "Unable to upgrade, please contact support"
-    ynh_die
-fi
-
 final_path=/var/www/$app
 
 # Get source
