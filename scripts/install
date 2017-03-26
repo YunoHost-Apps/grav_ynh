@@ -79,8 +79,8 @@ fi
 sudo yunohost app ssowatconf
 
 # Reload Nginx and regenerate SSOwat conf
-sudo service php5-fpm restart
-sudo service nginx reload
+sudo systemctl reload php5-fpm
+sudo systemctl reload nginx
 
 # Nettoyer hosts
 sudo sed -i '/#GRAV/d' /etc/hosts

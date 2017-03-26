@@ -50,4 +50,6 @@ then
 fi
 
 # Reload Nginx
-sudo service nginx reload || true
+sudo systemctl reload php5-fpm
+sudo systemctl reload nginx
+sudo yunohost app ssowatconf

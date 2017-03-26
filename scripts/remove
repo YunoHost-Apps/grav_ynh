@@ -19,5 +19,5 @@ sudo rm -f "/etc/php5/fpm/conf.d/20-${app}.ini"
 [[ -n $domain ]] && sudo rm -f "/etc/nginx/conf.d/${domain}.d/${app}.conf"
 
 # Reload services
-sudo service php5-fpm restart || true
-sudo service nginx reload || true
+sudo systemctl reload php5-fpm
+sudo systemctl reload nginx
