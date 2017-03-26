@@ -27,6 +27,7 @@ fi
 
 final_path=/var/www/$app
 
+# Get source
 SETUP_SOURCE
 
 # Modify Nginx configuration file and copy it to Nginx conf directory
@@ -43,6 +44,9 @@ if [ "$is_public" = "Yes" ];
 then
 	sudo sed -i "s@#--PRIVATE--@@g" /etc/nginx/conf.d/$domain.d/$app.conf
 fi
+
+# Create the php-fpm pool config
+POOL_FPM
 
 # Setup SSOwat
 ynh_app_setting_set "$app" is_public "$is_public"

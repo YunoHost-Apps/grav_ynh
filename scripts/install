@@ -43,6 +43,7 @@ ynh_app_setting_set $app multisite $multisite
 sudo mkdir "$final_path"
 ynh_app_setting_set $app final_path $final_path
 
+# Get source
 SETUP_SOURCE
 
 # Grav install
@@ -71,6 +72,7 @@ then
 	sudo sed -i "s@#--PRIVATE--@@g" /etc/nginx/conf.d/$domain.d/$app.conf
 fi
 
+# Create the php-fpm pool config
 POOL_FPM
 
 # Setup SSOwat
