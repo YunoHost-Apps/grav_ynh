@@ -43,7 +43,7 @@ ynh_app_setting_set $app multisite $multisite
 sudo mkdir "$final_path"
 ynh_app_setting_set $app final_path $final_path
 
-SETUP_SOURCE "grav-admin-v1.1.17.zip"
+SETUP_SOURCE
 
 # Grav install
 sudo $final_path/bin/grav

@@ -79,15 +79,15 @@ GENERATE_DB () {	# Create a database and a dedicated user in the name of the app
 }
 
 SETUP_SOURCE () {	# Download source, decompress and copu into $final_path
-	# $1 = Nom de l'archive téléchargée.
-	sudo wget -nv -i ../sources/source_url -O $1
+	src=$(cat ../sources/source_md5 | awk -F' ' {'print $2'})
+	sudo wget -nv -i ../sources/source_url -O $src
 	# Checks the checksum of the downloaded source.
-	# md5sum -c ../sources/source_md5 --status
+	# md5sum -c ../sources/source_md5 --status || ynh_die "Corrupt source"
 	# Decompress source
-	if [ "$(echo ${1##*.})" == "tgz" ]; then
-		tar -x -f $1
-	elif [ "$(echo ${1##*.})" == "zip" ]; then
-		unzip -q $1
+	if [ "$(echo ${src##*.})" == "tgz" ]; then
+		tar -x -f $src
+	elif [ "$(echo ${src##*.})" == "zip" ]; then
+		unzip -q $src
 	else
 		false	# Unsupported archive format.
 	fi

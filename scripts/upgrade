@@ -27,7 +27,7 @@ fi
 
 final_path=/var/www/$app
 
-SETUP_SOURCE "grav-admin-v1.1.17.zip"
+SETUP_SOURCE
 
 # Modify Nginx configuration file and copy it to Nginx conf directory
 sudo sed -i "s@__PATHTOCHANGE__@$path@g" /etc/nginx/conf.d/$domain.d/$app.conf
