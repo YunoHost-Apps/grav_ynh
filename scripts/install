@@ -17,7 +17,6 @@ domain=$YNH_APP_ARG_DOMAIN
 path=$YNH_APP_ARG_PATH
 admin_grav=$YNH_APP_ARG_ADMIN
 language=$YNH_APP_ARG_LANGUAGE
-multisite=$YNH_APP_ARG_MULTISITE
 is_public=$YNH_APP_ARG_IS_PUBLIC
 
 app=$YNH_APP_INSTANCE_NAME
@@ -37,7 +36,6 @@ ynh_app_setting_set $app path $path
 ynh_app_setting_set $app admin $admin_grav
 ynh_app_setting_set $app is_public $is_public
 ynh_app_setting_set $app language $language
-ynh_app_setting_set $app multisite $multisite
 
 # Creates the destination directory and stores its location.
 sudo mkdir "$final_path"
@@ -61,11 +59,6 @@ sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/$app.conf
 sudo sed -i "s@__PATHTOCHANGE__@$path@g" /etc/nginx/conf.d/$domain.d/$app.conf
 sudo sed -i "s@__FINALPATH__@$final_path@g" /etc/nginx/conf.d/$domain.d/$app.conf
 sudo sed -i "s@__NAMETOCHANGE__@$app@g" /etc/nginx/conf.d/$domain.d/$app.conf
-
-if [ "$multisite" = "Yes" ];
-then
-	sudo sed -i "s@#--MULTISITE--@@g" /etc/nginx/conf.d/$domain.d/$app.conf
-fi
 
 if [ "$is_public" = "Yes" ];
 then

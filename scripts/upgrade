@@ -14,7 +14,6 @@ domain=$(ynh_app_setting_get "$app" domain)
 path=$(ynh_app_setting_get "$app" path)
 admin=$(ynh_app_setting_get "$app" admin)
 is_public=$(ynh_app_setting_get "$app" is_public)
-multisite=$(ynh_app_setting_get "$app" multisite)
 language=$(ynh_app_setting_get "$app" language)
 
 CHECK_PATH	# Checks and corrects the syntax of the path.
@@ -34,11 +33,6 @@ SETUP_SOURCE
 sudo sed -i "s@__PATHTOCHANGE__@$path@g" /etc/nginx/conf.d/$domain.d/$app.conf
 sudo sed -i "s@__FINALPATH__@$final_path@g" /etc/nginx/conf.d/$domain.d/$app.conf
 sudo sed -i "s@__NAMETOCHANGE__@$app@g" /etc/nginx/conf.d/$domain.d/$app.conf
-
-if [ "$multisite" = "Yes" ];
-then
-	sudo sed -i "s@#--MULTISITE--@@g" /etc/nginx/conf.d/$domain.d/$app.conf
-fi
 
 if [ "$is_public" = "Yes" ];
 then
