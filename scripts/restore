@@ -54,6 +54,12 @@ sudo cp -a ./nginx.conf   "${nginx_conf}"
 sudo cp -a ./php-fpm.conf "${phpfpm_conf}"
 sudo cp -a ./php-fpm.ini "${phpfpm_ini}"
 
+# Set ssowat config
+if [ "$is_public" = "No" ];
+then
+	ynh_app_setting_delete $app skipped_uris
+fi
+
 # Reload services
 sudo systemctl reload php5-fpm
 sudo systemctl reload nginx
