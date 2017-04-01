@@ -36,6 +36,8 @@ fi
 # Create the php-fpm pool config
 POOL_FPM
 
+sudo chown -R www-data: "${final_path}"
+
 # Setup SSOwat
 ynh_app_setting_set "$app" is_public "$is_public"
 if [ "$is_public" = "Yes" ];
