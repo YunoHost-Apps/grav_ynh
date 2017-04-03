@@ -13,7 +13,7 @@ app=$YNH_APP_INSTANCE_NAME
 domain=$(ynh_app_setting_get "$app" domain)
 
 # Delete app directory and configurations
-sudo rm -rf "/var/www/${app}"
+SECURE_REMOVE '/var/www/$app'	# Delete directory application
 sudo rm -f "/etc/php5/fpm/pool.d/${app}.conf"
 sudo rm -f "/etc/php5/fpm/conf.d/20-${app}.ini"
 [[ -n $domain ]] && sudo rm -f "/etc/nginx/conf.d/${domain}.d/${app}.conf"
