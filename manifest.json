@@ -10,8 +10,8 @@
 	"url": "https://www.getgrav.org/",
 	"license": "free",
 	"maintainer": {
-		"name": "cyp",
-		"email": "cyp@rouquin.me"
+		"name": "cyp, lithrel",
+		"email": "cyp@rouquin.me, lithrel@randomdomainname.net"
 	},
 	"requirements": {
 		"yunohost": ">> 2.4.0"
