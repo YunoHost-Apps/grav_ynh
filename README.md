@@ -1,6 +1,6 @@
 # [EN] Grav for YunoHost
 
-[![Install Dokuwiki with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=dokuwiki)
+[![Install Grav with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=grav)
 
 * http://getgrav.org/
 * https://github.com/getgrav/grav
