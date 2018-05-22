@@ -92,6 +92,10 @@ Si `No`, à votre première visite de votre instance Grav, il vous sera proposé
 
 ## Versionning
 
+### Version 1.4.5 (22/05/18)
+
+- Update version
+
 ### Version 1.3.1 (22/07/17)
 
 - Update version
@@ -111,4 +115,3 @@ Si `No`, à votre première visite de votre instance Grav, il vous sera proposé
 ### Configuration
 
 1. Start url https://domaine.tld/grav
-
