@@ -1,5 +1,7 @@
 # [EN] Grav for YunoHost
 
+[![Install Grav with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=grav)
+
 * http://getgrav.org/
 * https://github.com/getgrav/grav
 
@@ -7,7 +9,7 @@
 
 From YunoHost admin panel:
 
-1. Enter repository url https://github.com/lithrel/grav_ynh
+1. Enter repository url https://github.com/YunoHost-Apps/grav_ynh
 2. Configure the app
 3. Click install
 4. Go to the url you configured
@@ -15,7 +17,7 @@ From YunoHost admin panel:
 From command line:
 
 ```sh
-sudo yunohost app install -l grav https://github.com/lithrel/grav_ynh
+sudo yunohost app install -l grav https://github.com/YunoHost-Apps/grav_ynh
 ```
 
 Options:
@@ -52,7 +54,7 @@ If `No`, on your first visit to your Grav instance Grav will propose you to crea
 
 Depuis le panneau d'administration YunoHost:
 
-1. Entrez l'url du dépot https://github.com/lithrel/grav_ynh
+1. Entrez l'url du dépot https://github.com/YunoHost-Apps/grav_ynh
 2. Configurez l'application
 3. Cliquez sur installer
 4. Rendez-vous à l'url que vous avez configuré
@@ -60,7 +62,7 @@ Depuis le panneau d'administration YunoHost:
 Depuis la ligne de commande:
 
 ```sh
-sudo yunohost app install -l grav https://github.com/lithrel/grav_ynh
+sudo yunohost app install -l grav https://github.com/YunoHost-Apps/grav_ynh
 ```
 
 Options:
@@ -89,6 +91,10 @@ Si `No`, à votre première visite de votre instance Grav, il vous sera proposé
 
 
 ## Versionning
+
+### Version 1.3.1 (22/07/17)
+
+- Update version
 
 ### Version 1.1.1 (13/03/17)
 
