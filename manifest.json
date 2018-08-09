@@ -49,7 +49,7 @@
                     "fr": "Est-ce une application publique ?"
                 },
                 "default": true
-            },
+            }
         ]
     }
 }
