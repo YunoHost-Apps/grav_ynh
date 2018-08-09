@@ -42,15 +42,6 @@
                 "default": "/grav"
             },
             {
-                "name": "admin",
-                "type": "user",
-                "ask": {
-                    "en": "Choose the Grav administrator (must be an existing YunoHost user)",
-                    "fr": "Administrateur du site (doit être un utilisateur YunoHost existant)"
-                },
-                "example": "johndoe"
-            },
-            {
                 "name": "is_public",
                 "type": "boolean",
                 "ask": {
@@ -59,15 +50,6 @@
                 },
                 "default": true
             },
-            {
-                "name": "language",
-                "ask": {
-                    "en": "Choose the application language",
-                    "fr": "Choisissez la langue de l'application"
-                },
-                "choices": ["en_EN", "fr_FR"],
-                "default": "fr_FR"
-            }
         ]
     }
 }

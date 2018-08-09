@@ -1,26 +1,27 @@
 # [EN] Grav for YunoHost
 
+[![Integration level](https://dash.yunohost.org/integration/grav.svg)](https://ci-apps.yunohost.org/jenkins/job/grav%20%28Community%29/lastBuild/consoleFull)
 [![Install Grav with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=grav)
+
+> *This package allow you to install Grav quickly and simply on a YunoHost server.  
+If you don't have YunoHost, please see [here](https://yunohost.org/#/install) to know how to install and enjoy it.*
 
 * http://getgrav.org/
 * https://github.com/getgrav/grav
 
+## Overview
+
+Grav is a modern open source flat-file CMS.
+
+**Shipped version:** 1.4.8 with admin panel
+
 ## Installation
 
-From YunoHost admin panel:
+- Click on the above *Install with YunoHost* button.
+- From YunoHost admin panel, Grav should be listed in the community packages list.
+- From command line: `sh sudo yunohost app install grav`.
 
-1. Enter repository url https://github.com/YunoHost-Apps/grav_ynh
-2. Configure the app
-3. Click install
-4. Go to the url you configured
-
-From command line:
-
-```sh
-sudo yunohost app install -l grav https://github.com/YunoHost-Apps/grav_ynh
-```
-
-Options:
+Before actual installation, you will have to configure the following fields:
 
 1. __Choose a domain for Grav__  
 Domain for your installation (example.org).
@@ -31,41 +32,37 @@ Path for your installation (/grav).
 3. __Is it a public application ?__  
 If public, everybody will be able to access your Grav instance (example.org/grav).
 
-4. __Do you wish to install the Admin plugin ?__  
-Grav has an optional admin panel, answer `Yes` if you want to use it.
+## Configuration
 
-5. __Make admin panel private ?__  
-_Only valid if admin panel is installed._  
-Protect the admin panel behind Yunohost authentication.
+Depending on the chosen domain and path, open https://example.org/grav in your browser. You will then be offered to create a Grav administrator.
 
-6. __Create administrator automatically ?__  
-_Only works if admin panel is installed and private._  
-If `Yes`, an admin account will be automatically created when you first visit your Grav instance, and you will be redirected to the admin panel. Your authentication will be handled by your YunoHost connection.  
-If `No`, on your first visit to your Grav instance Grav will propose you to create a new user.
 
 <hr/>
 
 # [FR] Grav pour YunoHost
 
+[![Integration level](https://dash.yunohost.org/integration/grav.svg)](https://ci-apps.yunohost.org/jenkins/job/grav%20%28Community%29/lastBuild/consoleFull)
+[![Install Grav with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=grav)
+
+> *Ce paquet vous permet d'installer Grav rapidement et simplement sur un serveur YunoHost.  
+Si vous n'avez pas YunoHost, veuillez consulter [cette page](https://yunohost.org/#/install) pour apprendre comment l'installer et en profiter.*
+
 * http://getgrav.org/
 * https://github.com/getgrav/grav
 
+## Description
+
+Grav est un CMS (système de gestion de contenu), moderne, ouvert, et sans base de données.
+
+**Version incluse :** 1.4.8 avec panneau d'administration
+
 ## Installation
 
-Depuis le panneau d'administration YunoHost:
+- Cliquez sur le bouton *Install with YunoHost* ci-dessus.
+- Dans le panneau d'administration de YunoHost, Grav est dans la liste d'applications *community*.
+- Depuis la ligne de commandes: `sh sudo yunohost app install grav`.
 
-1. Entrez l'url du dépot https://github.com/YunoHost-Apps/grav_ynh
-2. Configurez l'application
-3. Cliquez sur installer
-4. Rendez-vous à l'url que vous avez configuré
-
-Depuis la ligne de commande:
-
-```sh
-sudo yunohost app install -l grav https://github.com/YunoHost-Apps/grav_ynh
-```
-
-Options:
+Avant de l'installation effective, vous devrez remplir les champs suivants :
 
 1. __Choisissez un domaine pour Grav__  
 Domaine pour votre installation (example.org, grav.example.org).
@@ -76,21 +73,16 @@ Chemin pour votre installation (/grav, /).
 3. __Est-ce une page publique ?__  
 Si cette application est publique, n'importe quelle personne pourra y accéder (example.org/grav).
 
-4. __Souhaitez-vous installer le plugin d'administration ?__  
-Grav possède un plugin d'administration optionnel, répondez `Yes` si vous souhaitez l'utiliser.
+## Configuration
 
-5. __Souhaitez-vous rendre l'administration privée ?__  
-_Valide uniquement si le plugin d'administration est installé._  
-Protège l'administration derrière l'authentification Yunohost.
-
-6. __Souhaitez-vous créer un administrateur automatiquement ?__  
-_Valide uniquement si le plugin d'administration est installé et privé._  
-Si `Yes`, un compte administrateur sera automatiquement créé à votre première visite de votre instance Grav, et vous serez redirigé vers l'administration.
-Votre connexion à l'administration sera associée à votre connexion YunoHost.  
-Si `No`, à votre première visite de votre instance Grav, il vous sera proposé la création d'un nouvel utilisateur.
-
+Selon le domaine et le chemin choisis, ouvrez la page https://example.org/grav dans votre navigateur. Vous pourrez alors créer un administrateur pour Grav.
 
 ## Versionning
+
+### Version 1.4.8 (11/08/18)
+
+- Update version
+- Refactoring
 
 ### Version 1.4.5 (22/05/18)
 
@@ -111,7 +103,3 @@ Si `No`, à votre première visite de votre instance Grav, il vous sera proposé
 ### Version 1.0.0 (11/11/15)
 
 - First version
-
-### Configuration
-
-1. Start url https://domaine.tld/grav
