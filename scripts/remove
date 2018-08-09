@@ -1,25 +1,58 @@
 #!/bin/bash
 
-# Exit on command errors and treat unset variables as an error
-set -u
+#=================================================
+# GENERIC START
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
 
-# Loads the generic functions usually used in the script
-source .fonctions
-# Source app helpers
+source _common.sh
 source /usr/share/yunohost/helpers
 
-# Get multi-instances specific variables
+#=================================================
+# LOAD SETTINGS
+#=================================================
+
 app=$YNH_APP_INSTANCE_NAME
 
-# Retrieve app settings
-domain=$(ynh_app_setting_get "$app" domain)
+domain=$(ynh_app_setting_get $app domain)
+final_path=$(ynh_app_setting_get $app final_path)
 
-# Delete app directory and configurations
-SECURE_REMOVE '/var/www/$app'	# Delete directory application
-sudo rm -f "/etc/php5/fpm/pool.d/${app}.conf"
-sudo rm -f "/etc/php5/fpm/conf.d/20-${app}.ini"
-[[ -n $domain ]] && sudo rm -f "/etc/nginx/conf.d/${domain}.d/${app}.conf"
+#=================================================
+# STANDARD REMOVE
+#=================================================
+# REMOVE DEPENDENCIES
+#=================================================
 
-# Reload services
-sudo systemctl reload php5-fpm
-sudo systemctl reload nginx
+# Remove metapackage and its dependencies
+ynh_remove_app_dependencies
+
+#=================================================
+# REMOVE APP MAIN DIR
+#=================================================
+
+# Remove the app directory securely
+ynh_secure_remove "$final_path"
+
+#=================================================
+# REMOVE NGINX CONFIGURATION
+#=================================================
+
+# Remove the dedicated nginx config
+ynh_remove_nginx_config
+
+#=================================================
+# REMOVE PHP-FPM CONFIGURATION
+#=================================================
+
+# Remove the dedicated php-fpm config
+ynh_remove_fpm_config
+
+#=================================================
+# GENERIC FINALIZATION
+#=================================================
+# REMOVE DEDICATED USER
+#=================================================
+
+# Delete a system user
+ynh_system_user_delete $app
