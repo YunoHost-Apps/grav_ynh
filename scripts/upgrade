@@ -92,13 +92,20 @@ ynh_add_nginx_config
 ynh_install_app_dependencies php7.0-zip
 
 #=================================================
+# CREATE DEDICATED USER
+#=================================================
+
+# Create a dedicated user (if not existing)
+ynh_system_user_create "$app"
+
+#=================================================
 # PHP-FPM CONFIGURATION
 #=================================================
 
 # Create a dedicated php-fpm config
 ynh_add_fpm_config
 
-chown -R www-data: "$final_path"
+chown -R "$app": "$final_path"
 
 #=================================================
 # GENERIC FINALIZATION

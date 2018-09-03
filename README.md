@@ -17,6 +17,5 @@ sudo yunohost app install --url grav https://github.com/YunoHost-Apps/grav_ynh
 
 ## TODO
 
-[ ] create a dedicated user
 [ ] fix alias_traversal
 [ ] send email to admin

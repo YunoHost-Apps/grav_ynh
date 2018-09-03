@@ -79,6 +79,13 @@ ynh_setup_source "$final_path"
 ynh_add_nginx_config
 
 #=================================================
+# CREATE DEDICATED USER
+#=================================================
+
+# Create a system user
+ynh_system_user_create "$app"
+
+#=================================================
 # PHP-FPM CONFIGURATION
 #=================================================
 
@@ -91,7 +98,7 @@ ynh_add_fpm_config
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
-chown -R www-data: "$final_path"
+chown -R "$app": "$final_path"
 
 #=================================================
 # SETUP SSOWAT

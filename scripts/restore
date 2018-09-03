@@ -31,7 +31,6 @@ domain=$(ynh_app_setting_get $app domain)
 path_url=$(ynh_app_setting_get $app path)
 final_path=$(ynh_app_setting_get $app final_path)
 
-
 #=================================================
 # CHECK IF THE APP CAN BE RESTORED
 #=================================================
@@ -56,12 +55,18 @@ ynh_restore_file "/etc/nginx/conf.d/$domain.d/$app.conf"
 
 ynh_restore_file "$final_path"
 
+#=================================================
+# RECREATE THE DEDICATED USER
+#=================================================
+
+# Create the dedicated user (if not existing)
+ynh_system_user_create "$app"
 
 #=================================================
 # RESTORE USER RIGHTS
 #=================================================
 
-chown -R www-data: "$final_path"
+chown -R "$app": "$final_path"
 
 #=================================================
 # RESTORE THE PHP-FPM CONFIGURATION
