@@ -6,7 +6,7 @@
 		"en": "Grav - Grav is a modern open source flat-file CMS",
 		"fr": "Grav - Grav is a modern open source flat-file CMS"
 	},
-	"version": "1.3.1~ynh1",
+	"version": "1.5.1~ynh1",
 	"url": "https://www.getgrav.org/",
 	"license": "MIT-0",
 	"maintainer": {

@@ -16,7 +16,7 @@
 		setup_private=1
 		setup_public=1
 		upgrade=1
-		upgrade=1	from_commit=8b79023a4fb3633b1a01e4ad4dafb41a5344c3fd
+		upgrade=1	from_commit=ec151614e4c41f2012bb983d08faf6eda233d5be
 		backup_restore=1
 		multi_instance=1
 		incorrect_path=1
@@ -39,6 +39,6 @@
 Email=jean-baptiste@holcroft.fr
 Notification=all
 ;;; Upgrade options
-	; commit=8b79023a4fb3633b1a01e4ad4dafb41a5344c3fd
-		name=pre rebuild
+	; commit=ec151614e4c41f2012bb983d08faf6eda233d5be
+		name=Version 1.3.1
 		manifest_arg=domain=DOMAIN&path=PATH&admin=USER&language=fr_FR&is_public=PUBLIC&
