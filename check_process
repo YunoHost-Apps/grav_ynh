@@ -41,4 +41,4 @@ Notification=all
 ;;; Upgrade options
 	; commit=8b79023a4fb3633b1a01e4ad4dafb41a5344c3fd
 		name=pre rebuild
-		manifest_arg=domain=DOMAIN&path=PATH&admin=USER&language=fr_FR&is_public="Yes"&
+		manifest_arg=domain=DOMAIN&path=PATH&admin=USER&language=fr_FR&is_public=PUBLIC&
