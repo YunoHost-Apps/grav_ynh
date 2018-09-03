@@ -14,6 +14,13 @@ app=$YNH_APP_INSTANCE_NAME
 # Retrieve app settings
 domain=$(ynh_app_setting_get "$app" domain)
 
+#=================================================
+# REMOVE DEPENDENCIES
+#=================================================
+
+# Remove metapackage and its dependencies
+ynh_remove_app_dependencies
+
 # Delete app directory and configurations
 SECURE_REMOVE '/var/www/$app'	# Delete directory application
 sudo rm -f "/etc/php5/fpm/pool.d/${app}.conf"

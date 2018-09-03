@@ -41,6 +41,12 @@ ynh_app_setting_set $app language $language
 sudo mkdir "$final_path"
 ynh_app_setting_set $app final_path $final_path
 
+#=================================================
+# INSTALL DEPENDENCIES
+#=================================================
+
+ynh_install_app_dependencies php-zip
+
 # Get source
 SETUP_SOURCE
 

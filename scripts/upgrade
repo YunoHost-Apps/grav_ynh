@@ -18,6 +18,12 @@ language=$(ynh_app_setting_get "$app" language)
 
 CHECK_PATH	# Checks and corrects the syntax of the path.
 
+#=================================================
+# INSTALL DEPENDENCIES
+#=================================================
+
+ynh_install_app_dependencies php-zip
+
 final_path=/var/www/$app
 
 # Get source
