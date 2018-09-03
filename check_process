@@ -1,37 +1,44 @@
-;; Test complet sans multisite
-    auto_remove=1
-    ; Manifest
-        domain="domain.tld" (DOMAIN)
-        path="/path"    (PATH)
-        admin="john"    (USER)
-        language="fr_FR"
-        multisite="No"
-        is_public="Yes" (PUBLIC|public=Yes|private=No)
-    ; Checks
-        pkg_linter=1
-        setup_sub_dir=1
-        setup_root=1
-        setup_nourl=0
-        setup_private=1
-        setup_public=1
-        upgrade=1
-        backup_restore=1
-        multi_instance=1
-        wrong_user=1
-        wrong_path=1
-        incorrect_path=1
-        corrupt_source=0
-        fail_download_source=0
-        port_already_use=0
-        final_path_already_use=0
+# See here for more information
+# https://github.com/YunoHost/package_check#syntax-check_process-file
+
+;; Test complet
+	; Manifest
+		domain="domain.tld" (DOMAIN)
+		path="/path"    (PATH)
+		admin="john"    (USER)
+		language="fr_FR"
+		is_public="Yes" (PUBLIC|public=1|private=0)
+	; Checks
+		pkg_linter=1
+		setup_sub_dir=1
+		setup_root=1
+		setup_nourl=0
+		setup_private=1
+		setup_public=1
+		upgrade=1
+		upgrade=1	from_commit=8b79023a4fb3633b1a01e4ad4dafb41a5344c3fd
+		backup_restore=1
+		multi_instance=1
+		incorrect_path=1
+		port_already_use=0
+		change_url=1
 ;;; Levels
-    Level 1=auto
-    Level 2=auto
-    Level 3=auto
-    Level 4=0
-    Level 5=auto
-    Level 6=auto
-    Level 7=auto
-    Level 8=0
-    Level 9=0
-    Level 10=0
+	Level 1=auto
+	Level 2=auto
+	Level 3=auto
+	# doable, but there is no group in YunoHost's LDAP
+	# https://github.com/trilbymedia/grav-plugin-login-ldap
+	Level 4=1
+	Level 5=auto
+	Level 6=auto
+	Level 7=auto
+	Level 8=0
+	Level 9=0
+	Level 10=0
+;;; Options
+Email=jean-baptiste@holcroft.fr
+Notification=all
+;;; Upgrade options
+	; commit=8b79023a4fb3633b1a01e4ad4dafb41a5344c3fd
+		name=pre rebuild
+		manifest_arg=domain=DOMAIN&path=PATH&admin=USER&language=fr_FR&is_public=Yes&

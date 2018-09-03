@@ -19,7 +19,7 @@
 	"multi_instance": true,
 	"services": [
 		"nginx",
-		"php5-fpm"
+		"php7.0-fpm"
 	],
 	"arguments": {
 		"install" : [
@@ -53,12 +53,12 @@
 			},
 			{
 				"name": "is_public",
+				"type": "boolean",
 				"ask": {
 					"en": "Is it a public Grav site ?",
 					"fr": "Est-ce un site public ?"
 				},
-				"choices": ["Yes", "No"],
-				"default": "Yes"
+				"default": true
 			},
 			{
 				"name": "language",

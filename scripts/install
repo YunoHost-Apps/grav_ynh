@@ -1,92 +1,113 @@
 #!/bin/bash
 
-# Exit on command errors and treat unset variables as an error
-set -eu
+#=================================================
+# GENERIC START
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
 
-source .fonctions	# Loads the generic functions usually used in the script
-source /usr/share/yunohost/helpers # Source app helpers
+source _common.sh
+source /usr/share/yunohost/helpers
 
-CLEAN_SETUP () {
-	# Clean installation residues that are not supported by the remove script.
-	# Clean hosts
-	sudo sed -i '/#GRAV/d' /etc/hosts
-}
-TRAP_ON	# Active trap to stop the script if an error is detected.
+#=================================================
+# MANAGE SCRIPT FAILURE
+#=================================================
+
+# Exit if an error occurs during the execution of the script
+ynh_abort_if_errors
+
+#=================================================
+# RETRIEVE ARGUMENTS FROM THE MANIFEST
+#=================================================
 
 domain=$YNH_APP_ARG_DOMAIN
-path=$YNH_APP_ARG_PATH
+path_url=$YNH_APP_ARG_PATH
 admin_grav=$YNH_APP_ARG_ADMIN
 language=$YNH_APP_ARG_LANGUAGE
 is_public=$YNH_APP_ARG_IS_PUBLIC
 
 app=$YNH_APP_INSTANCE_NAME
 
-CHECK_VAR "$app" "app name not set"
+#=================================================
+# CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
+#=================================================
 
-CHECK_USER "$admin_grav"
+### If the app uses nginx as web server (written in HTML/PHP in most cases), the final path should be "/var/www/$app".
+### If the app provides an internal web server (or uses another application server such as uwsgi), the final path should be "/opt/yunohost/$app"
+final_path=/var/www/$app
+test ! -e "$final_path" || ynh_die "This path already contains a folder"
 
-CHECK_PATH
+# Normalize the url path syntax
+path_url=$(ynh_normalize_url_path "$path_url")
 
-CHECK_DOMAINPATH
+# Check web path availability
+ynh_webpath_available "$domain" "$path_url"
+# Register (book) web path
+ynh_webpath_register "$app" "$domain" "$path_url"
 
-CHECK_FINALPATH
+#=================================================
+# STORE SETTINGS FROM MANIFEST
+#=================================================
 
-ynh_app_setting_set $app domain $domain
-ynh_app_setting_set $app path $path
-ynh_app_setting_set $app admin $admin_grav
-ynh_app_setting_set $app is_public $is_public
-ynh_app_setting_set $app language $language
+ynh_app_setting_set "$app" domain    "$domain"
+ynh_app_setting_set "$app" path      "$path_url"
+ynh_app_setting_set "$app" admin     "$admin_grav"
+ynh_app_setting_set "$app" is_public "$is_public"
+ynh_app_setting_set "$app" language  "$language"
 
-# Creates the destination directory and stores its location.
-sudo mkdir "$final_path"
-ynh_app_setting_set $app final_path $final_path
-
+#=================================================
+# STANDARD MODIFICATIONS
 #=================================================
 # INSTALL DEPENDENCIES
 #=================================================
 
-ynh_install_app_dependencies php-zip
+ynh_install_app_dependencies php7.0-zip
 
-# Get source
-SETUP_SOURCE
+#=================================================
+# DOWNLOAD, CHECK AND UNPACK SOURCE
+#=================================================
 
-# Grav install
-sudo $final_path/bin/grav
+ynh_app_setting_set "$app" final_path "$final_path"
+# Download, check integrity, uncompress and patch the source from app.src
+ynh_setup_source "$final_path"
 
-# Set permissions
-sudo chown -R www-data: $final_path
+#=================================================
+# NGINX CONFIGURATION
+#=================================================
 
-echo -e "127.0.0.1 $domain #GRAV" | sudo tee -a /etc/hosts
+# Create a dedicated nginx config
+ynh_add_nginx_config
 
-# Copy nginx config
-sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/$app.conf
+#=================================================
+# PHP-FPM CONFIGURATION
+#=================================================
 
-# Modif the variables in the nginx configuration file
-sudo sed -i "s@__PATHTOCHANGE__@$path@g" /etc/nginx/conf.d/$domain.d/$app.conf
-sudo sed -i "s@__FINALPATH__@$final_path@g" /etc/nginx/conf.d/$domain.d/$app.conf
-sudo sed -i "s@__NAMETOCHANGE__@$app@g" /etc/nginx/conf.d/$domain.d/$app.conf
+# Create a dedicated php-fpm config
+ynh_add_fpm_config
 
-if [ "$is_public" = "Yes" ];
+#=================================================
+# GENERIC FINALIZATION
+#=================================================
+# SECURE FILES AND DIRECTORIES
+#=================================================
+
+chown -R www-data: "$final_path"
+
+#=================================================
+# SETUP SSOWAT
+#=================================================
+
+# Make app public if necessary
+if [ $is_public -eq "1" ]
 then
-	sudo sed -i "s@#--PRIVATE--@@g" /etc/nginx/conf.d/$domain.d/$app.conf
+	# unprotected_uris allows SSO credentials to be passed anyway.
+	ynh_app_setting_set "$app" unprotected_uris "/"
+else
+	ynh_replace_string "#--PRIVATE--" "" "/etc/nginx/conf.d/$domain.d/$app.conf"
 fi
 
-# Create the php-fpm pool config
-POOL_FPM
+#=================================================
+# RELOAD NGINX
+#=================================================
 
-# Setup SSOwat
-ynh_app_setting_set "$app" is_public "$is_public"
-if [ "$is_public" = "Yes" ];
-then
-  ynh_app_setting_set "$app" unprotected_uris "/"
-fi
-
-# Reload SSOwat configuration
-sudo yunohost app ssowatconf
-
-# Reload Nginx and regenerate SSOwat conf
-sudo systemctl reload php5-fpm
-sudo systemctl reload nginx
-
-# Nettoyer hosts
-sudo sed -i '/#GRAV/d' /etc/hosts
+systemctl reload nginx

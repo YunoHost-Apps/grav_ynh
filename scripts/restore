@@ -1,72 +1,90 @@
 #!/bin/bash
-# This restore script is adapted to Yunohost >=2.4
 
-# Exit on command errors and treat unset variables as an error
-set -eu
+#=================================================
+# GENERIC START
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
 
-# Source app helpers
+source ../settings/scripts/_common.sh
 source /usr/share/yunohost/helpers
 
-# The parameter $app is the id of the app instance ex: ynhexample__2
+#=================================================
+# MANAGE SCRIPT FAILURE
+#=================================================
+
+ynh_clean_setup () {
+	#### Remove this function if there's nothing to clean before calling the remove script.
+	true
+}
+# Exit if an error occurs during the execution of the script
+ynh_abort_if_errors
+
+
+#=================================================
+# LOAD SETTINGS
+#=================================================
+
 app=$YNH_APP_INSTANCE_NAME
 
-# Get old parameter of the app
 domain=$(ynh_app_setting_get $app domain)
-path=$(ynh_app_setting_get $app path)
-is_public=$(ynh_app_setting_get $app is_public)
+path_url=$(ynh_app_setting_get $app path)
+final_path=$(ynh_app_setting_get $app final_path)
 
-# Check domain/path availability
-sudo yunohost app checkurl "${domain}${path}" -a "${app}" \
-    || ynh_die "Path not available: ${domain}${path}"
-
-# Check $final_path
-final_path="/var/www/${app}"
-if [ -d "${final_path}" ]; then
-	ynh_die "There is already a directory: ${final_path}"
-fi
-
-# Check configuration files nginx
-nginx_conf="/etc/nginx/conf.d/${domain}.d/${app}.conf"
-if [ -f "${nginx_conf}" ]; then
-	ynh_die "The NGINX configuration already exists at '${nginx_conf}'. You should safely delete it before restoring this app."
-fi
-
-# Check configuration files php-fpm
-phpfpm_conf="/etc/php5/fpm/pool.d/${app}.conf"
-if [ -f "${phpfpm_conf}" ]; then 
-	ynh_die "The PHP FPM configuration already exists at '${phpfpm_conf}'. You should safely delete it before restoring this app."
-fi
-
-phpfpm_ini="/etc/php5/fpm/conf.d/20-${app}.ini"
-if [ -f "${phpfpm_ini}" ]; then
-	ynh_die "The PHP FPM INI configuration already exists at '${phpfpm_ini}'. You should safely delete it before restoring this app."
-fi
 
 #=================================================
-# INSTALL DEPENDENCIES
+# CHECK IF THE APP CAN BE RESTORED
 #=================================================
 
-ynh_install_app_dependencies php-zip
+ynh_webpath_available $domain $path_url \
+	|| ynh_die "Path not available: ${domain}${path_url}"
+test ! -d $final_path \
+|| ynh_die "There is already a directory: $final_path "
 
- # Restore sources & data
-sudo cp -a ./sources "${final_path}"
 
-# Set permissions
-sudo chown -R www-data: "${final_path}"
+#=================================================
+# STANDARD RESTORATION STEPS
+#=================================================
+# RESTORE THE NGINX CONFIGURATION
+#=================================================
 
-# Restore nginx configuration files
-sudo cp -a ./nginx.conf   "${nginx_conf}"
-# Restore php-fpm configuration files
-sudo cp -a ./php-fpm.conf "${phpfpm_conf}"
-sudo cp -a ./php-fpm.ini "${phpfpm_ini}"
+ynh_restore_file "/etc/nginx/conf.d/$domain.d/$app.conf"
 
-# Set ssowat config
-if [ "$is_public" = "No" ];
-then
-	ynh_app_setting_delete $app skipped_uris
-fi
+#=================================================
+# RESTORE THE APP MAIN DIR
+#=================================================
+
+ynh_restore_file "$final_path"
+
+
+#=================================================
+# RESTORE USER RIGHTS
+#=================================================
+
+chown -R www-data: "$final_path"
+
+#=================================================
+# RESTORE THE PHP-FPM CONFIGURATION
+#=================================================
+
+ynh_restore_file "/etc/php/7.0/fpm/pool.d/$app.conf"
+ynh_restore_file "/etc/php/7.0/fpm/conf.d/20-$app.ini"
+
+
+#=================================================
+# SPECIFIC RESTORATION
+#=================================================
+# REINSTALL DEPENDENCIES
+#=================================================
+
+ynh_install_app_dependencies php7.0-zip
+
+#=================================================
+# GENERIC FINALIZATION
+#=================================================
+# RELOAD NGINX AND PHP-FPM
+#=================================================
 
 # Reload services
-sudo systemctl reload php5-fpm
-sudo systemctl reload nginx
-sudo yunohost app ssowatconf
+systemctl reload php7.0-fpm
+systemctl reload nginx
