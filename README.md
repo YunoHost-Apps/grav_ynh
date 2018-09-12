@@ -16,25 +16,26 @@ Provided version: **1.5.1**
 Use either YunoHost's admin panel or command line:
 
 ```sh
-sudo yunohost app install --url grav https://github.com/YunoHost-Apps/grav_ynh
+sudo yunohost app install https://github.com/YunoHost-Apps/grav_ynh
 ```
 
+For upgrading (replace `grav` by the actual instance ID if more instances are installed):
 ```sh
-sudo yunohost app upgrade --url https://github.com/YunoHost-Apps/grav_ynh kanboard
+sudo yunohost app upgrade grav -u https://github.com/YunoHost-Apps/grav_ynh
 ```
 
 # State of this package
 
 * works fine:
-[x] install/remove/backup/remove/upgrade with x86_64
+   * [x] install/remove/backup/remove/upgrade with x86_64
 
 * to be confirmed:
-[ ] upgrade from old package to new package
-[ ] impact of upgrade on content
-[ ] ARM
+   * [x] upgrade from old package to new package
+   * [ ] impact of upgrade on content
+   * [ ] ARM
 
 * to be added:
-[ ] send email to admin
+   * [ ] send email to admin
 
 ## Links
 
