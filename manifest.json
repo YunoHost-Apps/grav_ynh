@@ -6,13 +6,26 @@
 		"en": "Grav - Grav is a modern open source flat-file CMS",
 		"fr": "Grav - Grav is a modern open source flat-file CMS"
 	},
-	"version": "1.5.1~ynh1",
+	"version": "1.5.1~ynh2",
 	"url": "https://www.getgrav.org/",
 	"license": "MIT-0",
-	"maintainer": {
-		"name": "cyp, lithrel, jibec",
-		"email": "cyp@rouquin.me, lithrel@randomdomainname.net, jean-baptiste@holcroft.fr"
-	},
+	"maintainer": [
+		{
+			"name": "jibec",
+			"email": "jean-baptiste@holcroft.fr"
+		},
+		{
+			"name": "tituspijean",
+			"email": "tituspijean@outlook.com"
+		}],
+	"previous_maintainers": [
+		{
+			"name": "cyp",
+			"email": "cyp@rouquin.me"
+		},{
+			"name": "lithrel",
+			"email": "lithrel@randomdomainname.net"
+		}],
 	"requirements": {
 		"yunohost": ">= 3.1.0"
 	},
