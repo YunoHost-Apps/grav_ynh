@@ -67,15 +67,13 @@ ynh_abort_if_errors
 # Normalize the URL path syntax
 path_url=$(ynh_normalize_url_path $path_url)
 
-
-
 #=================================================
 # STANDARD UPGRADE STEPS
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
 
-# Download, check integrity, uncompress and patch the source from app.src
+# Download, check integrity, uncompress and patch the source from app-upgrade.src
 ynh_setup_source "$final_path" "app-upgrade"
 
 #=================================================
@@ -105,14 +103,13 @@ ynh_system_user_create "$app"
 # Create a dedicated php-fpm config
 ynh_add_fpm_config
 
-chown -R "$app": "$final_path"
-
 #=================================================
 # GENERIC FINALIZATION
 #=================================================
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
+chown -R "$app": "$final_path"
 
 #=================================================
 # SETUP SSOWAT
