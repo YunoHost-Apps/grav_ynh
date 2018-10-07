@@ -104,6 +104,16 @@ ynh_system_user_create "$app"
 ynh_add_fpm_config
 
 #=================================================
+# SPECIFIC UPGRADE
+#=================================================
+# UPDATE PLUGINS
+#=================================================
+
+pushd "$final_path"
+	exec_as "$app" "bin/gpm update -y"
+popd
+
+#=================================================
 # GENERIC FINALIZATION
 #=================================================
 # SECURE FILES AND DIRECTORIES
