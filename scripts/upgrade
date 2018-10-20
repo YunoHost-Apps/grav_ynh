@@ -104,8 +104,6 @@ ynh_system_user_create "$app"
 ynh_add_fpm_config
 
 #=================================================
-# GENERIC FINALIZATION
-#=================================================
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
