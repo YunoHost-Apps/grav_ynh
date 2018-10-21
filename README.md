@@ -9,7 +9,7 @@ If you don't have YunoHost, please see [here](https://yunohost.org/#/install) to
 * http://getgrav.org/
 * https://github.com/getgrav/grav
 
-Provided version: **1.5.2**
+Provided version: **1.5.3**
 
 ## Installation
 
