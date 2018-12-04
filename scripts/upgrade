@@ -87,7 +87,7 @@ ynh_add_nginx_config
 # INSTALL DEPENDENCIES
 #=================================================
 
-ynh_install_app_dependencies php7.0-zip
+ynh_install_app_dependencies php7.2-zip
 
 #=================================================
 # CREATE DEDICATED USER

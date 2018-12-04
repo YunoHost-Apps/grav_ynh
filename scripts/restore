@@ -72,8 +72,8 @@ chown -R "$app": "$final_path"
 # RESTORE THE PHP-FPM CONFIGURATION
 #=================================================
 
-ynh_restore_file "/etc/php/7.0/fpm/pool.d/$app.conf"
-ynh_restore_file "/etc/php/7.0/fpm/conf.d/20-$app.ini"
+ynh_restore_file "/etc/php/7.2/fpm/pool.d/$app.conf"
+ynh_restore_file "/etc/php/7.2/fpm/conf.d/20-$app.ini"
 
 
 #=================================================
@@ -82,7 +82,7 @@ ynh_restore_file "/etc/php/7.0/fpm/conf.d/20-$app.ini"
 # REINSTALL DEPENDENCIES
 #=================================================
 
-ynh_install_app_dependencies php7.0-zip
+ynh_install_app_dependencies php7.2-zip
 
 #=================================================
 # GENERIC FINALIZATION
@@ -91,5 +91,5 @@ ynh_install_app_dependencies php7.0-zip
 #=================================================
 
 # Reload services
-systemctl reload php7.0-fpm
+systemctl reload php7.2-fpm
 systemctl reload nginx

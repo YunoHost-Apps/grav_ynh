@@ -61,7 +61,7 @@ ynh_app_setting_set "$app" language  "$language"
 # INSTALL DEPENDENCIES
 #=================================================
 
-ynh_install_app_dependencies php7.0-zip
+ynh_install_app_dependencies php7.2-zip
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
