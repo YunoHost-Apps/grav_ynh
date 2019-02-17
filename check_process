@@ -17,9 +17,10 @@
 		setup_public=1
 		upgrade=1
 		upgrade=1	from_commit=ec151614e4c41f2012bb983d08faf6eda233d5be
+		upgrade=1	from_commit=22290f672847342fd187a56d39b68393b1e0fd5a
 		backup_restore=1
 		multi_instance=1
-		incorrect_path=1
+		incorrect_path=0
 		port_already_use=0
 		change_url=1
 ;;; Levels
@@ -41,4 +42,7 @@ Notification=all
 ;;; Upgrade options
 	; commit=ec151614e4c41f2012bb983d08faf6eda233d5be
 		name=Version 1.3.1
+		manifest_arg=domain=DOMAIN&path=PATH&admin=USER&language=fr_FR&is_public=PUBLIC&
+	; commit=22290f672847342fd187a56d39b68393b1e0fd5a
+		name=Version 1.5.3
 		manifest_arg=domain=DOMAIN&path=PATH&admin=USER&language=fr_FR&is_public=PUBLIC&
