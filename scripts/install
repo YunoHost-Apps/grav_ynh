@@ -105,7 +105,7 @@ chown -R "$app": "$final_path"
 #=================================================
 
 # Make app public if necessary
-if [ $is_public -eq "1" ]
+if [ "$is_public" -eq "1" ]
 then
 	# unprotected_uris allows SSO credentials to be passed anyway.
 	ynh_app_setting_set "$app" unprotected_uris "/"
