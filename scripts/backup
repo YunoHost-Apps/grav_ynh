@@ -45,4 +45,3 @@ ynh_backup "/etc/nginx/conf.d/$domain.d/$app.conf"
 #=================================================
 
 ynh_backup "/etc/php/7.0/fpm/pool.d/$app.conf"
-ynh_backup "/etc/php/7.0/fpm/conf.d/20-$app.ini"
