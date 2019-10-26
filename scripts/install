@@ -7,6 +7,8 @@
 #=================================================
 
 source _common.sh
+source ynh_add_extra_apt_repos__3
+source ynh_install_php__3
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -64,7 +66,7 @@ ynh_app_setting_set "$app" language  "$language"
 #=================================================
 ynh_script_progression --message="Installing dependencies..." --time --weight=1
 
-ynh_install_app_dependencies php7.0-zip
+ynh_install_php --phpversion="$phpversion" --package="$pkg_dependencies"
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
@@ -81,7 +83,7 @@ ynh_setup_source "$final_path"
 ynh_script_progression --message="Configuring nginx web server..." --time --weight=1
 
 # Create a dedicated nginx config
-ynh_add_nginx_config
+ynh_add_nginx_config "phpversion"
 
 #=================================================
 # CREATE DEDICATED USER
@@ -97,7 +99,7 @@ ynh_system_user_create "$app"
 ynh_script_progression --message="Configuring php-fpm..." --time --weight=1
 
 # Create a dedicated php-fpm config
-ynh_add_fpm_config
+ynh_add_fpm_config --phpversion="$phpversion"
 
 #=================================================
 # GENERIC FINALIZATION

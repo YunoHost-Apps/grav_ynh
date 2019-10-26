@@ -7,6 +7,8 @@
 #=================================================
 
 source ../settings/scripts/_common.sh
+source ../settings/scripts/ynh_add_extra_apt_repos__3
+source ../settings/scripts/ynh_install_php__3
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -86,7 +88,7 @@ ynh_restore_file "/etc/php/7.0/fpm/pool.d/$app.conf"
 #=================================================
 ynh_script_progression --message="Reinstalling dependencies..." --time --weight=1
 
-ynh_install_app_dependencies php7.0-zip
+ynh_install_php --phpversion="$phpversion" --package="$pkg_dependencies"
 
 #=================================================
 # GENERIC FINALIZATION
@@ -96,7 +98,7 @@ ynh_install_app_dependencies php7.0-zip
 ynh_script_progression --message="Reloading nginx web server and php-fpm..." --time --weight=1
 
 # Reload services
-systemctl reload php7.0-fpm
+systemctl reload php${phpversion}-fpm
 systemctl reload nginx
 
 
