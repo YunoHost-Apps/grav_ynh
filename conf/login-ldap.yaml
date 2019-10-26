@@ -1,0 +1,27 @@
+enabled: true
+host: localhost
+port: 389
+version: 3
+ssl: false
+start_tls: false
+opt_referrals: false
+user_dn: 'uid=[username],ou=users,dc=yunohost,dc=org'
+search_dn: 'ou=users,dc=yunohost,dc=org'
+group_dn: 'ou=users,dc=yunohost,dc=org'
+group_query: '(&(uid=*)(uid=[username],ou=users,dc=yunohost,dc=org))'
+group_indentifier: uid
+map_username: uid
+map_fullname: givenName lastName
+map_email: mail
+map_dn: displayName
+
+save_grav_user: false
+store_ldap_data: false
+default_access_levels:
+  groups:
+    - ldap_users
+  access:
+    site:
+      login: 'true'
+    groups: "__ADMIN__:\r\n    admin:\r\n      login: true\r\n      super: true\r\n    site:\r\n      login: true"
+
