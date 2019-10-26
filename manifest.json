@@ -6,7 +6,7 @@
 		"en": "A modern open source flat-file CMS",
 		"fr": "Un CMS moderne basé sur des fichiers plats"
 	},
-	"version": "1.5.10~ynh1",
+	"version": "1.5.10~ynh2",
 	"url": "https://www.getgrav.org/",
 	"license": "MIT-0",
 	"maintainer": [
@@ -70,6 +70,10 @@
 				"ask": {
 					"en": "Is it a public Grav site ?",
 					"fr": "Est-ce un site public ?"
+				},
+				"help": {
+					"en": "Will anyone be able to access the website?",
+					"fr": "Est-ce que quiconque pourra accéder au site ?"
 				},
 				"default": true
 			},
