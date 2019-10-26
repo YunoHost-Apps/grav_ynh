@@ -24,6 +24,7 @@ ynh_abort_if_errors
 #=================================================
 # LOAD SETTINGS
 #=================================================
+ynh_script_progression --message="Loading settings..." --time --weight=1
 
 app=$YNH_APP_INSTANCE_NAME
 
@@ -34,6 +35,7 @@ final_path=$(ynh_app_setting_get "$app" final_path)
 #=================================================
 # CHECK IF THE APP CAN BE RESTORED
 #=================================================
+ynh_script_progression --message="Validating restoration parameters..." --time --weight=1
 
 ynh_webpath_available "$domain" "$path_url" \
 	|| ynh_die "Path not available: ${domain}${path_url}"
@@ -52,12 +54,14 @@ ynh_restore_file "/etc/nginx/conf.d/$domain.d/$app.conf"
 #=================================================
 # RESTORE THE APP MAIN DIR
 #=================================================
+ynh_script_progression --message="Restoring the app main directory..." --time --weight=1
 
 ynh_restore_file "$final_path"
 
 #=================================================
 # RECREATE THE DEDICATED USER
 #=================================================
+ynh_script_progression --message="Recreating the dedicated system user..." --time --weight=1
 
 # Create the dedicated user (if not existing)
 ynh_system_user_create "$app"
@@ -80,6 +84,7 @@ ynh_restore_file "/etc/php/7.0/fpm/pool.d/$app.conf"
 #=================================================
 # REINSTALL DEPENDENCIES
 #=================================================
+ynh_script_progression --message="Reinstalling dependencies..." --time --weight=1
 
 ynh_install_app_dependencies php7.0-zip
 
@@ -88,7 +93,15 @@ ynh_install_app_dependencies php7.0-zip
 #=================================================
 # RELOAD NGINX AND PHP-FPM
 #=================================================
+ynh_script_progression --message="Reloading nginx web server and php-fpm..." --time --weight=1
 
 # Reload services
 systemctl reload php7.0-fpm
 systemctl reload nginx
+
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_script_progression --message="Restoration completed for $app" --time --last
