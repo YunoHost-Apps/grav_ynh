@@ -25,18 +25,10 @@ For upgrading (replace `grav` by the actual instance ID if more instances are in
 sudo yunohost app upgrade grav -u https://github.com/YunoHost-Apps/grav_ynh
 ```
 
-# State of this package
+## Permissions
 
-* works fine:
-   * [x] install/remove/backup/remove/upgrade with x86_64
-
-* to be confirmed:
-   * [x] upgrade from old package to new package
-   * [ ] impact of upgrade on content
-   * [ ] ARM
-
-* to be added:
-   * [ ] send email to admin
+To make users administrators, give them the `grav.admin` permission.
+To allow users to log in, give them the `grav.user` permission.
 
 ## Links
 

@@ -7,9 +7,9 @@ start_tls: false
 opt_referrals: false
 user_dn: 'uid=[username],ou=users,dc=yunohost,dc=org'
 search_dn: 'ou=users,dc=yunohost,dc=org'
-group_dn: 'ou=users,dc=yunohost,dc=org'
-group_query: '(&(uid=*)(uid=[username],ou=users,dc=yunohost,dc=org))'
-group_indentifier: uid
+group_dn: 'ou=permission,dc=yunohost,dc=org'
+group_query: '(&(cn=*)(memberUid=[username]))'
+group_indentifier: cn
 map_username: uid
 map_fullname: givenName lastName
 map_email: mail
@@ -23,5 +23,5 @@ default_access_levels:
   access:
     site:
       login: 'true'
-    groups: "__ADMIN__:\r\n    admin:\r\n      login: true\r\n      super: true\r\n    site:\r\n      login: true"
+    groups: "__APP__.admin:\r\n    admin:\r\n      login: true\r\n      super: true\r\n    site:\r\n      login: true\r\n__APP__.user:\r\n    admin:\r\n      login: true\r\n    site:\r\n      login: true"
 
