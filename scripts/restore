@@ -75,13 +75,6 @@ ynh_system_user_create "$app"
 chown -R "$app": "$final_path"
 
 #=================================================
-# RESTORE THE PHP-FPM CONFIGURATION
-#=================================================
-
-ynh_restore_file "/etc/php/7.0/fpm/pool.d/$app.conf"
-
-
-#=================================================
 # SPECIFIC RESTORATION
 #=================================================
 # REINSTALL DEPENDENCIES
@@ -89,6 +82,12 @@ ynh_restore_file "/etc/php/7.0/fpm/pool.d/$app.conf"
 ynh_script_progression --message="Reinstalling dependencies..." --time --weight=1
 
 ynh_install_php --phpversion="$phpversion" --package="$pkg_dependencies"
+
+#=================================================
+# RESTORE THE PHP-FPM CONFIGURATION
+#=================================================
+
+ynh_restore_file "/etc/php/${phpversion}/fpm/pool.d/$app.conf"
 
 #=================================================
 # GENERIC FINALIZATION
