@@ -24,7 +24,7 @@ ynh_abort_if_errors
 
 domain=$YNH_APP_ARG_DOMAIN
 path_url=$YNH_APP_ARG_PATH
-admin_grav=$YNH_APP_ARG_ADMIN
+admin=$YNH_APP_ARG_ADMIN
 language=$YNH_APP_ARG_LANGUAGE
 is_public=$YNH_APP_ARG_IS_PUBLIC
 
@@ -55,7 +55,7 @@ ynh_script_progression --message="Storing installation settings..." --time --wei
 
 ynh_app_setting_set "$app" domain    "$domain"
 ynh_app_setting_set "$app" path      "$path_url"
-ynh_app_setting_set "$app" admin     "$admin_grav"
+ynh_app_setting_set "$app" admin     "$admin"
 ynh_app_setting_set "$app" is_public "$is_public"
 ynh_app_setting_set "$app" language  "$language"
 
@@ -120,7 +120,7 @@ popd
 
 ynh_secure_remove "$final_path/user/plugins/login-ldap/login-ldap.yaml"
 exec_as $app cp ../conf/login-ldap.yaml "$final_path/user/plugins/login-ldap/login-ldap.yaml"
-ynh_replace_string "__ADMIN__" "$admin_grav" "$final_path/user/plugins/login-ldap/login-ldap.yaml"
+ynh_replace_string "__ADMIN__" "$admin" "$final_path/user/plugins/login-ldap/login-ldap.yaml"
 ynh_replace_string "__APP__" "$app" "$final_path/user/plugins/login-ldap/login-ldap.yaml"
 exec_as $app cp "$final_path/user/plugins/login-ldap/login-ldap.yaml" "$final_path/user/config/plugins/login-ldap.yaml"
 
@@ -133,11 +133,12 @@ ynh_script_progression --message="Configuring permissions..." --time --weight=1
 if [ "$is_public" -eq "1" ]
 then
 	ynh_permission_update --permission "main" --remove "all_users" --add "visitors"
-else
-	ynh_permission_update --permission "main" --remove "all_users"
 fi
 
-ynh_permission_create --permission "admin" --url "/admin" --allowed "$admin_grav"
+# Giving admin permission to the specified used
+ynh_permission_create --permission "admin" --allowed "$admin"
+
+# Creating user permission
 ynh_permission_create --permission "user"
 
 #=================================================
