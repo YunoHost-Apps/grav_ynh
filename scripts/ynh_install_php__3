@@ -27,7 +27,9 @@ ynh_install_php () {
 	echo "$YNH_APP_INSTANCE_NAME:$phpversion" | tee --append "/etc/php/ynh_app_version"
 
 	# Add an extra repository for those packages
-	ynh_install_extra_repo --repo="https://packages.sury.org/php/ $(lsb_release -sc) main" --key="https://packages.sury.org/php/apt.gpg" --priority=995 --name=extra_php_version
+	if [ ! -f "/etc/apt/sources.list.d/sury.list" ]; then
+		ynh_install_extra_repo --repo="https://packages.sury.org/php/ $(lsb_release -sc) main" --key="https://packages.sury.org/php/apt.gpg" --priority=995 --name=extra_php_version
+	fi
 
 	# Install requested dependencies from this extra repository.
 	# Install php-fpm first, otherwise php will install apache as a dependency.
@@ -38,7 +40,9 @@ ynh_install_php () {
 	update-alternatives --set php /usr/bin/php7.0
 
 	# Remove this extra repository after packages are installed
-	ynh_remove_extra_repo --name=extra_php_version
+        if [ ! -f "/etc/apt/sources.list.d/sury.list" ]; then
+		ynh_remove_extra_repo --name=extra_php_version
+	fi
 
 	# Advertise service in admin panel
 	yunohost service add php${phpversion}-fpm --log "/var/log/php${phpversion}-fpm.log"
