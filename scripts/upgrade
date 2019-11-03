@@ -124,9 +124,9 @@ chown -R "$app": "$final_path"
 #=================================================
 
 pushd "$final_path"
-        exec_as $app "php$phpversion bin/gpm install login-ldap -y"
-        exec_as $app "mkdir -p user/config/plugins"
-        exec_as $app "touch user/accounts/admin.yaml"
+	exec_as $app "php$phpversion bin/gpm install login-ldap -y"
+	exec_as $app "mkdir -p user/config/plugins"
+	exec_as $app "touch user/accounts/admin.yaml"
 popd
 
 ynh_secure_remove "$final_path/user/plugins/login-ldap/login-ldap.yaml"
@@ -140,19 +140,30 @@ exec_as $app cp "$final_path/user/plugins/login-ldap/login-ldap.yaml" "$final_pa
 #=================================================
 ynh_script_progression --message="Configuring permissions..." --time --weight=1
 
-# Make app public if necessary
-if [ "$is_public" -eq "1" ]
+# Giving admin permission to the specified used
+if $(yunohost user permission list --output-as plain -s | grep -Fxq "${app}.admin")
 then
-        ynh_permission_update -p "main" -r "all_users" -a "visitors"
+	ynh_permission_update --permission "admin" --add "$admin"
+else
+	ynh_permission_create --permission "admin" --allowed "$admin"
 fi
 
-
-# Giving admin permission to the specified used
-$(ynh_permission_create -p "admin" -a "$admin") || $(ynh_permission_update -p "admin" -a "$admin") || true
-
 # Creating user permission
-$(ynh_permission_create -p "user") || true
+if ! $(yunohost user permission list --output-as plain -s | grep -Fxq "${app}.user")
+then
+	ynh_permission_create --permission "user"
+fi
 
+#=================================================
+# SETUP SSOWAT
+#=================================================
+ynh_script_progression --message="Configuring SSOwat..." --weight=1
+
+# Make app public if necessary or protect it
+if [ "$is_public" -eq "1" ]
+then
+	ynh_permission_update --permission "main" --remove "all_users" --add "visitors"
+fi
 
 #=================================================
 # RELOAD NGINX
@@ -160,6 +171,7 @@ $(ynh_permission_create -p "user") || true
 ynh_script_progression --message="Reloading nginx web server..." --time --weight=1
 
 systemctl reload nginx
+
 
 #=================================================
 # END OF SCRIPT
