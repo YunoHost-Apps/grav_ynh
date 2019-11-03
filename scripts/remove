@@ -26,23 +26,6 @@ final_path=$(ynh_app_setting_get "$app" final_path)
 #=================================================
 # STANDARD REMOVE
 #=================================================
-# REMOVE DEPENDENCIES
-#=================================================
-ynh_script_progression --message="Removing dependencies..." --time --weight=1
-
-# Remove metapackage and its dependencies
-ynh_remove_php "$phpversion"
-ynh_remove_extra_repo
-
-#=================================================
-# REMOVE APP MAIN DIR
-#=================================================
-ynh_script_progression --message="Removing app main directory..." --time --weight=1
-
-# Remove the app directory securely
-ynh_secure_remove "$final_path"
-
-#=================================================
 # REMOVE NGINX CONFIGURATION
 #=================================================
 ynh_script_progression --message="Removing nginx web server configuration..." --time --weight=1
@@ -57,6 +40,22 @@ ynh_script_progression --message="Removing php-fpm configuration..." --time --we
 
 # Remove the dedicated php-fpm config
 ynh_remove_fpm_config
+
+#=================================================
+# REMOVE DEPENDENCIES
+#=================================================
+ynh_script_progression --message="Removing dependencies..." --time --weight=1
+
+# Remove metapackage and its dependencies
+ynh_remove_php "$phpversion"
+
+#=================================================
+# REMOVE APP MAIN DIR
+#=================================================
+ynh_script_progression --message="Removing app main directory..." --time --weight=1
+
+# Remove the app directory securely
+ynh_secure_remove "$final_path"
 
 #=================================================
 # GENERIC FINALIZATION
