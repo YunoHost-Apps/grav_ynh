@@ -16,9 +16,8 @@
 		setup_private=1
 		setup_public=1
 		upgrade=1
-		# Temporarily removed due to check_process issue
-		# upgrade=1	from_commit=ec151614e4c41f2012bb983d08faf6eda233d5be
-		# upgrade=1	from_commit=22290f672847342fd187a56d39b68393b1e0fd5a
+		upgrade=1	from_commit=ec151614e4c41f2012bb983d08faf6eda233d5be
+		upgrade=1	from_commit=22290f672847342fd187a56d39b68393b1e0fd5a
 		backup_restore=1
 		multi_instance=1
 		incorrect_path=0
