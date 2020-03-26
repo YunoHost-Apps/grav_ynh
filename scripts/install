@@ -135,15 +135,12 @@ ynh_permission_create --permission "admin" --allowed "$admin"
 # Creating user permission
 ynh_permission_create --permission "user"
 
-#=================================================
-# SETUP SSOWAT
-#=================================================
-ynh_script_progression --message="Configuring SSOwat..." --weight=1
-
-# Make app public if necessary or protect it
-if [ "$is_public" -eq "1" ]
+# Make app public if necessary
+if [ $is_public -eq 1 ]
 then
-	ynh_permission_update --permission "main" --remove "all_users" --add "visitors"
+	# Everyone can access the app.
+	# The "main" permission is automatically created before the install script.
+	ynh_permission_update --permission "main" --add "visitors"
 fi
 
 #=================================================
