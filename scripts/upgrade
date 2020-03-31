@@ -7,8 +7,9 @@
 #=================================================
 
 source _common.sh
-source ynh_add_extra_apt_repos__3
-source ynh_install_php__3
+source experimental_helpers/ynh_add_extra_apt_repos__3
+source experimental_helpers/ynh_install_php__3
+source experimental_helpers/ynh_permission_has_user
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -29,15 +30,6 @@ language=$(ynh_app_setting_get "$app" language)
 #=================================================
 ynh_script_progression --message="Ensuring downward compatibility..." --time --weight=1
 
-# Fix is_public as a boolean value
-if [ "$is_public" = "Yes" ]; then
-	ynh_app_setting_set --app=$app --key=is_public --value=1
-	is_public=1
-elif [ "$is_public" = "No" ]; then
-	ynh_app_setting_set --app=$app --key=is_public --value=0
-	is_public=0
-fi
-
 # If db_name doesn't exist, create it
 if [ -z "$db_name" ]; then
 	db_name=$(ynh_sanitize_dbid --db_name=$app)
@@ -49,33 +41,25 @@ if [ -z "$final_path" ]; then
 	ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 fi
 
-# If nobody installed your app before 3.7, then you may
-# safely remove these lines
-
 # Cleaning legacy permissions
 is_public=$(ynh_app_setting_get --app=$app --key=is_public)
-skipped_uris=$(ynh_app_setting_get --app=$app --key=skipped_uris)
-unprotected_uris=$(ynh_app_setting_get --app=$app --key=unprotected_uris)
-protected_uris=$(ynh_app_setting_get --app=$app --key=protected_uris)
 
-# Remove is_public if exists
-if [ ! -z "$is_public" ]; then
-	ynh_app_setting_delete --app=$app --key=is_public
-fi
-
-# Remove skipped_uris if exists
-if [ ! -z "$skipped_uris" ]; then
-	ynh_app_setting_delete --app=$app --key=skipped_uris
-fi
-
-# Remove unprotected_uris if exists
-if [ ! -z "$unprotected_uris" ]; then
+if [ -n "$is_public" ]; then
+	# Remove unprotected_uris
 	ynh_app_setting_delete --app=$app --key=unprotected_uris
-fi
-
-# Remove protected_uris if exists
-if [ ! -z "$protected_uris" ]; then
+	# Remove protected_uris
 	ynh_app_setting_delete --app=$app --key=protected_uris
+
+	# Removing skipped/unprotected_uris under certain conditions, remove the visitors group added during the migration process of 3.7
+	# Remove skipped_uris. If the app was public, add visitors again to the main permission
+	if ynh_permission_has_user --permission=main --user=visitors
+	then
+		ynh_app_setting_delete --app=$app --key=skipped_uris
+		ynh_permission_update --permission "main" --add "visitors"
+	else
+		ynh_app_setting_delete --app=$app --key=skipped_uris
+	fi
+	ynh_app_setting_delete --app=$app --key=is_public
 fi
 
 #=================================================
@@ -168,15 +152,15 @@ exec_as $app cp "$final_path/user/plugins/login-ldap/login-ldap.yaml" "$final_pa
 ynh_script_progression --message="Configuring permissions..." --time --weight=1
 
 # Giving admin permission to the specified used
-if $(yunohost user permission list --output-as plain -s | grep -Fxq "${app}.admin")
+if ! ynh_permission_exists --permission "admin"
 then
-	ynh_permission_update --permission "admin" --add "$admin"
-else
 	ynh_permission_create --permission "admin" --allowed "$admin"
+else
+	ynh_permission_update --permission "admin" --add "$admin"
 fi
 
 # Creating user permission
-if ! $(yunohost user permission list --output-as plain -s | grep -Fxq "${app}.user")
+if ! ynh_permission_exists --permission "user"
 then
 	ynh_permission_create --permission "user"
 fi
