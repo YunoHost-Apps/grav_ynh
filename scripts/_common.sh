@@ -5,10 +5,10 @@
 #=================================================
 
 # dependencies used by the app
-pkg_dependencies="php7.2-zip php7.2-mbstring php7.2-curl php7.2-dom php7.2-gd php7.2-xml php7.2-ldap"
+pkg_dependencies="php7.3-zip php7.3-mbstring php7.3-curl php7.3-dom php7.3-gd php7.3-xml php7.3-ldap"
 
 # Version numbers
-phpversion="7.2"
+phpversion="7.3"
 
 
 #=================================================
