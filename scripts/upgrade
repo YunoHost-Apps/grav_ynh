@@ -24,6 +24,7 @@ path_url=$(ynh_app_setting_get "$app" path)
 admin=$(ynh_app_setting_get "$app" admin)
 final_path=$(ynh_app_setting_get "$app" final_path)
 language=$(ynh_app_setting_get "$app" language)
+oldphpversion=$(ynh_app_setting_get "$app" phpversion)
 
 #=================================================
 # ENSURE DOWNWARD COMPATIBILITY
@@ -39,6 +40,10 @@ fi
 if [ -z "$final_path" ]; then
 	final_path=/var/www/$app
 	ynh_app_setting_set --app=$app --key=final_path --value=$final_path
+fi
+# If phpversion doesn't exist, assume 7.0
+if [ -z "$oldphpversion" ]; then
+        oldphpversion="7.0"
 fi
 
 # Cleaning legacy permissions
@@ -120,6 +125,11 @@ ynh_system_user_create "$app"
 # PHP-FPM CONFIGURATION
 #=================================================
 ynh_script_progression --message="Upgrading php-fpm configuration..." --time --weight=1
+
+# If we need to upgrade the php-fpm config, let's remove the old one first
+if [ $oldphpversion != $phpversion ]; then
+   ynh_remove_fpm_config
+fi
 
 # Create a dedicated php-fpm config
 ynh_add_fpm_config --phpversion="$phpversion"
