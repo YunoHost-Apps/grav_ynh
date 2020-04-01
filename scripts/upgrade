@@ -52,7 +52,7 @@ if [ -n "$is_public" ]; then
 
 	# Removing skipped/unprotected_uris under certain conditions, remove the visitors group added during the migration process of 3.7
 	# Remove skipped_uris. If the app was public, add visitors again to the main permission
-	if ynh_permission_has_user --permission=main --user=visitors
+	if (ynh_permission_has_user --permission=main --user=visitors) || [ $is_public -eq 1 ];
 	then
 		ynh_app_setting_delete --app=$app --key=skipped_uris
 		ynh_permission_update --permission "main" --add "visitors"
