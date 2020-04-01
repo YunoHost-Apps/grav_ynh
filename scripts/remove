@@ -22,6 +22,7 @@ app=$YNH_APP_INSTANCE_NAME
 # Retrieve app settings
 domain=$(ynh_app_setting_get "$app" domain)
 final_path=$(ynh_app_setting_get "$app" final_path)
+phpversion=$(ynh_app_setting_get "$app" phpversion)
 
 #=================================================
 # STANDARD REMOVE
