@@ -141,6 +141,16 @@ ynh_add_fpm_config --phpversion="$phpversion"
 chown -R "$app": "$final_path"
 
 #=================================================
+# SPECIFIC UPGRADE
+#=================================================
+# UPGRADE PLUGINS
+#=================================================
+
+pushd "$final_path"
+        exec_as $app "php$phpversion bin/gpm update -y"
+popd
+
+#=================================================
 # INSTALL LDAP PLUGIN
 #=================================================
 
