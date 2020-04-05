@@ -18,10 +18,6 @@ map_dn: displayName
 save_grav_user: false
 store_ldap_data: false
 default_access_levels:
-  groups:
-    - ldap_users
   access:
-    site:
-      login: 'true'
     groups: "__APP__.admin:\r\n    admin:\r\n      login: true\r\n      super: true\r\n    site:\r\n      login: true\r\n__APP__.user:\r\n    admin:\r\n      login: true\r\n    site:\r\n      login: true"
 
