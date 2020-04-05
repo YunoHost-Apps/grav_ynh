@@ -7,8 +7,8 @@
 #=================================================
 
 source ../settings/scripts/_common.sh
-source ../settings/scripts/ynh_add_extra_apt_repos__3
-source ../settings/scripts/ynh_install_php__3
+source ../settings/scripts/experimental_helpers/ynh_add_extra_apt_repos__3
+source ../settings/scripts/experimental_helpers/ynh_install_php__3
 source /usr/share/yunohost/helpers
 
 #=================================================
