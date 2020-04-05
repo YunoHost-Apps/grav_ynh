@@ -145,6 +145,7 @@ chown -R "$app": "$final_path"
 #=================================================
 # UPGRADE PLUGINS
 #=================================================
+ynh_script_progression --message="Updating all plugins..." --time --weight=1
 
 pushd "$final_path"
         exec_as $app "php$phpversion bin/gpm update -y"
@@ -153,6 +154,7 @@ popd
 #=================================================
 # INSTALL LDAP PLUGIN
 #=================================================
+ynh_script_progression --message="Installing and configuring LDAP plugin..." --time --weight=1
 
 pushd "$final_path"
 	exec_as $app "php$phpversion bin/gpm install login-ldap -y"
