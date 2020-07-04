@@ -10,7 +10,7 @@ If you don't have YunoHost, please see [here](https://yunohost.org/#/install) to
 * http://getgrav.org/
 * https://github.com/getgrav/grav
 
-Provided version: **1.6.16**
+Provided version: **1.6.26**
 
 ## Installation
 
