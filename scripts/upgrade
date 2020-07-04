@@ -135,12 +135,17 @@ ynh_script_progression --message="Upgrading php-fpm configuration..." --time --w
 # Create a dedicated php-fpm config
 ynh_add_fpm_config --usage=medium --footprint=medium --phpversion=$YNH_PHP_VERSION --package="$extra_php_dependencies"
 
+# Delete existing ini configuration file (backward compatibility)
+if [ -f /etc/php/$YNH_PHP_VERSION/fpm/conf.d/20-$app.ini ]; then
+	ynh_secure_remove --file=/etc/php/$YNH_PHP_VERSION/fpm/conf.d/20-$app.ini
+fi
+
 #=================================================
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
 # Set permissions on app files
-chown -R root: $final_path
+chown -R $app: $final_path
 
 #=================================================
 # SPECIFIC UPGRADE
@@ -150,7 +155,7 @@ chown -R root: $final_path
 ynh_script_progression --message="Updating all plugins..." --time --weight=1
 
 pushd "$final_path"
-        exec_as $app "php${YNH_PHP_VERSION} bin/gpm update -y"
+	exec_as $app "php${YNH_PHP_VERSION} bin/gpm update -y"
 popd
 
 #=================================================
