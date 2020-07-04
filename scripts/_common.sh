@@ -4,12 +4,11 @@
 # COMMON VARIABLES
 #=================================================
 
-# dependencies used by the app
-pkg_dependencies="php7.3-zip php7.3-mbstring php7.3-curl php7.3-dom php7.3-gd php7.3-xml php7.3-ldap"
-
 # Version numbers
-phpversion="7.3"
+YNH_PHP_VERSION="7.3"
 
+# dependencies used by the app
+extra_php_dependencies="php${YNH_PHP_VERSION}-zip php${YNH_PHP_VERSION}-mbstring php${YNH_PHP_VERSION}-curl php${YNH_PHP_VERSION}-dom php${YNH_PHP_VERSION}-gd php${YNH_PHP_VERSION}-xml php${YNH_PHP_VERSION}-ldap"
 
 #=================================================
 # EXPERIMENTAL HELPERS

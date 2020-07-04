@@ -7,8 +7,6 @@
 #=================================================
 
 source _common.sh
-source experimental_helpers/ynh_add_extra_apt_repos__3
-source experimental_helpers/ynh_install_php__3
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -44,37 +42,30 @@ test ! -e "$final_path" || ynh_die "This path already contains a folder"
 path_url=$(ynh_normalize_url_path "$path_url")
 
 # Check web path availability
-ynh_webpath_available "$domain" "$path_url"
+ynh_webpath_available --domain=$domain --path_url=$path_url
 # Register (book) web path
-ynh_webpath_register "$app" "$domain" "$path_url"
+ynh_webpath_register --app=$app --domain=$domain --path_url=$path_url
 
 #=================================================
 # STORE SETTINGS FROM MANIFEST
 #=================================================
 ynh_script_progression --message="Storing installation settings..." --time --weight=1
 
-ynh_app_setting_set "$app" domain    "$domain"
-ynh_app_setting_set "$app" path      "$path_url"
-ynh_app_setting_set "$app" admin     "$admin"
-ynh_app_setting_set "$app" language  "$language"
+ynh_app_setting_set --app=$app --key=domain --value=$domain
+ynh_app_setting_set --app=$app --key=path --value=$path_url
+ynh_app_setting_set --app=$app --key=admin --value=$admin
+ynh_app_setting_set --app=$app --key=language --value=$language
 
 #=================================================
 # STANDARD MODIFICATIONS
-#=================================================
-# INSTALL DEPENDENCIES
-#=================================================
-ynh_script_progression --message="Installing dependencies..." --time --weight=1
-
-ynh_install_php --phpversion="$phpversion" --package="$pkg_dependencies"
-
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
 ynh_script_progression --message="Setting up source files..." --time --weight=1
 
-ynh_app_setting_set "$app" final_path "$final_path"
+ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 # Download, check integrity, uncompress and patch the source from app.src
-ynh_setup_source "$final_path"
+ynh_setup_source --dest_dir=$final_path
 
 #=================================================
 # NGINX CONFIGURATION
@@ -82,7 +73,7 @@ ynh_setup_source "$final_path"
 ynh_script_progression --message="Configuring nginx web server..." --time --weight=1
 
 # Create a dedicated nginx config
-ynh_add_nginx_config "phpversion"
+ynh_add_nginx_config YNH_PHP_VERSION
 
 #=================================================
 # CREATE DEDICATED USER
@@ -90,7 +81,7 @@ ynh_add_nginx_config "phpversion"
 ynh_script_progression --message="Configuring system user..." --time --weight=1
 
 # Create a system user
-ynh_system_user_create "$app"
+ynh_system_user_create --username=$app
 
 #=================================================
 # PHP-FPM CONFIGURATION
@@ -98,14 +89,16 @@ ynh_system_user_create "$app"
 ynh_script_progression --message="Configuring php-fpm..." --time --weight=1
 
 # Create a dedicated php-fpm config
-ynh_add_fpm_config --phpversion="$phpversion"
+ynh_add_fpm_config --usage=medium --footprint=medium --phpversion=$YNH_PHP_VERSION --package="$extra_php_dependencies"
 
 #=================================================
 # GENERIC FINALIZATION
 #=================================================
 # SECURE FILES AND DIRECTORIES
 #=================================================
-chown -R "$app": "$final_path"
+
+# Set permissions on app files
+chown -R $app: $final_path
 
 #=================================================
 # INSTALL LDAP PLUGIN
@@ -113,7 +106,7 @@ chown -R "$app": "$final_path"
 ynh_script_progression --message="Installing and configuring LDAP plugin..." --time --weight=1
 
 pushd "$final_path"
-	exec_as $app "php$phpversion bin/gpm install login-ldap -y"
+	exec_as $app "php${YNH_PHP_VERSION} bin/gpm install login-ldap -y"
 	exec_as $app "mkdir -p user/config/plugins"
 	exec_as $app "touch user/accounts/admin.yaml"
 popd
@@ -130,7 +123,7 @@ exec_as $app cp "$final_path/user/plugins/login-ldap/login-ldap.yaml" "$final_pa
 ynh_script_progression --message="Configuring permissions..." --time --weight=1
 
 # Giving admin permission to the specified used
-ynh_permission_create --permission "admin" --allowed "$admin"
+ynh_permission_create --permission "admin" --allowed $admin
 
 # Creating user permission
 ynh_permission_create --permission "user"
@@ -149,7 +142,6 @@ fi
 ynh_script_progression --message="Reloading nginx web server..." --time --weight=1
 
 systemctl reload nginx
-
 
 #=================================================
 # END OF SCRIPT
