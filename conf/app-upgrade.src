@@ -1,4 +1,4 @@
-SOURCE_URL=https://github.com/getgrav/grav/releases/download/1.6.23/grav-update-v1.6.26.zip
+SOURCE_URL=https://github.com/getgrav/grav/releases/download/1.6.26/grav-update-v1.6.26.zip
 SOURCE_SUM=3086CFA18AA816F5C5F7573EC920FB4BBAD8E863DEBBB9AC200D54490C61CAA7
 SOURCE_SUM_PRG=sha256sum
 SOURCE_FORMAT=zip
