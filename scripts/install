@@ -31,7 +31,7 @@ app=$YNH_APP_INSTANCE_NAME
 #=================================================
 # CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
 #=================================================
-ynh_script_progression --message="Validating installation parameters..." --time --weight=1
+ynh_script_progression --message="Validating installation parameters..." --weight=1
 
 ### If the app uses nginx as web server (written in HTML/PHP in most cases), the final path should be "/var/www/$app".
 ### If the app provides an internal web server (or uses another application server such as uwsgi), the final path should be "/opt/yunohost/$app"
@@ -49,7 +49,7 @@ ynh_webpath_register --app=$app --domain=$domain --path_url=$path_url
 #=================================================
 # STORE SETTINGS FROM MANIFEST
 #=================================================
-ynh_script_progression --message="Storing installation settings..." --time --weight=1
+ynh_script_progression --message="Storing installation settings..." --weight=1
 
 ynh_app_setting_set --app=$app --key=domain --value=$domain
 ynh_app_setting_set --app=$app --key=path --value=$path_url
@@ -61,7 +61,7 @@ ynh_app_setting_set --app=$app --key=language --value=$language
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
-ynh_script_progression --message="Setting up source files..." --time --weight=1
+ynh_script_progression --message="Setting up source files..." --weight=2
 
 ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 # Download, check integrity, uncompress and patch the source from app.src
@@ -70,7 +70,7 @@ ynh_setup_source --dest_dir=$final_path
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
-ynh_script_progression --message="Configuring nginx web server..." --time --weight=1
+ynh_script_progression --message="Configuring nginx web server..." --weight=1
 
 # Create a dedicated nginx config
 ynh_add_nginx_config YNH_PHP_VERSION
@@ -78,7 +78,7 @@ ynh_add_nginx_config YNH_PHP_VERSION
 #=================================================
 # CREATE DEDICATED USER
 #=================================================
-ynh_script_progression --message="Configuring system user..." --time --weight=1
+ynh_script_progression --message="Configuring system user..." --weight=1
 
 # Create a system user
 ynh_system_user_create --username=$app
@@ -86,7 +86,7 @@ ynh_system_user_create --username=$app
 #=================================================
 # PHP-FPM CONFIGURATION
 #=================================================
-ynh_script_progression --message="Configuring php-fpm..." --time --weight=1
+ynh_script_progression --message="Configuring php-fpm..." --weight=3
 
 # Create a dedicated php-fpm config
 ynh_add_fpm_config --usage=medium --footprint=medium --phpversion=$YNH_PHP_VERSION --package="$extra_php_dependencies"
@@ -103,12 +103,12 @@ chown -R $app: $final_path
 #=================================================
 # INSTALL LDAP PLUGIN
 #=================================================
-ynh_script_progression --message="Installing and configuring LDAP plugin..." --time --weight=1
+ynh_script_progression --message="Installing and configuring LDAP plugin..." --weight=1
 
 pushd "$final_path"
-	exec_as $app "php${YNH_PHP_VERSION} bin/gpm install login-ldap -y"
-	exec_as $app "mkdir -p user/config/plugins"
-	exec_as $app "touch user/accounts/admin.yaml"
+	exec_as $app php${YNH_PHP_VERSION} bin/gpm install login-ldap -y
+	exec_as $app mkdir -p user/config/plugins/login-ldap
+	exec_as $app touch user/accounts/admin.yaml
 popd
 
 ynh_secure_remove "$final_path/user/plugins/login-ldap/login-ldap.yaml"
@@ -120,7 +120,7 @@ exec_as $app cp "$final_path/user/plugins/login-ldap/login-ldap.yaml" "$final_pa
 #=================================================
 # SETUP PERMISSIONS
 #=================================================
-ynh_script_progression --message="Configuring permissions..." --time --weight=1
+ynh_script_progression --message="Configuring permissions..." --weight=1
 
 # Giving admin permission to the specified used
 ynh_permission_create --permission "admin" --allowed $admin
@@ -139,7 +139,7 @@ fi
 #=================================================
 # RELOAD NGINX
 #=================================================
-ynh_script_progression --message="Reloading nginx web server..." --time --weight=1
+ynh_script_progression --message="Reloading nginx web server..." --weight=1
 
 systemctl reload nginx
 
@@ -147,4 +147,4 @@ systemctl reload nginx
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Installation of $app completed" --time --last
+ynh_script_progression --message="Installation of $app completed" --last
