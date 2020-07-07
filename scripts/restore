@@ -66,14 +66,18 @@ ynh_restore_file --origin_path="$final_path"
 ynh_script_progression --message="Recreating the dedicated system user..." --time --weight=1
 
 # Create the dedicated user (if not existing)
-ynh_system_user_create --username=$app
+ynh_system_user_create --username=$app --home_dir=$final_path
 
 #=================================================
 # RESTORE USER RIGHTS
 #=================================================
 
 # Restore permissions on app files
-chown -R $app: $final_path
+chown -R $app:www-data $final_path
+find $final_path -type f -exec chmod 664 {} \;
+find $final_path/bin -type f -exec chmod 775 {} \;
+find $final_path -type d -exec chmod 775 {} \;
+find $final_path -type d -exec chmod +s {} \;
 
 #=================================================
 # RESTORE THE PHP-FPM CONFIGURATION

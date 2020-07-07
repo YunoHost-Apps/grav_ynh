@@ -136,7 +136,7 @@ ynh_add_nginx_config YNH_PHP_VERSION
 ynh_script_progression --message="Making sure dedicated system user exists..." --time --weight=1
 
 # Create a dedicated user (if not existing)
-ynh_system_user_create --username=$app
+ynh_system_user_create --username=$app --home_dir=$final_path
 
 #=================================================
 # PHP-FPM CONFIGURATION
@@ -156,7 +156,11 @@ fi
 #=================================================
 
 # Set permissions on app files
-chown -R $app: $final_path
+chown -R $app:www-data $final_path
+find $final_path -type f -exec chmod 664 {} \;
+find $final_path/bin -type f -exec chmod 775 {} \;
+find $final_path -type d -exec chmod 775 {} \;
+find $final_path -type d -exec chmod +s {} \;
 
 #=================================================
 # SPECIFIC UPGRADE

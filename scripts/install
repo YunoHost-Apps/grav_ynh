@@ -81,7 +81,7 @@ ynh_add_nginx_config YNH_PHP_VERSION
 ynh_script_progression --message="Configuring system user..." --weight=1
 
 # Create a system user
-ynh_system_user_create --username=$app
+ynh_system_user_create --username=$app --home_dir=$final_path
 
 #=================================================
 # PHP-FPM CONFIGURATION
@@ -98,7 +98,11 @@ ynh_add_fpm_config --usage=medium --footprint=medium --phpversion=$YNH_PHP_VERSI
 #=================================================
 
 # Set permissions on app files
-chown -R $app: $final_path
+chown -R $app:www-data $final_path
+find $final_path -type f -exec chmod 664 {} \;
+find $final_path/bin -type f -exec chmod 775 {} \;
+find $final_path -type d -exec chmod 775 {} \;
+find $final_path -type d -exec chmod +s {} \;
 
 #=================================================
 # INSTALL LDAP PLUGIN
