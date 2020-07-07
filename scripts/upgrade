@@ -16,37 +16,81 @@ ynh_script_progression --message="Loading installation settings..." --time --wei
 
 app=$YNH_APP_INSTANCE_NAME
 
-domain=$(ynh_app_setting_get "$app" domain)
-path_url=$(ynh_app_setting_get "$app" path)
-admin=$(ynh_app_setting_get "$app" admin)
-is_public=$(ynh_app_setting_get "$app" is_public)
-final_path=$(ynh_app_setting_get "$app" final_path)
-language=$(ynh_app_setting_get "$app" language)
+domain=$(ynh_app_setting_get --app=$app --key=domain)
+path_url=$(ynh_app_setting_get --app=$app --key=path)
+admin=$(ynh_app_setting_get --app=$app --key=admin)
+final_path=$(ynh_app_setting_get --app=$app --key=final_path)
+language=$(ynh_app_setting_get --app=$app --key=language)
+
+fpm_footprint=$(ynh_app_setting_get --app=$app --key=fpm_footprint)
+fpm_usage=$(ynh_app_setting_get --app=$app --key=fpm_usage)
+
+#=================================================
+# CHECK VERSION
+#=================================================
+
+### This helper will compare the version of the currently installed app and the version of the upstream package.
+### $upgrade_type can have 2 different values
+### - UPGRADE_APP if the upstream app version has changed
+### - UPGRADE_PACKAGE if only the YunoHost package has changed
+### ynh_check_app_version_changed will stop the upgrade if the app is up to date.
+### UPGRADE_APP should be used to upgrade the core app only if there's an upgrade to do.
+upgrade_type=$(ynh_check_app_version_changed)
 
 #=================================================
 # ENSURE DOWNWARD COMPATIBILITY
 #=================================================
 ynh_script_progression --message="Ensuring downward compatibility..." --time --weight=1
 
-# Fix is_public as a boolean value
-if [ "$is_public" = "Yes" ]; then
-	ynh_app_setting_set "$app" is_public 1
-	is_public=1
-elif [ "$is_public" = "No" ]; then
-	ynh_app_setting_set "$app" is_public 0
-	is_public=0
-fi
-
 # If db_name doesn't exist, create it
 if [ -z "$db_name" ]; then
-	db_name=$(ynh_sanitize_dbid "$app")
-	ynh_app_setting_set "$app" db_name "$db_name"
+	db_name=$(ynh_sanitize_dbid --db_name=$app)
+	ynh_app_setting_set --app=$app --key=db_name --value=$db_name
 fi
 
 # If final_path doesn't exist, create it
 if [ -z "$final_path" ]; then
-	final_path="/var/www/$app"
-	ynh_app_setting_set "$app" final_path "$final_path"
+	final_path=/var/www/$app
+	ynh_app_setting_set --app=$app --key=final_path --value=$final_path
+fi
+
+# Cleaning legacy permissions
+is_public=$(ynh_app_setting_get --app=$app --key=is_public)
+
+if [ -n "$is_public" ]; then
+	# Removing skipped/unprotected_uris under certain conditions, remove the visitors group added during the migration process of 3.7
+	# Remove skipped_uris. If the app was public, add visitors again to the main permission
+	if ynh_permission_has_user --permission=main --user=visitors
+	then
+		# Remove unprotected_uris
+		ynh_app_setting_delete --app=$app --key=unprotected_uris
+		# Remove protected_uris
+		ynh_app_setting_delete --app=$app --key=protected_uris
+		# Remove skipped_uris
+		ynh_app_setting_delete --app=$app --key=skipped_uris
+		# Give visitors main permission
+		ynh_permission_update --permission "main" --add "visitors"
+	else
+		# Remove unprotected_uris
+		ynh_app_setting_delete --app=$app --key=unprotected_uris
+		# Remove protected_uris
+		ynh_app_setting_delete --app=$app --key=protected_uris
+		# Remove skipped_uris
+		ynh_app_setting_delete --app=$app --key=skipped_uris
+	fi
+	ynh_app_setting_delete --app=$app --key=is_public
+fi
+
+# If fpm_footprint doesn't exist, create it
+if [ -z "$fpm_footprint" ]; then
+	fpm_footprint=medium
+	ynh_app_setting_set --app=$app --key=fpm_footprint --value=$fpm_footprint
+fi
+
+# If fpm_usage doesn't exist, create it
+if [ -z "$fpm_usage" ]; then
+	fpm_usage=medium
+	ynh_app_setting_set --app=$app --key=fpm_usage --value=$fpm_usage
 fi
 
 #=================================================
@@ -68,17 +112,21 @@ ynh_abort_if_errors
 #=================================================
 
 # Normalize the URL path syntax
-path_url=$(ynh_normalize_url_path "$path_url")
+path_url=$(ynh_normalize_url_path --path_url=$path_url)
 
 #=================================================
 # STANDARD UPGRADE STEPS
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
-ynh_script_progression --message="Upgrading source files..." --time --weight=1
 
-# Download, check integrity, uncompress and patch the source from app-upgrade.src
-ynh_setup_source "$final_path" "app-upgrade"
+if [ "$upgrade_type" == "UPGRADE_APP" ]
+then
+	ynh_script_progression --message="Upgrading source files..." --time --weight=1
+
+	# Download, check integrity, uncompress and patch the source from app.src
+	ynh_setup_source --dest_dir="$final_path" --source_id="app-upgrade"
+fi
 
 #=================================================
 # NGINX CONFIGURATION
@@ -86,14 +134,7 @@ ynh_setup_source "$final_path" "app-upgrade"
 ynh_script_progression --message="Upgrading nginx web server configuration..." --time --weight=1
 
 # Create a dedicated nginx config
-ynh_add_nginx_config
-
-#=================================================
-# INSTALL DEPENDENCIES
-#=================================================
-ynh_script_progression --message="Upgrading dependencies..." --time --weight=1
-
-ynh_install_app_dependencies php7.0-zip
+ynh_add_nginx_config YNH_PHP_VERSION
 
 #=================================================
 # CREATE DEDICATED USER
@@ -101,7 +142,7 @@ ynh_install_app_dependencies php7.0-zip
 ynh_script_progression --message="Making sure dedicated system user exists..." --time --weight=1
 
 # Create a dedicated user (if not existing)
-ynh_system_user_create "$app"
+ynh_system_user_create --username=$app --home_dir=$final_path
 
 #=================================================
 # PHP-FPM CONFIGURATION
@@ -109,34 +150,78 @@ ynh_system_user_create "$app"
 ynh_script_progression --message="Upgrading php-fpm configuration..." --time --weight=1
 
 # Create a dedicated php-fpm config
-ynh_add_fpm_config
+ynh_add_fpm_config --usage=$fpm_usage --footprint=$fpm_footprint --phpversion=$YNH_PHP_VERSION --package="$extra_php_dependencies"
+
+# Delete existing ini configuration file (backward compatibility)
+if [ -f /etc/php/$YNH_PHP_VERSION/fpm/conf.d/20-$app.ini ]; then
+	ynh_secure_remove --file=/etc/php/$YNH_PHP_VERSION/fpm/conf.d/20-$app.ini
+fi
 
 #=================================================
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
-chown -R "$app": "$final_path"
+# Set permissions on app files
+chown -R $app:www-data $final_path
+find $final_path -type f -exec chmod 664 {} \;
+find $final_path/bin -type f -exec chmod 775 {} \;
+find $final_path -type d -exec chmod 775 {} \;
+find $final_path -type d -exec chmod +s {} \;
 
 #=================================================
-# SETUP SSOWAT
+# SPECIFIC UPGRADE
 #=================================================
-ynh_script_progression --message="Upgrading SSOwat configuration..." --time --weight=1
+# UPGRADE PLUGINS
+#=================================================
+ynh_script_progression --message="Updating all plugins..." --time --weight=1
 
-# Make app public if necessary
-if [ "$is_public" -eq "1" ]
+pushd "$final_path"
+	exec_as $app php${YNH_PHP_VERSION} bin/gpm update -y
+popd
+
+#=================================================
+# INSTALL LDAP PLUGIN
+#=================================================
+ynh_script_progression --message="Installing and configuring LDAP plugin..." --time --weight=1
+
+pushd "$final_path"
+	exec_as $app php${YNH_PHP_VERSION} bin/gpm install login-ldap -y
+	exec_as $app mkdir -p user/config/plugins/login-ldap
+	exec_as $app touch user/accounts/admin.yaml
+popd
+
+ynh_secure_remove "$final_path/user/plugins/login-ldap/login-ldap.yaml"
+exec_as $app cp ../conf/login-ldap.yaml "$final_path/user/plugins/login-ldap/login-ldap.yaml"
+ynh_replace_string "__ADMIN__" "$admin" "$final_path/user/plugins/login-ldap/login-ldap.yaml"
+ynh_replace_string "__APP__" "$app" "$final_path/user/plugins/login-ldap/login-ldap.yaml"
+exec_as $app cp "$final_path/user/plugins/login-ldap/login-ldap.yaml" "$final_path/user/config/plugins/login-ldap.yaml"
+
+#=================================================
+# SETUP PERMISSIONS
+#=================================================
+ynh_script_progression --message="Configuring permissions..." --time --weight=1
+
+# Giving admin permission to the specified used
+if ! ynh_permission_exists --permission "admin"
 then
-	# unprotected_uris allows SSO credentials to be passed anyway.
-	ynh_app_setting_set "$app" unprotected_uris "/"
+	ynh_permission_create --permission "admin" --allowed "$admin"
 else
-	ynh_replace_string "#--PRIVATE--" "" "/etc/nginx/conf.d/$domain.d/$app.conf"
+	ynh_permission_update --permission "admin" --add "$admin"
+fi
+
+# Creating user permission
+if ! ynh_permission_exists --permission "user"
+then
+	ynh_permission_create --permission "user"
 fi
 
 #=================================================
-# RELOAD NGINX
+# RELOAD NGINX AND PHP-FPM
 #=================================================
-ynh_script_progression --message="Reloading nginx web server..." --time --weight=1
+ynh_script_progression --message="Reloading nginx web server and php-fpm..." --time --weight=1
 
-systemctl reload nginx
+ynh_systemd_action --service_name=php${YNH_PHP_VERSION}-fpm --action=restart
+ynh_systemd_action --service_name=nginx --action=reload
 
 #=================================================
 # END OF SCRIPT
