@@ -6,7 +6,7 @@
 		"en": "A modern open source flat-file CMS",
 		"fr": "Un CMS moderne basé sur des fichiers plats"
 	},
-	"version": "1.5.10~ynh2",
+	"version": "1.6.26~ynh1",
 	"url": "https://www.getgrav.org/",
 	"license": "MIT-0",
 	"maintainer": [
@@ -27,12 +27,11 @@
 			"email": "lithrel@randomdomainname.net"
 		}],
 	"requirements": {
-		"yunohost": ">= 3.5.0"
+		"yunohost": ">= 3.7.1"
 	},
 	"multi_instance": true,
 	"services": [
-		"nginx",
-		"php7.0-fpm"
+		"nginx"
 	],
 	"arguments": {
 		"install" : [
