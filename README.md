@@ -3,7 +3,7 @@
 [![Integration level](https://dash.yunohost.org/integration/grav.svg)](https://dash.yunohost.org/appci/app/grav) ![](https://ci-apps.yunohost.org/ci/badges/grav.status.svg) ![](https://ci-apps.yunohost.org/ci/badges/grav.maintain.svg)  
 [![Install Grav with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=grav)
 
-> *This package allow you to install Grav quickly and simply on a YunoHost server.  
+> *This package allows you to install Grav quickly and simply on a YunoHost server.  
 If you don't have YunoHost, please see [here](https://yunohost.org/#/install) to know how to install and enjoy it.*
 
 ## Overview
