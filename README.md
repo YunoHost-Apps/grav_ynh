@@ -16,6 +16,10 @@ Provided version: **1.6.27**
  * Official documentation: https://learn.getgrav.org/16/
  * YunoHost documentation: If specific documentation is needed, feel free to contribute.
 
+## Limitations
+
+* If installing Grav at the root of a domain, bear in mind that paths starting by `/yunohost` are reserved.
+
 ## Installation
 
 Use either YunoHost's admin panel or command line:
