@@ -33,6 +33,14 @@ For upgrading (replace `grav` by the actual instance ID if more instances are in
 sudo yunohost app upgrade grav -u https://github.com/YunoHost-Apps/grav_ynh
 ```
 
+## Administration and plugin installation
+
+* You can access the administration panel at `yourdomain.tld/path/admin`. Users created within YunoHost can log in, provided their were given the appropriate permissions (see next section).
+* Grav provides a command line interface. Refer to its documentation, but you will need to specifically call for the PHP version currently used for the app:
+  * Go to your app's directory: `cd /var/www/grav` (or `grav__2`, etc. if you have multiple ones)
+  * `php7.3 bin/grav ...` or `php7.3 bin/gpm ...` 
+* You can install plugins through the admin panel, or through the GPM.
+
 ## Permissions
 
 To make users administrators, give them the `grav.admin` permission.
