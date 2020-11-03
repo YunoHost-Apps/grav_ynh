@@ -11,6 +11,10 @@ Grav is a modern open source flat-file CMS.
 
 Provided version: **1.6.28**
 
+## Screenshots
+
+![](https://framalibre.org/sites/default/files/Screenshot_2019-05-30_at_02.09_.36_.png)
+
 ## Documentation
 
  * Official documentation: https://learn.getgrav.org/16/
