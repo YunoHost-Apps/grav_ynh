@@ -176,7 +176,7 @@ find $final_path -type d -exec chmod +s {} \;
 ynh_script_progression --message="Updating all plugins..." --time --weight=1
 
 pushd "$final_path"
-	exec_as $app php${YNH_PHP_VERSION} bin/gpm update -y
+	exec_as $app php${YNH_PHP_VERSION} bin/gpm update --all-yes --no-interaction
 popd
 
 #=================================================
@@ -185,7 +185,7 @@ popd
 ynh_script_progression --message="Installing and configuring LDAP plugin..." --time --weight=1
 
 pushd "$final_path"
-	exec_as $app php${YNH_PHP_VERSION} bin/gpm install login-ldap -y
+	exec_as $app php${YNH_PHP_VERSION} bin/gpm install login-ldap --all-yes --no-interaction
 	exec_as $app mkdir -p user/config/plugins/login-ldap
 	exec_as $app touch user/accounts/admin.yaml
 popd
