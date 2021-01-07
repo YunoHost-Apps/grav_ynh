@@ -1,7 +1,7 @@
 # Grav for YunoHost
 
 [![Integration level](https://dash.yunohost.org/integration/grav.svg)](https://dash.yunohost.org/appci/app/grav) ![](https://ci-apps.yunohost.org/ci/badges/grav.status.svg) ![](https://ci-apps.yunohost.org/ci/badges/grav.maintain.svg)  
-[![Install Grav with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=grav)
+[![Install Grav with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=grav)
 
 > *This package allows you to install Grav quickly and simply on a YunoHost server.  
 If you don't have YunoHost, please see [here](https://yunohost.org/#/install) to know how to install and enjoy it.*
@@ -10,6 +10,10 @@ If you don't have YunoHost, please see [here](https://yunohost.org/#/install) to
 Grav is a modern open source flat-file CMS.
 
 Provided version: **1.6.28**
+
+## Screenshots
+
+![](https://framalibre.org/sites/default/files/Screenshot_2019-05-30_at_02.09_.36_.png)
 
 ## Documentation
 
