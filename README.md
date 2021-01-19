@@ -9,7 +9,7 @@ If you don't have YunoHost, please see [here](https://yunohost.org/#/install) to
 ## Overview
 Grav is a modern open source flat-file CMS.
 
-Provided version: **1.6.28**
+Provided version: **1.7.0**
 
 ## Screenshots
 
@@ -17,7 +17,7 @@ Provided version: **1.6.28**
 
 ## Documentation
 
- * Official documentation: https://learn.getgrav.org/16/
+ * Official documentation: https://learn.getgrav.org/17/
  * YunoHost documentation: If specific documentation is needed, feel free to contribute.
 
 ## Limitations
