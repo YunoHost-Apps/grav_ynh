@@ -6,7 +6,7 @@
 		"en": "A modern open source flat-file CMS",
 		"fr": "Un CMS moderne basé sur des fichiers plats"
 	},
-	"version": "1.7.0~ynh1",
+	"version": "1.7.1~ynh1",
 	"url": "https://www.getgrav.org/",
 	"license": "MIT-0",
 	"maintainer": [
