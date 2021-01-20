@@ -118,7 +118,7 @@ fi
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
-ynh_script_progression --message="Upgrading nginx web server configuration..." --weight=2
+ynh_script_progression --message="Upgrading NGINX web server configuration..." --weight=2
 
 # Create a dedicated nginx config
 ynh_add_nginx_config YNH_PHP_VERSION
@@ -134,7 +134,7 @@ ynh_system_user_create --username=$app --home_dir=$final_path
 #=================================================
 # PHP-FPM CONFIGURATION
 #=================================================
-ynh_script_progression --message="Upgrading php-fpm configuration..." --weight=1
+ynh_script_progression --message="Upgrading PHP-FPM configuration..." --weight=1
 
 # Create a dedicated php-fpm config
 ynh_add_fpm_config --usage=$fpm_usage --footprint=$fpm_footprint --phpversion=$YNH_PHP_VERSION --package="$extra_php_dependencies"
@@ -205,7 +205,7 @@ fi
 #=================================================
 # RELOAD NGINX AND PHP-FPM
 #=================================================
-ynh_script_progression --message="Reloading nginx web server and php-fpm..." --weight=1
+ynh_script_progression --message="Reloading NGINX web server and PHP-FPM..." --weight=1
 
 ynh_systemd_action --service_name=php${YNH_PHP_VERSION}-fpm --action=restart
 ynh_systemd_action --service_name=nginx --action=reload
