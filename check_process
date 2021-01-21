@@ -26,20 +26,17 @@
 		setup_private=1
 		setup_public=1
 		upgrade=1
-		upgrade=1	from_commit=5e98c15e231931d07b5b98701af01a778a8fe448
+		upgrade=1	from_commit=2909df6045ffab5378623c9fc05c9a69eac35a2e
 		backup_restore=1
 		multi_instance=1
 		port_already_use=0	(66)
 		change_url=1
 		actions=0
 		config_panel=0
-;;; Levels
-	# If the level 5 (Package linter) is forced to 1. Please add justifications here.
-	Level 5=auto
 ;;; Options
 Email=tituspijean@outlook.com
 Notification=none
 ;;; Upgrade options
-	; commit=5e98c15e231931d07b5b98701af01a778a8fe448
-			name=Version 1.5.10
+	; commit=2909df6045ffab5378623c9fc05c9a69eac35a2e
+			name=Upgrade to v1.6.26, YNH v3.7 permissions system, PHP version handling…
 			manifest_arg=domain=DOMAIN&path=PATH&admin=USER&language=fr_FR&is_public=1&
