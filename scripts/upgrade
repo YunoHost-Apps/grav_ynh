@@ -121,7 +121,7 @@ fi
 ynh_script_progression --message="Upgrading NGINX web server configuration..." --weight=2
 
 # Create a dedicated nginx config
-ynh_add_nginx_config YNH_PHP_VERSION
+ynh_add_nginx_config
 
 #=================================================
 # CREATE DEDICATED USER
@@ -137,7 +137,7 @@ ynh_system_user_create --username=$app --home_dir=$final_path
 ynh_script_progression --message="Upgrading PHP-FPM configuration..." --weight=1
 
 # Create a dedicated php-fpm config
-ynh_add_fpm_config --usage=$fpm_usage --footprint=$fpm_footprint --phpversion=$YNH_PHP_VERSION --package="$extra_php_dependencies"
+ynh_add_fpm_config --usage=$fpm_usage --footprint=$fpm_footprint --package="$extra_php_dependencies"
 
 # Delete existing ini configuration file (backward compatibility)
 if [ -f /etc/php/$YNH_PHP_VERSION/fpm/conf.d/20-$app.ini ]; then
@@ -186,7 +186,7 @@ exec_as $app cp "$final_path/user/plugins/login-ldap/login-ldap.yaml" "$final_pa
 #=================================================
 # SETUP PERMISSIONS
 #=================================================
-ynh_script_progression --message="Configuring permissions..." --time --weight=1
+ynh_script_progression --message="Configuring permissions..." --weight=1
 
 # Giving admin permission to the specified used
 if ! ynh_permission_exists --permission "admin"

@@ -38,9 +38,6 @@ ynh_script_progression --message="Validating installation parameters..." --weigh
 final_path=/var/www/$app
 test ! -e "$final_path" || ynh_die "This path already contains a folder"
 
-# Normalize the url path syntax
-path_url=$(ynh_normalize_url_path "$path_url")
-
 # Check web path availability
 ynh_webpath_available --domain=$domain --path_url=$path_url
 # Register (book) web path
@@ -73,7 +70,7 @@ ynh_setup_source --dest_dir=$final_path
 ynh_script_progression --message="Configuring NGINX web server..." --weight=1
 
 # Create a dedicated nginx config
-ynh_add_nginx_config YNH_PHP_VERSION
+ynh_add_nginx_config
 
 #=================================================
 # CREATE DEDICATED USER
@@ -89,7 +86,7 @@ ynh_system_user_create --username=$app --home_dir=$final_path
 ynh_script_progression --message="Configuring PHP-FPM..." --weight=3
 
 # Create a dedicated php-fpm config
-ynh_add_fpm_config --usage=medium --footprint=medium --phpversion=$YNH_PHP_VERSION --package="$extra_php_dependencies"
+ynh_add_fpm_config --usage=medium --footprint=medium --package="$extra_php_dependencies"
 
 #=================================================
 # GENERIC FINALIZATION
