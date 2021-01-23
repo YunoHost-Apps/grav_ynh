@@ -163,7 +163,7 @@ find $final_path -type d -exec chmod +s {} \;
 ynh_script_progression --message="Updating all plugins..." --weight=1
 
 pushd "$final_path"
-	exec_as $app php${YNH_PHP_VERSION} bin/gpm update --all-yes --no-interaction
+	exec_as $app yes N | php${YNH_PHP_VERSION} bin/gpm update --all-yes --no-interaction
 popd
 
 #=================================================
