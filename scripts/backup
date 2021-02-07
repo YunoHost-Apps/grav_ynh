@@ -45,13 +45,19 @@ ynh_backup --src_path="$final_path"
 # BACKUP THE NGINX CONFIGURATION
 #=================================================
 
-ynh_backup "/etc/nginx/conf.d/$domain.d/$app.conf"
+ynh_backup --src_path="/etc/nginx/conf.d/$domain.d/$app.conf"
 
 #=================================================
 # BACKUP THE PHP-FPM CONFIGURATION
 #=================================================
 
-ynh_backup "/etc/php/${phpversion}/fpm/pool.d/$app.conf"
+ynh_backup --src_path="/etc/php/${phpversion}/fpm/pool.d/$app.conf"
+
+#=================================================
+# BACKUP CRON
+#=================================================
+
+ynh_backup --src_path="/etc/cron.d/$app"
 
 #=================================================
 # END OF SCRIPT
