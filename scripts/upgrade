@@ -187,7 +187,7 @@ exec_as $app cp "$final_path/user/plugins/login-ldap/login-ldap.yaml" "$final_pa
 # CREATE A CRON TASK
 #=================================================
 
-echo "* *  *  *  * $app php$phpversion $final_path/bin/grav scheduler 1>> /dev/null 2>&1" > /etc/cron.d/$app
+echo "* *  *  *  * $app php${YNH_PHP_VERSION} $final_path/bin/grav scheduler 1>> /dev/null 2>&1" > /etc/cron.d/$app
 
 #=================================================
 # SETUP PERMISSIONS
