@@ -26,7 +26,7 @@
 		setup_private=1
 		setup_public=1
 		upgrade=1
-		upgrade=1	from_commit=2909df6045ffab5378623c9fc05c9a69eac35a2e
+		upgrade=1	from_commit=84ab41360f76783e8f1e292439bbdbfe30bd44ac
 		backup_restore=1
 		multi_instance=1
 		port_already_use=0	(66)
@@ -37,6 +37,6 @@
 Email=tituspijean@outlook.com
 Notification=none
 ;;; Upgrade options
-	; commit=2909df6045ffab5378623c9fc05c9a69eac35a2e
-			name=Upgrade to v1.6.26, YNH v3.7 permissions system, PHP version handling…
+	; commit=84ab41360f76783e8f1e292439bbdbfe30bd44ac
+			name=Upgrade to v1.6.27 and YNH 4.0.7, README improvements (#44)
 			manifest_arg=domain=DOMAIN&path=PATH&admin=USER&language=fr_FR&is_public=1&
