@@ -119,6 +119,12 @@ ynh_replace_string "__APP__" "$app" "$final_path/user/plugins/login-ldap/login-l
 exec_as $app cp "$final_path/user/plugins/login-ldap/login-ldap.yaml" "$final_path/user/config/plugins/login-ldap.yaml"
 
 #=================================================
+# CREATE A CRON TASK
+#=================================================
+
+echo "* *  *  *  * $app php${YNH_PHP_VERSION} $final_path/bin/grav scheduler 1>> /dev/null 2>&1" > /etc/cron.d/$app
+
+#=================================================
 # SETUP PERMISSIONS
 #=================================================
 ynh_script_progression --message="Configuring permissions..." --weight=1
