@@ -96,9 +96,9 @@ ynh_add_fpm_config --usage=medium --footprint=medium --package="$extra_php_depen
 
 # Set permissions on app files
 chown -R $app:www-data $final_path
-find $final_path -type f -exec chmod 664 {} \;
-find $final_path/bin -type f -exec chmod 775 {} \;
-find $final_path -type d -exec chmod 775 {} \;
+find $final_path -type f -exec chmod 660 {} \;
+find $final_path/bin -type f -exec chmod 770 {} \;
+find $final_path -type d -exec chmod 770 {} \;
 find $final_path -type d -exec chmod +s {} \;
 
 #=================================================
