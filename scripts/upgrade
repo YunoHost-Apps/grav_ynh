@@ -177,11 +177,7 @@ pushd "$final_path"
 	exec_as $app touch user/accounts/admin.yaml
 popd
 
-ynh_secure_remove "$final_path/user/plugins/login-ldap/login-ldap.yaml"
-exec_as $app cp ../conf/login-ldap.yaml "$final_path/user/plugins/login-ldap/login-ldap.yaml"
-ynh_replace_string "__ADMIN__" "$admin" "$final_path/user/plugins/login-ldap/login-ldap.yaml"
-ynh_replace_string "__APP__" "$app" "$final_path/user/plugins/login-ldap/login-ldap.yaml"
-exec_as $app cp "$final_path/user/plugins/login-ldap/login-ldap.yaml" "$final_path/user/config/plugins/login-ldap.yaml"
+ynh_add_config --template="../conf/login-ldap.yaml" --destination="$final_path/user/config/plugins/login-ldap.yaml"
 
 #=================================================
 # CREATE A CRON TASK
