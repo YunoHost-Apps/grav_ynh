@@ -27,7 +27,7 @@
 			"email": "lithrel@randomdomainname.net"
 		}],
 	"requirements": {
-		"yunohost": ">= 4.0.7"
+		"yunohost": ">= 4.1.0"
 	},
 	"multi_instance": true,
 	"services": [
