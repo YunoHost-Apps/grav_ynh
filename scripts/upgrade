@@ -49,29 +49,9 @@ if [ -z "$final_path" ]; then
 fi
 
 # Cleaning legacy permissions
-is_public=$(ynh_app_setting_get --app=$app --key=is_public)
+if ynh_legacy_permissions_exists; then
+	ynh_legacy_permissions_delete_all
 
-if [ -n "$is_public" ]; then
-	# Removing skipped/unprotected_uris under certain conditions, remove the visitors group added during the migration process of 3.7
-	# Remove skipped_uris. If the app was public, add visitors again to the main permission
-	if ynh_permission_has_user --permission=main --user=visitors
-	then
-		# Remove unprotected_uris
-		ynh_app_setting_delete --app=$app --key=unprotected_uris
-		# Remove protected_uris
-		ynh_app_setting_delete --app=$app --key=protected_uris
-		# Remove skipped_uris
-		ynh_app_setting_delete --app=$app --key=skipped_uris
-		# Give visitors main permission
-		ynh_permission_update --permission "main" --add "visitors"
-	else
-		# Remove unprotected_uris
-		ynh_app_setting_delete --app=$app --key=unprotected_uris
-		# Remove protected_uris
-		ynh_app_setting_delete --app=$app --key=protected_uris
-		# Remove skipped_uris
-		ynh_app_setting_delete --app=$app --key=skipped_uris
-	fi
 	ynh_app_setting_delete --app=$app --key=is_public
 fi
 
