@@ -95,24 +95,24 @@ ynh_add_fpm_config --usage=medium --footprint=medium --package="$extra_php_depen
 #=================================================
 
 # Set permissions on app files
-chown -R $app:www-data $final_path
-find $final_path -type f -exec chmod 660 {} \;
-find $final_path/bin -type f -exec chmod 770 {} \;
-find $final_path -type d -exec chmod 770 {} \;
-find $final_path -type d -exec chmod +s {} \;
+chown -R $app:$app "$final_path"
+find "$final_path" -type f -exec chmod 640 {} \;
+find "$final_path/bin" -type f -exec chmod 750 {} \;
+find "$final_path" -type d -exec chmod 750 {} \;
+find "$final_path" -type d -exec chmod +s {} \;
 
 #=================================================
 # INSTALL LDAP PLUGIN
 #=================================================
 ynh_script_progression --message="Installing and configuring LDAP plugin..." --weight=1
 
-pushd "$final_path"
-	exec_as $app php${YNH_PHP_VERSION} bin/gpm install login-ldap --all-yes --no-interaction
-	exec_as $app mkdir -p user/config/plugins/login-ldap
-	exec_as $app touch user/accounts/admin.yaml
-popd
+exec_as $app php${YNH_PHP_VERSION} "$final_path/bin/gpm" install login-ldap --all-yes --no-interaction
+exec_as $app mkdir -p "$final_path/user/config/plugins/login-ldap"
+exec_as $app touch "$final_path/user/accounts/admin.yaml"
 
 ynh_add_config --template="../conf/login-ldap.yaml" --destination="$final_path/user/config/plugins/login-ldap.yaml"
+chown $app:$app "$final_path/user/config/plugins/login-ldap.yaml"
+chmod 640 "$final_path/user/config/plugins/login-ldap.yaml"
 
 #=================================================
 # CREATE A CRON TASK
