@@ -151,7 +151,7 @@ fi
 #=================================================
 
 # Set permissions on app files
-chown -R $app:$app "$final_path"
+chown -R $app:www-data "$final_path"
 find "$final_path" -type f -exec chmod 640 {} \;
 find "$final_path/bin" -type f -exec chmod 750 {} \;
 find "$final_path" -type d -exec chmod 750 {} \;
