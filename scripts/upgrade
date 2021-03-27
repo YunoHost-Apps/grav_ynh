@@ -49,29 +49,9 @@ if [ -z "$final_path" ]; then
 fi
 
 # Cleaning legacy permissions
-is_public=$(ynh_app_setting_get --app=$app --key=is_public)
+if ynh_legacy_permissions_exists; then
+	ynh_legacy_permissions_delete_all
 
-if [ -n "$is_public" ]; then
-	# Removing skipped/unprotected_uris under certain conditions, remove the visitors group added during the migration process of 3.7
-	# Remove skipped_uris. If the app was public, add visitors again to the main permission
-	if ynh_permission_has_user --permission=main --user=visitors
-	then
-		# Remove unprotected_uris
-		ynh_app_setting_delete --app=$app --key=unprotected_uris
-		# Remove protected_uris
-		ynh_app_setting_delete --app=$app --key=protected_uris
-		# Remove skipped_uris
-		ynh_app_setting_delete --app=$app --key=skipped_uris
-		# Give visitors main permission
-		ynh_permission_update --permission "main" --add "visitors"
-	else
-		# Remove unprotected_uris
-		ynh_app_setting_delete --app=$app --key=unprotected_uris
-		# Remove protected_uris
-		ynh_app_setting_delete --app=$app --key=protected_uris
-		# Remove skipped_uris
-		ynh_app_setting_delete --app=$app --key=skipped_uris
-	fi
 	ynh_app_setting_delete --app=$app --key=is_public
 fi
 
@@ -145,43 +125,37 @@ if [ -f /etc/php/$YNH_PHP_VERSION/fpm/conf.d/20-$app.ini ]; then
 fi
 
 #=================================================
+# SPECIFIC UPGRADE
+#=================================================
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
 # Set permissions on app files
-chown -R $app:www-data $final_path
-find $final_path -type f -exec chmod 664 {} \;
-find $final_path/bin -type f -exec chmod 775 {} \;
-find $final_path -type d -exec chmod 775 {} \;
-find $final_path -type d -exec chmod +s {} \;
+chown -R $app:www-data "$final_path"
+find "$final_path" -type f -exec chmod 640 {} \;
+find "$final_path/bin" -type f -exec chmod 750 {} \;
+find "$final_path" -type d -exec chmod 750 {} \;
+find "$final_path" -type d -exec chmod +s {} \;
 
-#=================================================
-# SPECIFIC UPGRADE
 #=================================================
 # UPGRADE PLUGINS
 #=================================================
 ynh_script_progression --message="Updating all plugins..." --weight=1
 
-pushd "$final_path"
-	exec_as $app yes N | exec_as $app php${YNH_PHP_VERSION} bin/gpm update --all-yes --no-interaction
-popd
+yes N | ynh_exec_warn_less exec_as $app php${YNH_PHP_VERSION} $final_path/bin/gpm update --all-yes --no-interaction
 
 #=================================================
 # INSTALL LDAP PLUGIN
 #=================================================
 ynh_script_progression --message="Installing and configuring LDAP plugin..." --weight=3
 
-pushd "$final_path"
-	exec_as $app php${YNH_PHP_VERSION} bin/gpm install login-ldap --all-yes --no-interaction
-	exec_as $app mkdir -p user/config/plugins/login-ldap
-	exec_as $app touch user/accounts/admin.yaml
-popd
+exec_as $app php${YNH_PHP_VERSION} "$final_path/bin/gpm" install login-ldap --all-yes --no-interaction
+exec_as $app mkdir -p "$final_path/user/config/plugins/login-ldap"
+exec_as $app touch "$final_path/user/accounts/admin.yaml"
 
-ynh_secure_remove "$final_path/user/plugins/login-ldap/login-ldap.yaml"
-exec_as $app cp ../conf/login-ldap.yaml "$final_path/user/plugins/login-ldap/login-ldap.yaml"
-ynh_replace_string "__ADMIN__" "$admin" "$final_path/user/plugins/login-ldap/login-ldap.yaml"
-ynh_replace_string "__APP__" "$app" "$final_path/user/plugins/login-ldap/login-ldap.yaml"
-exec_as $app cp "$final_path/user/plugins/login-ldap/login-ldap.yaml" "$final_path/user/config/plugins/login-ldap.yaml"
+ynh_add_config --template="../conf/login-ldap.yaml" --destination="$final_path/user/config/plugins/login-ldap.yaml"
+chown $app:$app "$final_path/user/config/plugins/login-ldap.yaml"
+chmod 640 "$final_path/user/config/plugins/login-ldap.yaml"
 
 #=================================================
 # CREATE A CRON TASK

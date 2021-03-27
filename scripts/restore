@@ -73,11 +73,11 @@ ynh_system_user_create --username=$app --home_dir=$final_path
 #=================================================
 
 # Restore permissions on app files
-chown -R $app:www-data $final_path
-find $final_path -type f -exec chmod 664 {} \;
-find $final_path/bin -type f -exec chmod 775 {} \;
-find $final_path -type d -exec chmod 775 {} \;
-find $final_path -type d -exec chmod +s {} \;
+chown -R $app:www-data "$final_path"
+find "$final_path" -type f -exec chmod 640 {} \;
+find "$final_path/bin" -type f -exec chmod 750 {} \;
+find "$final_path" -type d -exec chmod 750 {} \;
+find "$final_path" -type d -exec chmod +s {} \;
 
 #=================================================
 # RESTORE THE CRON

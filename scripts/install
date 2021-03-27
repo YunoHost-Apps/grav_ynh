@@ -95,28 +95,24 @@ ynh_add_fpm_config --usage=medium --footprint=medium --package="$extra_php_depen
 #=================================================
 
 # Set permissions on app files
-chown -R $app:www-data $final_path
-find $final_path -type f -exec chmod 664 {} \;
-find $final_path/bin -type f -exec chmod 775 {} \;
-find $final_path -type d -exec chmod 775 {} \;
-find $final_path -type d -exec chmod +s {} \;
+chown -R $app:www-data "$final_path"
+find "$final_path" -type f -exec chmod 640 {} \;
+find "$final_path/bin" -type f -exec chmod 750 {} \;
+find "$final_path" -type d -exec chmod 750 {} \;
+find "$final_path" -type d -exec chmod +s {} \;
 
 #=================================================
 # INSTALL LDAP PLUGIN
 #=================================================
 ynh_script_progression --message="Installing and configuring LDAP plugin..." --weight=1
 
-pushd "$final_path"
-	exec_as $app php${YNH_PHP_VERSION} bin/gpm install login-ldap --all-yes --no-interaction
-	exec_as $app mkdir -p user/config/plugins/login-ldap
-	exec_as $app touch user/accounts/admin.yaml
-popd
+exec_as $app php${YNH_PHP_VERSION} "$final_path/bin/gpm" install login-ldap --all-yes --no-interaction
+exec_as $app mkdir -p "$final_path/user/config/plugins/login-ldap"
+exec_as $app touch "$final_path/user/accounts/admin.yaml"
 
-ynh_secure_remove "$final_path/user/plugins/login-ldap/login-ldap.yaml"
-exec_as $app cp ../conf/login-ldap.yaml "$final_path/user/plugins/login-ldap/login-ldap.yaml"
-ynh_replace_string "__ADMIN__" "$admin" "$final_path/user/plugins/login-ldap/login-ldap.yaml"
-ynh_replace_string "__APP__" "$app" "$final_path/user/plugins/login-ldap/login-ldap.yaml"
-exec_as $app cp "$final_path/user/plugins/login-ldap/login-ldap.yaml" "$final_path/user/config/plugins/login-ldap.yaml"
+ynh_add_config --template="../conf/login-ldap.yaml" --destination="$final_path/user/config/plugins/login-ldap.yaml"
+chown $app:$app "$final_path/user/config/plugins/login-ldap.yaml"
+chmod 640 "$final_path/user/config/plugins/login-ldap.yaml"
 
 #=================================================
 # CREATE A CRON TASK
