@@ -63,6 +63,10 @@
 			{
 				"name": "language",
 				"type": "string",
+				"ask": {
+					"en": "Choose the application language",
+					"fr": "Choisissez la langue de l'application"
+				},
 				"choices": ["en_EN", "fr_FR"],
 				"default": "fr_FR"
 			}
