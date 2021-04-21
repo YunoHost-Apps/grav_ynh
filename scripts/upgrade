@@ -55,6 +55,18 @@ if ynh_legacy_permissions_exists; then
 	ynh_app_setting_delete --app=$app --key=is_public
 fi
 
+# Giving admin permission to the specified used
+if ! ynh_permission_exists --permission "admin"
+then
+        ynh_permission_create --permission "admin" --allowed "$admin"
+fi
+
+# Creating user permission
+if ! ynh_permission_exists --permission "user"
+then
+        ynh_permission_create --permission "user"
+fi
+
 # If fpm_footprint doesn't exist, create it
 if [ -z "$fpm_footprint" ]; then
 	fpm_footprint=medium
@@ -142,14 +154,18 @@ find "$final_path" -type d -exec chmod +s {} \;
 #=================================================
 ynh_script_progression --message="Updating all plugins..." --weight=1
 
-yes N | ynh_exec_warn_less exec_as $app php${YNH_PHP_VERSION} $final_path/bin/gpm update --all-yes --no-interaction
+pushd "$final_path"
+	ynh_exec_warn_less yes N | ynh_exec_warn_less exec_as $app php${YNH_PHP_VERSION} bin/gpm update --all-yes --no-interaction || ynh_print_warn --message="Automatic plugin upgrade has failed, you can upgrade them from your Grav admin panel."
+popd
 
 #=================================================
 # INSTALL LDAP PLUGIN
 #=================================================
 ynh_script_progression --message="Installing and configuring LDAP plugin..." --weight=3
 
-exec_as $app php${YNH_PHP_VERSION} "$final_path/bin/gpm" install login-ldap --all-yes --no-interaction
+pushd "$final_path"
+        exec_as $app php${YNH_PHP_VERSION} bin/gpm install login-ldap --no-interaction
+popd
 exec_as $app mkdir -p "$final_path/user/config/plugins/login-ldap"
 exec_as $app touch "$final_path/user/accounts/admin.yaml"
 
@@ -162,25 +178,6 @@ chmod 640 "$final_path/user/config/plugins/login-ldap.yaml"
 #=================================================
 
 echo "* *  *  *  * $app php${YNH_PHP_VERSION} $final_path/bin/grav scheduler 1>> /dev/null 2>&1" > /etc/cron.d/$app
-
-#=================================================
-# SETUP PERMISSIONS
-#=================================================
-ynh_script_progression --message="Configuring permissions..." --weight=1
-
-# Giving admin permission to the specified used
-if ! ynh_permission_exists --permission "admin"
-then
-	ynh_permission_create --permission "admin" --allowed "$admin"
-else
-	ynh_permission_update --permission "admin" --add "$admin"
-fi
-
-# Creating user permission
-if ! ynh_permission_exists --permission "user"
-then
-	ynh_permission_create --permission "user"
-fi
 
 #=================================================
 # RELOAD NGINX AND PHP-FPM
