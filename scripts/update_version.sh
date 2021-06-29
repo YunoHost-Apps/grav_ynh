@@ -79,15 +79,11 @@ EOT
 #  README and COMMIT
 ###
 
-sed -i "s#\*\*Shipped version:\*\*.*#\*\*Shipped version:\*\* ${version}#" ../README.md
-sed -i "s#\*\*Version incluse :\*\*.*#\*\*Version incluse :\*\* ${version}#" ../README_fr.md
 sed -i "s#    \"version\": \".*#    \"version\": \"${version}\~ynh1\",#" ../manifest.json
-
-# TODO: Run README maker
 
 message="Upgrade to v$version"
 if [ "$message" == "$(git show -s --format=%s)" ]; then
-  git commit ../README.md ../README_fr.md ../manifest.json ../conf/app.src --amend -m "$message"
+  git commit ../manifest.json ../conf/app.src --amend -m "$message"
 else
-  git commit ../README.md ../README_fr.md ../manifest.json ../conf/app.src -m "$message"
+  git commit ../manifest.json ../conf/app.src -m "$message"
 fi
