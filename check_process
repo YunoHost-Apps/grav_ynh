@@ -27,6 +27,7 @@
 		setup_public=1
 		upgrade=1
 		upgrade=1	from_commit=12e86653bc6c91208b3abaf4243a7ebb996cada6
+		upgrade=1	from_commit=7d16d0560c588ad4adcde5b44ae4329f9e40f7c7
 		backup_restore=1
 		multi_instance=1
 		port_already_use=0	(66)
@@ -39,4 +40,7 @@ Notification=none
 ;;; Upgrade options
 	; commit=12e86653bc6c91208b3abaf4243a7ebb996cada6
 			name=Upgrade to v1.7.5
+			manifest_arg=domain=DOMAIN&path=PATH&admin=USER&language=fr_FR&is_public=1&
+	; commit=7d16d0560c588ad4adcde5b44ae4329f9e40f7c7
+			name=Upgrade to v1.7.17
 			manifest_arg=domain=DOMAIN&path=PATH&admin=USER&language=fr_FR&is_public=1&
