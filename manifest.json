@@ -1,82 +1,88 @@
 {
-	"name": "Grav",
-	"id": "grav",
-	"packaging_format": 1,
-	"description": {
-		"en": "A modern open source flat-file CMS",
-		"fr": "Un CMS moderne basé sur des fichiers plats"
-	},
-	"version": "1.7.17~ynh1",
-	"url": "https://www.getgrav.org/",
-	"upstream": {
-			"license": "MIT",
-			"website": "https://www.getgrav.org/",
-			"demo": "https://getgrav.org/downloads/themes",
-			"admindoc": "https://learn.getgrav.org",
-			"code": "https://github.com/getgrav/grav"
-	},
-	"license": "MIT-0",
-	"maintainer": [
-		{
-			"name": "tituspijean",
-			"email": "tituspijean@outlook.com"
-		}],
-	"previous_maintainers": [
-		{
-			"name": "cyp",
-			"email": "cyp@rouquin.me"
-		},{
-			"name": "lithrel",
-			"email": "lithrel@randomdomainname.net"
-		},
-		{
-			"name": "jibec",
-			"email": "jean-baptiste@holcroft.fr"
-		}],
-	"requirements": {
-		"yunohost": ">= 4.1.0"
-	},
-	"multi_instance": true,
-	"services": [
-		"nginx"
-	],
-	"arguments": {
-		"install" : [
-			{
-				"name": "domain",
-				"type": "domain",
-				"example": "example.org"
-			},
-			{
-				"name": "path",
-				"type": "path",
-				"example": "/grav",
-				"default": "/grav"
-			},
-			{
-				"name": "admin",
-				"type": "user",
-				"example": "johndoe"
-			},
-			{
-				"name": "is_public",
-				"type": "boolean",
-				"help": {
-					"en": "Will anyone be able to access the website?",
-					"fr": "Est-ce que quiconque pourra accéder au site ?"
-				},
-				"default": true
-			},
-			{
-				"name": "language",
-				"type": "string",
-				"ask": {
-					"en": "Choose the application language",
-					"fr": "Choisissez la langue de l'application"
-				},
-				"choices": ["en_EN", "fr_FR"],
-				"default": "fr_FR"
-			}
-		]
-	}
+    "name": "Grav",
+    "id": "grav",
+    "packaging_format": 1,
+    "description": {
+        "en": "A modern open source flat-file CMS",
+        "fr": "Un CMS moderne basé sur des fichiers plats"
+    },
+    "version": "1.7.20~ynh1",
+    "url": "https://www.getgrav.org/",
+    "upstream": {
+        "license": "MIT",
+        "website": "https://www.getgrav.org/",
+        "demo": "https://getgrav.org/downloads/themes",
+        "admindoc": "https://learn.getgrav.org",
+        "code": "https://github.com/getgrav/grav"
+    },
+    "license": "MIT-0",
+    "maintainer": [
+        {
+            "name": "tituspijean",
+            "email": "tituspijean@outlook.com"
+        }
+    ],
+    "previous_maintainers": [
+        {
+            "name": "cyp",
+            "email": "cyp@rouquin.me"
+        },
+        {
+            "name": "lithrel",
+            "email": "lithrel@randomdomainname.net"
+        },
+        {
+            "name": "jibec",
+            "email": "jean-baptiste@holcroft.fr"
+        }
+    ],
+    "requirements": {
+        "yunohost": ">= 4.1.0"
+    },
+    "multi_instance": true,
+    "services": [
+        "nginx"
+    ],
+    "arguments": {
+        "install": [
+            {
+                "name": "domain",
+                "type": "domain",
+                "example": "example.org"
+            },
+            {
+                "name": "path",
+                "type": "path",
+                "example": "/grav",
+                "default": "/grav"
+            },
+            {
+                "name": "admin",
+                "type": "user",
+                "example": "johndoe"
+            },
+            {
+                "name": "is_public",
+                "type": "boolean",
+                "help": {
+                    "en": "Will anyone be able to access the website?",
+                    "fr": "Est-ce que quiconque pourra accéder au site ?"
+                },
+                "default": true
+            },
+            {
+                "name": "language",
+                "type": "string",
+                "ask": {
+                    "en": "Choose the application language",
+                    "fr": "Choisissez la langue de l'application"
+                },
+                "choices": [
+                    "en_EN",
+                    "fr_FR"
+                ],
+                "default": "fr_FR"
+            }
+        ]
+    }
 }
