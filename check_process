@@ -4,11 +4,11 @@
 		#echo -n "Here your commands to execute in the container"
 		#echo ", before each installation of the app."
 	; Manifest
-		domain="domain.tld"	(DOMAIN)
-		path="/path"	(PATH)
-		admin="john"	(USER)
+		domain="domain.tld"
+		path="/path"
+		admin="john"
 		language="fr_FR"
-		is_public=1	(PUBLIC|public=1|private=0)
+		is_public=1
 	; Actions
 		action_argument=arg1|arg2
 		is_public=1|0
