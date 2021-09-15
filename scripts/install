@@ -104,12 +104,14 @@ find "$final_path" -type d -exec chmod +s {} \;
 #=================================================
 ynh_script_progression --message="Installing and configuring LDAP plugin..." --weight=1
 
-pushd "$final_path"
-	exec_as $app php${YNH_PHP_VERSION} bin/gpm install login-ldap --no-interaction
-popd
+# Download LDAP source
+ynh_setup_source --dest_dir="$final_path/user/plugins/login-ldap" --source_id="ldap"
+
+# Preparing config
 exec_as $app mkdir -p "$final_path/user/config/plugins/login-ldap"
 exec_as $app touch "$final_path/user/accounts/admin.yaml"
 
+# Setting up config
 ynh_add_config --template="../conf/login-ldap.yaml" --destination="$final_path/user/config/plugins/login-ldap.yaml"
 chown $app:$app "$final_path/user/config/plugins/login-ldap.yaml"
 chmod 640 "$final_path/user/config/plugins/login-ldap.yaml"
