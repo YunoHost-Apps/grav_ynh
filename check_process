@@ -27,6 +27,7 @@
 		setup_public=1
 		upgrade=1
 #		upgrade=1	from_commit=7d16d0560c588ad4adcde5b44ae4329f9e40f7c7
+		upgrade=1	from_commit=412306ac0a7c3f6f02aff162b65eb4b1f4484b2a
 		backup_restore=1
 		multi_instance=1
 		port_already_use=0	(66)
@@ -38,5 +39,8 @@ Email=tituspijean@outlook.com
 Notification=none
 ;;; Upgrade options
 #	; commit=7d16d0560c588ad4adcde5b44ae4329f9e40f7c7
-#			name=Upgrade to v1.7.17
+#			name=v1.7.17
 #			manifest_arg=domain=DOMAIN&path=PATH&admin=USER&language=fr_FR&is_public=1&
+	; commit=412306ac0a7c3f6f02aff162b65eb4b1f4484b2a
+			name=v1.7.21
+			manifest_arg=domain=DOMAIN&path=PATH&admin=USER&language=fr_FR&is_public=1&
