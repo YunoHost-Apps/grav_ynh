@@ -52,6 +52,13 @@ ynh_app_setting_set --app=$app --key=admin --value=$admin
 ynh_app_setting_set --app=$app --key=language --value=$language
 
 #=================================================
+# INSTALL DEPENDENCIES
+#=================================================
+ynh_script_progression --message="Installing dependencies..." --weight=1
+
+ynh_install_app_dependencies $pkg_dependencies
+
+#=================================================
 # CREATE DEDICATED USER
 #=================================================
 ynh_script_progression --message="Configuring system user..." --weight=1
@@ -108,8 +115,8 @@ ynh_script_progression --message="Installing and configuring LDAP plugin..." --w
 ynh_setup_source --dest_dir="$final_path/user/plugins/login-ldap" --source_id="ldap"
 
 # Preparing config
-exec_as $app mkdir -p "$final_path/user/config/plugins/login-ldap"
-exec_as $app touch "$final_path/user/accounts/admin.yaml"
+ynh_exec_as $app mkdir -p "$final_path/user/config/plugins/login-ldap"
+ynh_exec_as $app touch "$final_path/user/accounts/admin.yaml"
 
 # Setting up config
 ynh_add_config --template="../conf/login-ldap.yaml" --destination="$final_path/user/config/plugins/login-ldap.yaml"
