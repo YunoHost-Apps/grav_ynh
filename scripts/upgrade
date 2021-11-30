@@ -116,6 +116,13 @@ ynh_script_progression --message="Upgrading NGINX web server configuration..." -
 ynh_add_nginx_config
 
 #=================================================
+# UPGRADE DEPENDENCIES
+#=================================================
+ynh_script_progression --message="Upgrading dependencies..." --weight=1
+
+ynh_install_app_dependencies $pkg_dependencies
+
+#=================================================
 # CREATE DEDICATED USER
 #=================================================
 ynh_script_progression --message="Making sure dedicated system user exists..." --weight=3
@@ -129,7 +136,7 @@ ynh_system_user_create --username=$app --home_dir=$final_path
 ynh_script_progression --message="Upgrading PHP-FPM configuration..." --weight=1
 
 # Create a dedicated php-fpm config
-ynh_add_fpm_config --usage=$fpm_usage --footprint=$fpm_footprint --package="$extra_php_dependencies"
+ynh_add_fpm_config --usage=$fpm_usage --footprint=$fpm_footprint
 
 # Delete existing ini configuration file (backward compatibility)
 if [ -f /etc/php/$YNH_PHP_VERSION/fpm/conf.d/20-$app.ini ]; then
@@ -146,8 +153,8 @@ ynh_script_progression --message="Installing and configuring LDAP plugin..." --w
 # Download LDAP source
 ynh_setup_source --dest_dir="$final_path/user/plugins/login-ldap" --source_id="ldap"
 
-exec_as $app mkdir -p "$final_path/user/config/plugins/login-ldap"
-exec_as $app touch "$final_path/user/accounts/admin.yaml"
+ynh_exec_as $app mkdir -p "$final_path/user/config/plugins/login-ldap"
+ynh_exec_as $app touch "$final_path/user/accounts/admin.yaml"
 
 ynh_add_config --template="../conf/login-ldap.yaml" --destination="$final_path/user/config/plugins/login-ldap.yaml"
 chown $app:$app "$final_path/user/config/plugins/login-ldap.yaml"
