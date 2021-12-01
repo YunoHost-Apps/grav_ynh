@@ -153,8 +153,8 @@ ynh_script_progression --message="Installing and configuring LDAP plugin..." --w
 # Download LDAP source
 ynh_setup_source --dest_dir="$final_path/user/plugins/login-ldap" --source_id="ldap"
 
-ynh_exec_as $app mkdir -p "$final_path/user/config/plugins/login-ldap"
-ynh_exec_as $app touch "$final_path/user/accounts/admin.yaml"
+mkdir -p "$final_path/user/config/plugins/login-ldap"
+touch "$final_path/user/accounts/admin.yaml"
 
 ynh_add_config --template="../conf/login-ldap.yaml" --destination="$final_path/user/config/plugins/login-ldap.yaml"
 chown $app:$app "$final_path/user/config/plugins/login-ldap.yaml"
