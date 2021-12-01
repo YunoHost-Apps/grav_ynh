@@ -36,8 +36,6 @@ ynh_script_progression --message="Validating installation parameters..." --weigh
 final_path=/var/www/$app
 test ! -e "$final_path" || ynh_die "This path already contains a folder"
 
-# Check web path availability
-ynh_webpath_available --domain=$domain --path_url=$path_url
 # Register (book) web path
 ynh_webpath_register --app=$app --domain=$domain --path_url=$path_url
 
@@ -50,6 +48,13 @@ ynh_app_setting_set --app=$app --key=domain --value=$domain
 ynh_app_setting_set --app=$app --key=path --value=$path_url
 ynh_app_setting_set --app=$app --key=admin --value=$admin
 ynh_app_setting_set --app=$app --key=language --value=$language
+
+#=================================================
+# INSTALL DEPENDENCIES
+#=================================================
+ynh_script_progression --message="Installing dependencies..." --weight=1
+
+ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
 # CREATE DEDICATED USER
@@ -84,7 +89,7 @@ ynh_add_nginx_config
 ynh_script_progression --message="Configuring PHP-FPM..." --weight=3
 
 # Create a dedicated php-fpm config
-ynh_add_fpm_config --usage=medium --footprint=medium --package="$extra_php_dependencies"
+ynh_add_fpm_config --usage=medium --footprint=medium
 
 #=================================================
 # GENERIC FINALIZATION
@@ -108,8 +113,8 @@ ynh_script_progression --message="Installing and configuring LDAP plugin..." --w
 ynh_setup_source --dest_dir="$final_path/user/plugins/login-ldap" --source_id="ldap"
 
 # Preparing config
-exec_as $app mkdir -p "$final_path/user/config/plugins/login-ldap"
-exec_as $app touch "$final_path/user/accounts/admin.yaml"
+ynh_exec_as $app mkdir -p "$final_path/user/config/plugins/login-ldap"
+ynh_exec_as $app touch "$final_path/user/accounts/admin.yaml"
 
 # Setting up config
 ynh_add_config --template="../conf/login-ldap.yaml" --destination="$final_path/user/config/plugins/login-ldap.yaml"
