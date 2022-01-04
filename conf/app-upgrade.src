@@ -1,5 +1,5 @@
-SOURCE_URL=https://github.com/getgrav/grav/releases/download/1.7.25/grav-update-v1.7.25.zip
-SOURCE_SUM=526e42e3a169b2d6b93cb35af714a7fb91f15a27ebf3361b354ee6cfe28f26d6
+SOURCE_URL=https://github.com/getgrav/grav/releases/download/1.7.26/grav-update-v1.7.26.zip
+SOURCE_SUM=1cea83084c0f6c1fa1943093f7e536a6901260de0d8cf52cabb9fd803e783f15
 SOURCE_SUM_PRG=sha256sum
 SOURCE_FORMAT=zip
 SOURCE_IN_SUBDIR=true
