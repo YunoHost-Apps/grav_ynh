@@ -124,8 +124,13 @@ chmod 640 "$final_path/user/config/plugins/login-ldap.yaml"
 #=================================================
 # CREATE A CRON TASK
 #=================================================
+ynh_script_progression --message="Creating cron task..." --weight=1
 
 echo "* *  *  *  * $app php${YNH_PHP_VERSION} $final_path/bin/grav scheduler 1>> /dev/null 2>&1" > /etc/cron.d/$app
+
+ynh_print_info --message="Grav's own daily backup will be disabled, as it makes YunoHost backups increasingly large."
+
+ynh_replace_string --match_string="default-site-backup: enabled" --replace_string="default-site-backup: disabled" --target_file="$final_path/user/config/scheduler.yaml"
 
 #=================================================
 # SETUP PERMISSIONS
