@@ -127,6 +127,7 @@ chmod 640 "$final_path/user/config/plugins/login-ldap.yaml"
 
 echo "* *  *  *  * $app php${YNH_PHP_VERSION} $final_path/bin/grav scheduler 1>> /dev/null 2>&1" > /etc/cron.d/$app
 
+chmod 644 /etc/cron.d/$app
 #=================================================
 # SETUP PERMISSIONS
 #=================================================
