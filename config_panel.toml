@@ -1,0 +1,19 @@
+version = "1.0"
+
+[main]
+name = "Grav configuration"
+
+    [main.sftp]
+    name = "SSH and SFTP access"
+
+        [main.sftp.with_sftp]
+        ask = "Do you need an SSH and SFTP access?"
+        type = "boolean"
+        default = false
+
+        [main.sftp.password]
+        ask = "Set a password for the SSH and SFTP access"
+        type = "password"
+        optional = true
+        visible = "with_sftp"
+        help = "If a password already exists, leave blank and it will not be replaced."
