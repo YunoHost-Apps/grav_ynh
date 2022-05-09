@@ -13,7 +13,7 @@ Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour
 
 Un CMS moderne basé sur des fichiers plats
 
-**Version incluse :** 1.7.31~ynh1
+**Version incluse :** 1.7.33~ynh1
 
 **Démo :** https://getgrav.org/downloads/themes
 
