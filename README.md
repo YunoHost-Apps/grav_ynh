@@ -5,7 +5,7 @@ It shall NOT be edited by hand.
 
 # Grav for YunoHost
 
-[![Integration level](https://dash.yunohost.org/integration/grav.svg)](https://dash.yunohost.org/appci/app/grav) ![](https://ci-apps.yunohost.org/ci/badges/grav.status.svg) ![](https://ci-apps.yunohost.org/ci/badges/grav.maintain.svg)  
+[![Integration level](https://dash.yunohost.org/integration/grav.svg)](https://dash.yunohost.org/appci/app/grav) ![Working status](https://ci-apps.yunohost.org/ci/badges/grav.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/grav.maintain.svg)  
 [![Install Grav with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=grav)
 
 *[Lire ce readme en français.](./README_fr.md)*
@@ -17,13 +17,13 @@ If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/in
 
 A modern open source flat-file CMS
 
-**Shipped version:** 1.7.33~ynh1
+**Shipped version:** 1.7.35~ynh1
 
 **Demo:** https://getgrav.org/downloads/themes
 
 ## Screenshots
 
-![](./doc/screenshots/grav.jpg)
+![Screenshot of Grav](./doc/screenshots/grav.jpg)
 
 ## Disclaimers / important information
 
@@ -38,21 +38,22 @@ A modern open source flat-file CMS
 
 ## Documentation and resources
 
-* Official app website: https://www.getgrav.org/
-* Official admin documentation: https://learn.getgrav.org
-* Upstream app code repository: https://github.com/getgrav/grav
-* YunoHost documentation for this app: https://yunohost.org/app_grav
-* Report a bug: https://github.com/YunoHost-Apps/grav_ynh/issues
+* Official app website: <https://www.getgrav.org/>
+* Official admin documentation: <https://learn.getgrav.org>
+* Upstream app code repository: <https://github.com/getgrav/grav>
+* YunoHost documentation for this app: <https://yunohost.org/app_grav>
+* Report a bug: <https://github.com/YunoHost-Apps/grav_ynh/issues>
 
 ## Developer info
 
 Please send your pull request to the [testing branch](https://github.com/YunoHost-Apps/grav_ynh/tree/testing).
 
 To try the testing branch, please proceed like that.
-```
+
+``` bash
 sudo yunohost app install https://github.com/YunoHost-Apps/grav_ynh/tree/testing --debug
 or
 sudo yunohost app upgrade grav -u https://github.com/YunoHost-Apps/grav_ynh/tree/testing --debug
 ```
 
-**More info regarding app packaging:** https://yunohost.org/packaging_apps
+**More info regarding app packaging:** <https://yunohost.org/packaging_apps>
