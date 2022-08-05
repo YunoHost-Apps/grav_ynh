@@ -25,6 +25,9 @@ language=$(ynh_app_setting_get --app=$app --key=language)
 fpm_footprint=$(ynh_app_setting_get --app=$app --key=fpm_footprint)
 fpm_usage=$(ynh_app_setting_get --app=$app --key=fpm_usage)
 
+with_sftp=$(ynh_app_setting_get --app=$app --key=with_sftp)
+password=$(ynh_app_setting_get --app=$app --key=password)
+
 #=================================================
 # CHECK VERSION
 #=================================================
@@ -77,6 +80,12 @@ fi
 if [ -z "$fpm_usage" ]; then
 	fpm_usage=medium
 	ynh_app_setting_set --app=$app --key=fpm_usage --value=$fpm_usage
+fi
+
+# If with_sftp or password don't exist, create them
+if [ -z "$with_sftp" ] || [ -z "$password" ]; then
+	ynh_app_setting_set --app=$app --key=with_sftp --value="false"
+	ynh_app_setting_set --app=$app --key=password --value=$(ynh_string_random)
 fi
 
 #=================================================
