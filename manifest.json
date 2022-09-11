@@ -15,7 +15,7 @@
         "admindoc": "https://learn.getgrav.org",
         "code": "https://github.com/getgrav/grav"
     },
-    "license": "MIT-0",
+    "license": "MIT",
     "maintainer": [
         {
             "name": "tituspijean",
