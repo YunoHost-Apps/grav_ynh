@@ -17,6 +17,7 @@ Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour
 
 Un CMS moderne basé sur des fichiers plats
 
+
 **Version incluse :** 1.7.36~ynh1
 
 
