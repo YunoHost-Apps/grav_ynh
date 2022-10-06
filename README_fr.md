@@ -17,7 +17,7 @@ Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour
 
 Un CMS moderne basé sur des fichiers plats
 
-**Version incluse :** 1.7.36~ynh1
+**Version incluse :** 1.7.37.1~ynh1 *(:warning: Il s'agit de la branche `ci-auto-update-v1.7.37.1`. La [branche `master`](https://github.com/YunoHost-Apps/grav_ynh/tree/master) utilisée dans le catalogue est actuellement en 1.7.36\~ynh1.)*
 
 
 **Démo :** https://getgrav.org/downloads/themes
