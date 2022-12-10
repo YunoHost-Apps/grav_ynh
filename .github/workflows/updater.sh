@@ -17,56 +17,58 @@ echo "${#ASSETS[@]} available asset(s)"
 # Let's loop over the array of assets URLs
 for asset_url in ${ASSETS[@]}; do
 
-echo "Handling asset at $asset_url"
+	echo "Handling asset at $asset_url"
 
-# Assign the asset to a source file in conf/ directory
-# Leave $src empty to ignore the asset
-case $asset_url in
-  *"admin"*)
-    src="app"
-    ;;
-  *"update"*)
-    src="app-upgrade"
-    ;;
-  *)
-    src=""
-    ;;
-esac
+	# Assign the asset to a source file in conf/ directory
+	# Leave $src empty to ignore the asset
+	case $asset_url in
+		*"admin"*)
+			src="app"
+			;;
+		*"update"*)
+			src="app-upgrade"
+			;;
+		*)
+			src=""
+		;;
+	esac
 
-# If $src is not empty, let's process the asset
-if [ ! -z "$src" ]; then
+	# If $src is not empty, let's process the asset
+	if [ ! -z "$src" ]; then
 
-# Create the temporary directory
-tempdir="$(mktemp -d)"
+		# Create the temporary directory
+		tempdir="$(mktemp -d)"
 
-# Download sources and calculate checksum
-filename=${asset_url##*/}
-curl --silent -4 -L $asset_url -o "$tempdir/$filename"
-checksum=$(sha256sum "$tempdir/$filename" | head -c 64)
+		# Download sources and calculate checksum
+		filename=${asset_url##*/}
+		curl --silent -4 -L $asset_url -o "$tempdir/$filename"
+		checksum=$(sha256sum "$tempdir/$filename" | head -c 64)
 
-# Delete temporary directory
-rm -rf $tempdir
+		# Delete temporary directory
+		rm -rf $tempdir
 
-# Get extension
-if [[ $filename == *.tar.gz ]]; then
-  extension=tar.gz
-else
-  extension=${filename##*.}
-fi
+		# Get extension
+		if [[ $filename == *.tar.gz ]]; then
+			extension=tar.gz
+		else
+			extension=${filename##*.}
+		fi
 
-# Rewrite source file
-cat <<EOT > conf/$src.src
+		# Rewrite source file
+		cat <<EOT > conf/$src.src
 SOURCE_URL=$asset_url
 SOURCE_SUM=$checksum
 SOURCE_SUM_PRG=sha256sum
 SOURCE_FORMAT=$extension
 SOURCE_IN_SUBDIR=true
+SOURCE_FILENAME=
+SOURCE_EXTRACT=true
 EOT
-echo "... conf/$src.src updated"
+		echo "... conf/$src.src updated"
 
-else
-echo "... asset ignored"
-fi
+	else
+		echo "... asset ignored"
+	fi
 
 done
 echo "Done!"

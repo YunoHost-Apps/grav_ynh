@@ -6,9 +6,9 @@
 	; Manifest
 		domain="domain.tld"
 		path="/path"
-		admin="john"
-		language="fr_FR"
 		is_public=1
+		language="fr_FR"
+		admin="john"
 	; Actions
 		action_argument=arg1|arg2
 		is_public=1|0

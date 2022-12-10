@@ -15,10 +15,10 @@ If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/in
 
 ## Overview
 
-A modern open source flat-file CMS
+Grav is a modern open source flat-file CMS.
+
 
 **Shipped version:** 1.7.36~ynh1
-
 
 **Demo:** https://getgrav.org/downloads/themes
 

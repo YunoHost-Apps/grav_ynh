@@ -14,29 +14,13 @@ source /usr/share/yunohost/helpers
 #=================================================
 ynh_script_progression --message="Loading installation settings..." --weight=1
 
-# Get multi-instances specific variables
 app=$YNH_APP_INSTANCE_NAME
 
-# Retrieve app settings
 domain=$(ynh_app_setting_get --app=$app --key=domain)
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 
 #=================================================
 # STANDARD REMOVE
-#=================================================
-# REMOVE DEPENDENCIES
-#=================================================
-ynh_script_progression --message="Removing dependencies..." --weight=2
-
-# Remove metapackage and its dependencies
-ynh_remove_app_dependencies
-
-#=================================================
-# REMOVE THE CRON
-#=================================================
-
-ynh_secure_remove --file="/etc/cron.d/$app"
-
 #=================================================
 # REMOVE APP MAIN DIR
 #=================================================
@@ -50,7 +34,7 @@ ynh_secure_remove --file="$final_path"
 #=================================================
 ynh_script_progression --message="Removing NGINX web server configuration..." --weight=1
 
-# Remove the dedicated nginx config
+# Remove the dedicated NGINX config
 ynh_remove_nginx_config
 
 #=================================================
@@ -58,7 +42,7 @@ ynh_remove_nginx_config
 #=================================================
 ynh_script_progression --message="Removing PHP-FPM configuration..." --weight=2
 
-# Remove the dedicated php-fpm config
+# Remove the dedicated PHP-FPM config
 ynh_remove_fpm_config
 
 #=================================================
@@ -68,6 +52,16 @@ ynh_script_progression --message="Removing dependencies..." --weight=1
 
 # Remove metapackage and its dependencies
 ynh_remove_app_dependencies
+
+#=================================================
+# SPECIFIC REMOVE
+#=================================================
+# REMOVE VARIOUS FILES
+#=================================================
+ynh_script_progression --message="Removing various files..." --weight=1
+
+# Remove a cron file
+ynh_secure_remove --file="/etc/cron.d/$app"
 
 #=================================================
 # GENERIC FINALIZATION
