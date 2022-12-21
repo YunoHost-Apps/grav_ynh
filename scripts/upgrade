@@ -18,10 +18,9 @@ app=$YNH_APP_INSTANCE_NAME
 
 domain=$(ynh_app_setting_get --app=$app --key=domain)
 path_url=$(ynh_app_setting_get --app=$app --key=path)
+language=$(ynh_app_setting_get --app=$app --key=language)
 admin=$(ynh_app_setting_get --app=$app --key=admin)
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
-language=$(ynh_app_setting_get --app=$app --key=language)
-
 fpm_footprint=$(ynh_app_setting_get --app=$app --key=fpm_footprint)
 fpm_usage=$(ynh_app_setting_get --app=$app --key=fpm_usage)
 
@@ -31,19 +30,30 @@ password=$(ynh_app_setting_get --app=$app --key=password)
 #=================================================
 # CHECK VERSION
 #=================================================
+ynh_script_progression --message="Checking version..." --weight=1
 
 upgrade_type=$(ynh_check_app_version_changed)
 
 #=================================================
+# BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
+#=================================================
+ynh_script_progression --message="Backing up the app before upgrading (may take a while)..." --weight=4
+
+# Backup the current version of the app
+ynh_backup_before_upgrade
+ynh_clean_setup () {
+	# Restore it if the upgrade fails
+	ynh_restore_upgradebackup
+}
+# Exit if an error occurs during the execution of the script
+ynh_abort_if_errors
+
+#=================================================
+# STANDARD UPGRADE STEPS
+#=================================================
 # ENSURE DOWNWARD COMPATIBILITY
 #=================================================
 ynh_script_progression --message="Ensuring downward compatibility..." --weight=1
-
-# If db_name doesn't exist, create it
-if [ -z "$db_name" ]; then
-	db_name=$(ynh_sanitize_dbid --db_name=$app)
-	ynh_app_setting_set --app=$app --key=db_name --value=$db_name
-fi
 
 # If final_path doesn't exist, create it
 if [ -z "$final_path" ]; then
@@ -59,15 +69,15 @@ if ynh_legacy_permissions_exists; then
 fi
 
 # Giving admin permission to the specified used
-if ! ynh_permission_exists --permission "admin"
+if ! ynh_permission_exists --permission="admin"
 then
-        ynh_permission_create --permission "admin" --allowed "$admin"
+        ynh_permission_create --permission="admin" --allowed="$admin"
 fi
 
 # Creating user permission
-if ! ynh_permission_exists --permission "user"
+if ! ynh_permission_exists --permission="user"
 then
-        ynh_permission_create --permission "user"
+        ynh_permission_create --permission="user"
 fi
 
 # If fpm_footprint doesn't exist, create it
@@ -88,22 +98,19 @@ if [ -z "$with_sftp" ] || [ -z "$password" ]; then
 	ynh_app_setting_set --app=$app --key=password --value=$(ynh_string_random)
 fi
 
-#=================================================
-# BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
-#=================================================
-ynh_script_progression --message="Backing up the app before upgrading (may take a while)..." --weight=4
-
-# Backup the current version of the app
-ynh_backup_before_upgrade
-ynh_clean_setup () {
-	# restore it if the upgrade fails
-	ynh_restore_upgradebackup
-}
-# Exit if an error occurs during the execution of the script
-ynh_abort_if_errors
+# Delete existing ini configuration file (backward compatibility)
+if [ -f /etc/php/$YNH_PHP_VERSION/fpm/conf.d/20-$app.ini ]; then
+	ynh_secure_remove --file=/etc/php/$YNH_PHP_VERSION/fpm/conf.d/20-$app.ini
+fi
 
 #=================================================
-# STANDARD UPGRADE STEPS
+# CREATE DEDICATED USER
+#=================================================
+ynh_script_progression --message="Making sure dedicated system user exists..." --weight=3
+
+# Create a dedicated user (if not existing)
+ynh_system_user_create --username=$app --home_dir="$final_path"
+
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
@@ -114,15 +121,15 @@ then
 
 	# Download, check integrity, uncompress and patch the source from app.src
 	ynh_setup_source --dest_dir="$final_path" --source_id="app-upgrade"
+	ynh_setup_source --dest_dir="$final_path/user/plugins/login-ldap" --source_id="ldap"
 fi
 
-#=================================================
-# NGINX CONFIGURATION
-#=================================================
-ynh_script_progression --message="Upgrading NGINX web server configuration..." --weight=2
-
-# Create a dedicated nginx config
-ynh_add_nginx_config
+# Set permissions on app files
+chown -R $app:www-data "$final_path"
+find "$final_path" -type f -exec chmod 640 {} \;
+find "$final_path/bin" -type f -exec chmod 750 {} \;
+find "$final_path" -type d -exec chmod 750 {} \;
+find "$final_path" -type d -exec chmod +s {} \;
 
 #=================================================
 # UPGRADE DEPENDENCIES
@@ -132,35 +139,28 @@ ynh_script_progression --message="Upgrading dependencies..." --weight=1
 ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
-# CREATE DEDICATED USER
-#=================================================
-ynh_script_progression --message="Making sure dedicated system user exists..." --weight=3
-
-# Create a dedicated user (if not existing)
-ynh_system_user_create --username=$app --home_dir=$final_path
-
-#=================================================
 # PHP-FPM CONFIGURATION
 #=================================================
 ynh_script_progression --message="Upgrading PHP-FPM configuration..." --weight=1
 
-# Create a dedicated php-fpm config
+# Create a dedicated PHP-FPM config
 ynh_add_fpm_config --usage=$fpm_usage --footprint=$fpm_footprint
+phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
 
-# Delete existing ini configuration file (backward compatibility)
-if [ -f /etc/php/$YNH_PHP_VERSION/fpm/conf.d/20-$app.ini ]; then
-	ynh_secure_remove --file=/etc/php/$YNH_PHP_VERSION/fpm/conf.d/20-$app.ini
-fi
+#=================================================
+# NGINX CONFIGURATION
+#=================================================
+ynh_script_progression --message="Upgrading NGINX web server configuration..." --weight=2
+
+# Create a dedicated NGINX config
+ynh_add_nginx_config
 
 #=================================================
 # SPECIFIC UPGRADE
 #=================================================
-# UPGRADE LDAP PLUGIN
+# UPDATE A CONFIG FILE
 #=================================================
-ynh_script_progression --message="Installing and configuring LDAP plugin..." --weight=3
-
-# Download LDAP source
-ynh_setup_source --dest_dir="$final_path/user/plugins/login-ldap" --source_id="ldap"
+ynh_script_progression --message="Updating a configuration file..." --weight=3
 
 mkdir -p "$final_path/user/config/plugins/login-ldap"
 touch "$final_path/user/accounts/admin.yaml"
@@ -168,17 +168,6 @@ touch "$final_path/user/accounts/admin.yaml"
 ynh_add_config --template="../conf/login-ldap.yaml" --destination="$final_path/user/config/plugins/login-ldap.yaml"
 chown $app:$app "$final_path/user/config/plugins/login-ldap.yaml"
 chmod 640 "$final_path/user/config/plugins/login-ldap.yaml"
-
-#=================================================
-# SECURE FILES AND DIRECTORIES
-#=================================================
-
-# Set permissions on app files
-chown -R $app:www-data "$final_path"
-find "$final_path" -type f -exec chmod 640 {} \;
-find "$final_path/bin" -type f -exec chmod 750 {} \;
-find "$final_path" -type d -exec chmod 750 {} \;
-find "$final_path" -type d -exec chmod +s {} \;
 
 #=================================================
 # UPGRADE PLUGINS
@@ -190,18 +179,20 @@ pushd "$final_path"
 popd
 
 #=================================================
-# CREATE A CRON TASK
-#=================================================
+# UPDATE A CRON TASK
+#================================================
+ynh_script_progression --message="Updating a cron task..." --weight=1
 
 echo "* *  *  *  * $app php${YNH_PHP_VERSION} $final_path/bin/grav scheduler 1>> /dev/null 2>&1" > /etc/cron.d/$app
 chmod 644 /etc/cron.d/$app
 
 #=================================================
-# RELOAD NGINX AND PHP-FPM
+# GENERIC FINALIZATION
 #=================================================
-ynh_script_progression --message="Reloading NGINX web server and PHP-FPM..." --weight=1
+# RELOAD NGINX
+#=================================================
+ynh_script_progression --message="Reloading NGINX web server..." --weight=1
 
-ynh_systemd_action --service_name=php${YNH_PHP_VERSION}-fpm --action=restart
 ynh_systemd_action --service_name=nginx --action=reload
 
 #=================================================
