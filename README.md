@@ -18,7 +18,7 @@ If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/in
 Grav is a modern open source flat-file CMS.
 
 
-**Shipped version:** 1.7.37.1~ynh1 *(:warning: This is the `ci-auto-update-v1.7.37.1` branch. The [`master` branch](https://github.com/YunoHost-Apps/grav_ynh/tree/master) used in the catalog is currently on version 1.7.36\~ynh1.)*
+**Shipped version:** 1.7.37.1~ynh1
 
 **Demo:** https://getgrav.org/downloads/themes
 
