@@ -7,7 +7,7 @@ jobs:
   updater:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Check if newer version is available upstream
@@ -46,12 +46,12 @@ jobs:
           # Run the version updater script
           ./.github/workflows/updater.sh
           # Replace new version in manifest
-          jq -s --indent 4 ".[] | .version = \"$VERSION~ynh1\"" manifest.json | sponge manifest.json
+          jq -s --indent 4 ".[] | .version = "$VERSION~ynh1"" manifest.json | sponge manifest.json
           # Commit
           git commit -am "Upgrade to v$VERSION"
       - name: Create Pull Request
         id: cpr
-        uses: peter-evans/create-pull-request@v3
+        uses: peter-evans/create-pull-request@v4
         if: steps.check_version.outputs.to_update == 'true'
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
