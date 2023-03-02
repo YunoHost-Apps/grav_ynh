@@ -5,26 +5,27 @@ It shall NOT be edited by hand.
 
 # Grav pour YunoHost
 
-[![Niveau d'intégration](https://dash.yunohost.org/integration/grav.svg)](https://dash.yunohost.org/appci/app/grav) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/grav.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/grav.maintain.svg)  
+[![Niveau d’intégration](https://dash.yunohost.org/integration/grav.svg)](https://dash.yunohost.org/appci/app/grav) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/grav.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/grav.maintain.svg)
+
 [![Installer Grav avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=grav)
 
 *[Read this readme in english.](./README.md)*
 
-> *Ce package vous permet d'installer Grav rapidement et simplement sur un serveur YunoHost.
-Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour savoir comment l'installer et en profiter.*
+> *Ce package vous permet d’installer Grav rapidement et simplement sur un serveur YunoHost.
+Si vous n’avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour savoir comment l’installer et en profiter.*
 
-## Vue d'ensemble
+## Vue d’ensemble
 
 Un CMS moderne basé sur des fichiers plats
 
 
-**Version incluse :** 1.7.38~ynh1
+**Version incluse :** 1.7.39.4~ynh1
 
 **Démo :** https://getgrav.org/downloads/themes
 
-## Captures d'écran
+## Captures d’écran
 
-![Capture d'écran de Grav](./doc/screenshots/grav.jpg)
+![Capture d’écran de Grav](./doc/screenshots/grav.jpg)
 
 ## Avertissements / informations importantes
 
@@ -40,9 +41,9 @@ Un CMS moderne basé sur des fichiers plats
 
 ## Documentations et ressources
 
-* Site officiel de l'app : <https://www.getgrav.org/>
-* Documentation officielle de l'admin : <https://learn.getgrav.org>
-* Dépôt de code officiel de l'app : <https://github.com/getgrav/grav>
+* Site officiel de l’app : <https://www.getgrav.org/>
+* Documentation officielle de l’admin : <https://learn.getgrav.org>
+* Dépôt de code officiel de l’app : <https://github.com/getgrav/grav>
 * Documentation YunoHost pour cette app : <https://yunohost.org/app_grav>
 * Signaler un bug : <https://github.com/YunoHost-Apps/grav_ynh/issues>
 
@@ -58,4 +59,4 @@ ou
 sudo yunohost app upgrade grav -u https://github.com/YunoHost-Apps/grav_ynh/tree/testing --debug
 ```
 
-**Plus d'infos sur le packaging d'applications :** <https://yunohost.org/packaging_apps>
+**Plus d’infos sur le packaging d’applications :** <https://yunohost.org/packaging_apps>
