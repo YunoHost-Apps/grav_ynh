@@ -49,7 +49,9 @@ ram.runtime = "50M"
     choices = ["en_EN", "fr_FR"]
     default = "fr_FR"
 
-    [install.admin]
+    [install.init_admin_permission]
+    ask.en = "Select an administrator for the app"
+    ask.fr = "Sélectionnez un administrateur pour l'application"
     type = "user"
 
 [resources]
@@ -75,6 +77,7 @@ ram.runtime = "50M"
 
     [resources.permissions]
     main.url = "/"
+    admin.show_tile = false
 
     [resources.apt]
     packages = "php7.4, php7.4-zip, php7.4-mbstring, php7.4-curl, php7.4-dom, php7.4-gd, php7.4-xml, php7.4-ldap"
