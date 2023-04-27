@@ -1,6 +1,0 @@
-SOURCE_URL=https://github.com/getgrav/grav/releases/download/1.7.40/grav-admin-v1.7.40.zip
-SOURCE_SUM=c3b5735a8b3c66d7d1a9347fa3300f0a3f545fd9521304208acec2d52a3ada8d
-SOURCE_SUM_PRG=sha256sum
-SOURCE_FORMAT=zip
-SOURCE_IN_SUBDIR=true
-SOURCE_FILENAME=

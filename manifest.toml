@@ -1,0 +1,80 @@
+packaging_format = 2
+
+id = "grav"
+name = "Grav"
+description.en = "Modern open source flat-file CMS"
+description.fr = "CMS moderne basé sur des fichiers plats"
+
+version = "1.7.40~ynh1"
+
+maintainers = ["tituspijean"]
+
+[upstream]
+license = "MIT"
+website = "https://www.getgrav.org/"
+demo = "https://getgrav.org/downloads/themes"
+admindoc = "https://learn.getgrav.org"
+code = "https://github.com/getgrav/grav"
+cpe = "cpe:2.3:a:getgrav:grav"
+fund = "https://opencollective.com/grav"
+
+[integration]
+yunohost = ">= 11.1"
+architectures = "all"
+multi_instance = true
+ldap = "true"
+sso = "false"
+disk = "50M"
+ram.build = "50M"
+ram.runtime = "50M"
+
+[install]
+    [install.domain]
+    type = "domain"
+
+    [install.path]
+    type = "path"
+    default = "/grav"
+
+    [install.init_main_permission]
+    help.en = "Will anyone be able to access the website?"
+    help.fr = "Est-ce que quiconque pourra accéder au site ?"
+    type = "group"
+    default = "visitors"
+
+    [install.language]
+    ask.en = "Choose the application language"
+    ask.fr = "Choisissez la langue de l'application"
+    type = "string"
+    choices = ["en_EN", "fr_FR"]
+    default = "fr_FR"
+
+    [install.admin]
+    type = "user"
+
+[resources]
+    [resources.sources]
+        [resources.sources.ldap]
+        url = "https://github.com/trilbymedia/grav-plugin-login-ldap/archive/refs/tags/1.0.2.zip"
+        sha256 = "bdaea681730e800ab8eda7edf56d772baca1de783d0f8c321ac2ec86d82628ca"
+        autoupdate.strategy = "latest_github_tag"
+
+        [resources.sources.main]
+        url = "https://github.com/getgrav/grav/releases/download/1.7.40/grav-admin-v1.7.40.zip"
+        sha256 = "c3b5735a8b3c66d7d1a9347fa3300f0a3f545fd9521304208acec2d52a3ada8d"
+        autoupdate.strategy = "latest_github_tag"
+
+        [resources.sources.app-upgrade]
+        url = "https://github.com/getgrav/grav/releases/download/1.7.40/grav-update-v1.7.40.zip"
+        sha256 = "e202ed8b74673cd30230a1349c68a7b667c6fb743b64ba796111468b9ed9fd09"
+        autoupdate.strategy = "latest_github_tag"
+
+    [resources.system_user]
+
+    [resources.install_dir]
+
+    [resources.permissions]
+    main.url = "/"
+
+    [resources.apt]
+    packages = "php7.4, php7.4-zip, php7.4-mbstring, php7.4-curl, php7.4-dom, php7.4-gd, php7.4-xml, php7.4-ldap"
