@@ -12,6 +12,9 @@ source /usr/share/yunohost/helpers
 # Initialize the SFTP setting for the config panel
 ynh_app_setting_set --app=$app --key=with_sftp --value="false"
 ynh_app_setting_set --app=$app --key=password --value=$(ynh_string_random)
+ynh_app_setting_set --app=$app --key=fpm_footprint --value="medium"
+ynh_app_setting_set --app=$app --key=fpm_free_footprint --value="0"
+ynh_app_setting_set --app=$app --key=fpm_usage --value="medium"
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
