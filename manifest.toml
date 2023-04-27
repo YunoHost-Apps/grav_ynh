@@ -22,8 +22,8 @@ fund = "https://opencollective.com/grav"
 yunohost = ">= 11.1"
 architectures = "all"
 multi_instance = true
-ldap = "true"
-sso = "false"
+ldap = true
+sso = false
 disk = "50M"
 ram.build = "50M"
 ram.runtime = "50M"
