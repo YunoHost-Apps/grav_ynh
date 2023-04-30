@@ -6,3 +6,4 @@ test_format = 1.0
 
     test_upgrade_from.412306a.name = "v1.7.21"
     test_upgrade_from.412306a.install_args.admin = "package_checker"
+    test_upgrade_from.412306a.install_args.domain = "domain.tld"
