@@ -4,5 +4,5 @@ test_format = 1.0
 
     args.init_admin_permission = "package_checker"
 
-    test_upgrade_from.412306ac0a7c3f6f02aff162b65eb4b1f4484b2a.name = "Upgrade from v1.7.21"
-    test_upgrade_from.412306ac0a7c3f6f02aff162b65eb4b1f4484b2a.args.admin = "package_checker"
+    test_upgrade_from.412306a.name = "v1.7.21"
+    test_upgrade_from.412306a.args.admin = "package_checker"
