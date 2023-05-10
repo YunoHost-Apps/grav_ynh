@@ -1,5 +1,5 @@
-SOURCE_URL=https://github.com/getgrav/grav/releases/download/1.7.40/grav-admin-v1.7.40.zip
-SOURCE_SUM=c3b5735a8b3c66d7d1a9347fa3300f0a3f545fd9521304208acec2d52a3ada8d
+SOURCE_URL=https://github.com/getgrav/grav/releases/download/1.7.41/grav-admin-v1.7.41.zip
+SOURCE_SUM=1d3c1f0c0f2e224d202777ca2a823da48e03804164ce061ee005c08ee7f1875e
 SOURCE_SUM_PRG=sha256sum
 SOURCE_FORMAT=zip
 SOURCE_IN_SUBDIR=true
