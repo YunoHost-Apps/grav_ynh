@@ -19,7 +19,7 @@ Si vous n’avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) po
 Un CMS moderne basé sur des fichiers plats
 
 
-**Version incluse :** 1.7.40~ynh1
+**Version incluse :** 1.7.41.1~ynh1
 
 **Démo :** https://getgrav.org/downloads/themes
 
