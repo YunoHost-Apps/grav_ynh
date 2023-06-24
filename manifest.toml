@@ -63,7 +63,7 @@ ram.runtime = "50M"
 
         [resources.sources.main]
         url = "https://github.com/getgrav/grav/releases/download/1.7.42.1/grav-admin-v1.7.42.1.zip"
-        sha256 = '6aadb5f5cda5aeb8c8bf5cecaf06129bfc7226aaf49a21840bbd98600a69ef26"
+        sha256 = "6aadb5f5cda5aeb8c8bf5cecaf06129bfc7226aaf49a21840bbd98600a69ef26"
         autoupdate.strategy = "latest_github_tag"
 
         [resources.sources.app-upgrade]
