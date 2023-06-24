@@ -1,0 +1,84 @@
+packaging_format = 2
+
+id = "grav"
+name = "Grav"
+description.en = "Modern open source flat-file CMS"
+description.fr = "CMS moderne basé sur des fichiers plats"
+
+version = "1.7.42.1~ynh1"
+
+maintainers = ["tituspijean"]
+
+[upstream]
+license = "MIT"
+website = "https://www.getgrav.org/"
+demo = "https://getgrav.org/downloads/themes"
+admindoc = "https://learn.getgrav.org"
+code = "https://github.com/getgrav/grav"
+cpe = "cpe:2.3:a:getgrav:grav"
+fund = "https://opencollective.com/grav"
+
+[integration]
+yunohost = ">= 11.1"
+architectures = "all"
+multi_instance = true
+ldap = true
+sso = false
+disk = "50M"
+ram.build = "50M"
+ram.runtime = "50M"
+
+[install]
+    [install.domain]
+    type = "domain"
+
+    [install.path]
+    type = "path"
+    default = "/grav"
+
+    [install.init_main_permission]
+    help.en = "Will anyone be able to access the website?"
+    help.fr = "Est-ce que quiconque pourra accéder au site ?"
+    type = "group"
+    default = "visitors"
+
+    [install.language]
+    ask.en = "Choose the application language"
+    ask.fr = "Choisissez la langue de l'application"
+    type = "string"
+    choices = ["en_EN", "fr_FR"]
+    default = "fr_FR"
+
+    [install.init_admin_permission]
+    ask.en = "Select an administrator for the app"
+    ask.fr = "Sélectionnez un administrateur pour l'application"
+    type = "user"
+
+[resources]
+    [resources.sources]
+        [resources.sources.ldap]
+        url = "https://github.com/trilbymedia/grav-plugin-login-ldap/archive/refs/tags/1.0.2.zip"
+        sha256 = "bdaea681730e800ab8eda7edf56d772baca1de783d0f8c321ac2ec86d82628ca"
+        autoupdate.strategy = "latest_github_tag"
+
+        [resources.sources.main]
+        url = "https://github.com/getgrav/grav/releases/download/1.7.42.1/grav-admin-v1.7.42.1.zip"
+        sha256 = "491ea48e91da4de3ab07b059e373355282a85d8e36a7b76200e11298a616c70d"
+        autoupdate.strategy = "latest_github_tag"
+
+        [resources.sources.app-upgrade]
+        url = "https://github.com/getgrav/grav/releases/download/1.7.42.1/grav-update-v1.7.42.1.zip"
+        sha256 = "59875446e248c442e99651a093081a6fa6fe539a3cabe944ce2c5c69fe77900c"
+        autoupdate.strategy = "latest_github_tag"
+
+    [resources.system_user]
+
+    [resources.install_dir]
+
+    [resources.permissions]
+    main.url = "/"
+    admin.show_tile = false
+    user.show_tile = false
+
+    [resources.apt]
+    packages = "php7.4, php7.4-zip, php7.4-mbstring, php7.4-curl, php7.4-dom, php7.4-gd, php7.4-xml, php7.4-ldap"

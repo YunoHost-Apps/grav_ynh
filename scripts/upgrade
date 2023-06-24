@@ -10,43 +10,11 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# LOAD SETTINGS
-#=================================================
-ynh_script_progression --message="Loading installation settings..." --weight=1
-
-app=$YNH_APP_INSTANCE_NAME
-
-domain=$(ynh_app_setting_get --app=$app --key=domain)
-path_url=$(ynh_app_setting_get --app=$app --key=path)
-language=$(ynh_app_setting_get --app=$app --key=language)
-admin=$(ynh_app_setting_get --app=$app --key=admin)
-final_path=$(ynh_app_setting_get --app=$app --key=final_path)
-fpm_footprint=$(ynh_app_setting_get --app=$app --key=fpm_footprint)
-fpm_usage=$(ynh_app_setting_get --app=$app --key=fpm_usage)
-
-with_sftp=$(ynh_app_setting_get --app=$app --key=with_sftp)
-password=$(ynh_app_setting_get --app=$app --key=password)
-
-#=================================================
 # CHECK VERSION
 #=================================================
 ynh_script_progression --message="Checking version..." --weight=1
 
 upgrade_type=$(ynh_check_app_version_changed)
-
-#=================================================
-# BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
-#=================================================
-ynh_script_progression --message="Backing up the app before upgrading (may take a while)..." --weight=4
-
-# Backup the current version of the app
-ynh_backup_before_upgrade
-ynh_clean_setup () {
-	# Restore it if the upgrade fails
-	ynh_restore_upgradebackup
-}
-# Exit if an error occurs during the execution of the script
-ynh_abort_if_errors
 
 #=================================================
 # STANDARD UPGRADE STEPS
@@ -55,61 +23,28 @@ ynh_abort_if_errors
 #=================================================
 ynh_script_progression --message="Ensuring downward compatibility..." --weight=1
 
-# If final_path doesn't exist, create it
-if [ -z "$final_path" ]; then
-	final_path=/var/www/$app
-	ynh_app_setting_set --app=$app --key=final_path --value=$final_path
-fi
-
-# Cleaning legacy permissions
-if ynh_legacy_permissions_exists; then
-	ynh_legacy_permissions_delete_all
-
-	ynh_app_setting_delete --app=$app --key=is_public
-fi
-
-# Giving admin permission to the specified used
-if ! ynh_permission_exists --permission="admin"
-then
-        ynh_permission_create --permission="admin" --allowed="$admin"
-fi
-
-# Creating user permission
-if ! ynh_permission_exists --permission="user"
-then
-        ynh_permission_create --permission="user"
-fi
-
 # If fpm_footprint doesn't exist, create it
-if [ -z "$fpm_footprint" ]; then
+if [ -z "${fpm_footprint:-}" ]; then
 	fpm_footprint=medium
 	ynh_app_setting_set --app=$app --key=fpm_footprint --value=$fpm_footprint
 fi
 
 # If fpm_usage doesn't exist, create it
-if [ -z "$fpm_usage" ]; then
+if [ -z "${fpm_usage:-}" ]; then
 	fpm_usage=medium
 	ynh_app_setting_set --app=$app --key=fpm_usage --value=$fpm_usage
 fi
 
 # If with_sftp or password don't exist, create them
-if [ -z "$with_sftp" ] || [ -z "$password" ]; then
+if [ -z "${with_sftp:-}" ] || [ -z "${password:-}" ]; then
 	ynh_app_setting_set --app=$app --key=with_sftp --value="false"
-	ynh_app_setting_set --app=$app --key=password --value=$(ynh_string_random)
+ 	ynh_app_setting_set --app=$app --key=password --value=$(ynh_string_random)
 fi
 
 # Delete existing ini configuration file (backward compatibility)
-if [ -f /etc/php/$YNH_PHP_VERSION/fpm/conf.d/20-$app.ini ]; then
-	ynh_secure_remove --file=/etc/php/$YNH_PHP_VERSION/fpm/conf.d/20-$app.ini
+if [ -f /etc/php/$phpversion/fpm/conf.d/20-$app.ini ]; then
+	ynh_secure_remove --file=/etc/php/$phpversion/fpm/conf.d/20-$app.ini
 fi
-
-#=================================================
-# CREATE DEDICATED USER
-#=================================================
-ynh_script_progression --message="Making sure dedicated system user exists..." --weight=3
-
-# Create a dedicated user (if not existing)
-ynh_system_user_create --username=$app --home_dir="$final_path"
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
@@ -120,23 +55,16 @@ then
 	ynh_script_progression --message="Upgrading source files..." --weight=2
 
 	# Download, check integrity, uncompress and patch the source from app.src
-	ynh_setup_source --dest_dir="$final_path" --source_id="app-upgrade"
-	ynh_setup_source --dest_dir="$final_path/user/plugins/login-ldap" --source_id="ldap"
+	ynh_setup_source --dest_dir="$install_dir" --source_id="app-upgrade"
+	ynh_setup_source --dest_dir="$install_dir/user/plugins/login-ldap" --source_id="ldap"
 fi
 
 # Set permissions on app files
-chown -R $app:www-data "$final_path"
-find "$final_path" -type f -exec chmod 640 {} \;
-find "$final_path/bin" -type f -exec chmod 750 {} \;
-find "$final_path" -type d -exec chmod 750 {} \;
-find "$final_path" -type d -exec chmod +s {} \;
-
-#=================================================
-# UPGRADE DEPENDENCIES
-#=================================================
-ynh_script_progression --message="Upgrading dependencies..." --weight=1
-
-ynh_install_app_dependencies $pkg_dependencies
+chown -R $app:www-data "$install_dir"
+find "$install_dir" -type f -exec chmod 640 {} \;
+find "$install_dir/bin" -type f -exec chmod 750 {} \;
+find "$install_dir" -type d -exec chmod 750 {} \;
+find "$install_dir" -type d -exec chmod +s {} \;
 
 #=================================================
 # PHP-FPM CONFIGURATION
@@ -145,7 +73,6 @@ ynh_script_progression --message="Upgrading PHP-FPM configuration..." --weight=1
 
 # Create a dedicated PHP-FPM config
 ynh_add_fpm_config --usage=$fpm_usage --footprint=$fpm_footprint
-phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
 
 #=================================================
 # NGINX CONFIGURATION
@@ -162,20 +89,20 @@ ynh_add_nginx_config
 #=================================================
 ynh_script_progression --message="Updating a configuration file..." --weight=3
 
-mkdir -p "$final_path/user/config/plugins/login-ldap"
-touch "$final_path/user/accounts/admin.yaml"
+mkdir -p "$install_dir/user/config/plugins/login-ldap"
+touch "$install_dir/user/accounts/admin.yaml"
 
-ynh_add_config --template="../conf/login-ldap.yaml" --destination="$final_path/user/config/plugins/login-ldap.yaml"
-chown $app:$app "$final_path/user/config/plugins/login-ldap.yaml"
-chmod 640 "$final_path/user/config/plugins/login-ldap.yaml"
+ynh_add_config --template="../conf/login-ldap.yaml" --destination="$install_dir/user/config/plugins/login-ldap.yaml"
+chown $app:$app "$install_dir/user/config/plugins/login-ldap.yaml"
+chmod 640 "$install_dir/user/config/plugins/login-ldap.yaml"
 
 #=================================================
 # UPGRADE PLUGINS
 #=================================================
 ynh_script_progression --message="Updating all plugins..." --weight=1
 
-pushd "$final_path"
-	ynh_exec_warn_less yes N | ynh_exec_warn_less ynh_exec_as $app php${YNH_PHP_VERSION} bin/gpm update --all-yes --no-interaction || ynh_print_warn --message="Automatic plugin upgrade has failed, you can upgrade them from your Grav admin panel."
+pushd "$install_dir"
+	ynh_exec_warn_less yes N | ynh_exec_warn_less ynh_exec_as $app php${phpversion} bin/gpm update --all-yes --no-interaction || ynh_print_warn --message="Automatic plugin upgrade has failed, you can upgrade them from your Grav admin panel."
 popd
 
 #=================================================
@@ -183,17 +110,8 @@ popd
 #================================================
 ynh_script_progression --message="Updating a cron task..." --weight=1
 
-echo "* *  *  *  * $app php${YNH_PHP_VERSION} $final_path/bin/grav scheduler 1>> /dev/null 2>&1" > /etc/cron.d/$app
+echo "* *  *  *  * $app php${phpversion} $install_dir/bin/grav scheduler 1>> /dev/null 2>&1" > /etc/cron.d/$app
 chmod 644 /etc/cron.d/$app
-
-#=================================================
-# GENERIC FINALIZATION
-#=================================================
-# RELOAD NGINX
-#=================================================
-ynh_script_progression --message="Reloading NGINX web server..." --weight=1
-
-ynh_systemd_action --service_name=nginx --action=reload
 
 #=================================================
 # END OF SCRIPT

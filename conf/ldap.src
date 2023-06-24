@@ -1,7 +1,0 @@
-SOURCE_URL=https://github.com/trilbymedia/grav-plugin-login-ldap/archive/refs/tags/1.0.2.zip
-SOURCE_SUM=bdaea681730e800ab8eda7edf56d772baca1de783d0f8c321ac2ec86d82628ca
-SOURCE_SUM_PRG=sha256sum
-SOURCE_FORMAT=zip
-SOURCE_IN_SUBDIR=true
-SOURCE_FILENAME=ldap.zip
-SOURCE_EXTRACT=true
