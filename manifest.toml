@@ -60,6 +60,7 @@ ram.runtime = "50M"
         url = "https://github.com/trilbymedia/grav-plugin-login-ldap/archive/refs/tags/1.0.2.zip"
         sha256 = "bdaea681730e800ab8eda7edf56d772baca1de783d0f8c321ac2ec86d82628ca"
         autoupdate.strategy = "latest_github_tag"
+        autoupdate.upstream = "https://github.com/trilbymedia/grav-plugin-login-ldap"
 
         [resources.sources.main]
         url = "https://github.com/getgrav/grav/releases/download/1.7.42.1/grav-admin-v1.7.42.1.zip"
