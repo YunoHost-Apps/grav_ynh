@@ -57,19 +57,22 @@ ram.runtime = "50M"
 [resources]
     [resources.sources]
         [resources.sources.ldap]
-        url = "https://github.com/trilbymedia/grav-plugin-login-ldap/archive/refs/tags/1.0.2.zip"
-        sha256 = "bdaea681730e800ab8eda7edf56d772baca1de783d0f8c321ac2ec86d82628ca"
+        url = "https://github.com/trilbymedia/grav-plugin-login-ldap/archive/refs/tags/1.0.2.tar.gz"
+        sha256 = "130298bf04e6464ea4347d2deda9e285b2820c48e9e64e6d4b67217566047c3b"
         autoupdate.strategy = "latest_github_tag"
+        autoupdate.upstream = "https://github.com/trilbymedia/grav-plugin-login-ldap"
 
         [resources.sources.main]
         url = "https://github.com/getgrav/grav/releases/download/1.7.42.1/grav-admin-v1.7.42.1.zip"
-        sha256 = "491ea48e91da4de3ab07b059e373355282a85d8e36a7b76200e11298a616c70d"
-        autoupdate.strategy = "latest_github_tag"
+        sha256 = "5bbaa72a49fcc4139882a416847a7fde376b05e0c3699632f39b29c24caecdde"
+        autoupdate.strategy = "latest_github_release"
+        autoupdate.asset = "grav-admin.*.zip"
 
         [resources.sources.app-upgrade]
         url = "https://github.com/getgrav/grav/releases/download/1.7.42.1/grav-update-v1.7.42.1.zip"
-        sha256 = "59875446e248c442e99651a093081a6fa6fe539a3cabe944ce2c5c69fe77900c"
-        autoupdate.strategy = "latest_github_tag"
+        sha256 = "345459bb2c9db7094eb963504eba5a22f8b5900bd3a4e47266daca1a1d12b35f"
+        autoupdate.strategy = "latest_github_release"
+        autoupdate.asset = "grav-update.*.zip"
 
     [resources.system_user]
 
