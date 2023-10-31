@@ -32,7 +32,7 @@ Grav is a modern open source flat-file CMS.
 * Official app website: <https://www.getgrav.org/>
 * Official admin documentation: <https://learn.getgrav.org>
 * Upstream app code repository: <https://github.com/getgrav/grav>
-* YunoHost documentation for this app: <https://yunohost.org/app_grav>
+* YunoHost Store: <https://apps.yunohost.org/app/grav>
 * Report a bug: <https://github.com/YunoHost-Apps/grav_ynh/issues>
 
 ## Developer info
