@@ -19,7 +19,7 @@ Si vous n’avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) po
 Un CMS moderne basé sur des fichiers plats
 
 
-**Version incluse :** 1.7.43~ynh1
+**Version incluse :** 1.7.44~ynh1
 
 **Démo :** https://getgrav.org/downloads/themes
 
@@ -32,6 +32,7 @@ Un CMS moderne basé sur des fichiers plats
 * Site officiel de l’app : <https://www.getgrav.org/>
 * Documentation officielle de l’admin : <https://learn.getgrav.org>
 * Dépôt de code officiel de l’app : <https://github.com/getgrav/grav>
+* YunoHost Store: <https://apps.yunohost.org/app/grav>
 * Signaler un bug : <https://github.com/YunoHost-Apps/grav_ynh/issues>
 
 ## Informations pour les développeurs
