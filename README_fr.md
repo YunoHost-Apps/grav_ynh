@@ -32,6 +32,7 @@ Un CMS moderne basé sur des fichiers plats
 * Site officiel de l’app : <https://www.getgrav.org/>
 * Documentation officielle de l’admin : <https://learn.getgrav.org>
 * Dépôt de code officiel de l’app : <https://github.com/getgrav/grav>
+* YunoHost Store: <https://apps.yunohost.org/app/grav>
 * Signaler un bug : <https://github.com/YunoHost-Apps/grav_ynh/issues>
 
 ## Informations pour les développeurs
