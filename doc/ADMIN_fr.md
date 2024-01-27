@@ -7,4 +7,4 @@
       1. `cd __INSTALL_DIR__`
       2. `sudo -u __APP__ php__PHPVERSION__ bin/grav ...` ou `sudo -u __APP__ php__PHPVERSION__ bin/gpm ...`
 * Vous pouvez installer les extensions soit via le panneau d'administration, soit via GPM.
-* Si vous installez Grav à la racine d'un domaine, sachez que les chemins d'accès commançant par `/yunohost` sont réservés.
+* Si vous installez Grav à la racine d'un domaine, sachez que les chemins d'accès commençant par `/yunohost` sont réservés.
