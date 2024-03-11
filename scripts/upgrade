@@ -38,8 +38,8 @@ then
 	ynh_script_progression --message="Upgrading source files..." --weight=2
 
 	# Download, check integrity, uncompress and patch the source from app.src
-	ynh_setup_source --dest_dir="$install_dir" --source_id="app-upgrade"
-	ynh_setup_source --dest_dir="$install_dir/user/plugins/login-ldap" --source_id="ldap"
+	ynh_setup_source --dest_dir="$install_dir" --source_id="app-upgrade" --full_replace=1
+	ynh_setup_source --dest_dir="$install_dir/user/plugins/login-ldap" --source_id="ldap" --full_replace=1
 fi
 
 # Set permissions on app files
