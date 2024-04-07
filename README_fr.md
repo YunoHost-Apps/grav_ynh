@@ -19,7 +19,7 @@ Il NE doit PAS être modifié à la main.
 Un CMS moderne basé sur des fichiers plats
 
 
-**Version incluse :** 1.7.44~ynh1
+**Version incluse :** 1.7.45~ynh1
 
 **Démo :** <https://getgrav.org/downloads/themes>
 
