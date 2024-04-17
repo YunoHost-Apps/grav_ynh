@@ -5,7 +5,7 @@ name = "Grav"
 description.en = "Modern open source flat-file CMS"
 description.fr = "CMS moderne basé sur des fichiers plats"
 
-version = "1.7.45~ynh2"
+version = "1.7.45~ynh3"
 
 maintainers = ["tituspijean"]
 
