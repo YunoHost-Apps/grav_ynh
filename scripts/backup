@@ -19,7 +19,10 @@ ynh_print_info --message="Declaring files to be backed up..."
 # BACKUP THE APP MAIN DIR
 #=================================================
 
-ynh_backup --src_path="$install_dir"
+# Backup install_dir except backup and cache directory
+for f in $(ls "$install_dir" -I backup -I cache); do
+    ynh_backup --src_path="${install_dir}/$f"
+done
 
 #=================================================
 # BACKUP THE NGINX CONFIGURATION
