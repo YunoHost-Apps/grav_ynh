@@ -8,3 +8,6 @@
       2. `sudo -u __APP__ php__PHPVERSION__ bin/grav ...` or `sudo -u __APP__ php__PHPVERSION__bin/gpm ...`
 * You can install plugins through the admin panel, or through the GPM.
 * If installing Grav at the root of a domain, bear in mind that paths starting by `/yunohost` are reserved.
+* Grav's automated daily self-backups are disabled by default
+* Grav's self-backups are not backed up by YunoHost
+* Daily cache purge and clear are enabled by default
