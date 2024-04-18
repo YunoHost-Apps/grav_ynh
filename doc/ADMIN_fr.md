@@ -8,3 +8,6 @@
       2. `sudo -u __APP__ php__PHPVERSION__ bin/grav ...` ou `sudo -u __APP__ php__PHPVERSION__ bin/gpm ...`
 * Vous pouvez installer les extensions soit via le panneau d'administration, soit via GPM.
 * Si vous installez Grav à la racine d'un domaine, sachez que les chemins d'accès commençant par `/yunohost` sont réservés.
+* Les auto-sauvegardes quotidiennes automatiques de Grav sont désactivées par défaut
+* Les auto-sauvegardes de Grav ne sont pas contenues dans les sauvegardes générées par YunoHost
+* Le nettoyage et la purge quotidienne du cache sont activés par défaut

@@ -58,7 +58,12 @@ ynh_script_progression --message="Adding a configuration file..." --weight=1
 ynh_exec_as $app mkdir -p "$install_dir/user/config/plugins/login-ldap"
 ynh_exec_as $app touch "$install_dir/user/accounts/admin.yaml"
 
-# Setting up config
+# Setting up scheduler config
+ynh_add_config --template="../conf/scheduler.yaml" --destination="$install_dir/user/config/scheduler.yaml"
+chown $app:$app "$install_dir/user/config/scheduler.yaml"
+chmod 640 "$install_dir/user/config/scheduler.yaml"
+
+# Setting up LDAP config
 ynh_add_config --template="../conf/login-ldap.yaml" --destination="$install_dir/user/config/plugins/login-ldap.yaml"
 chown $app:$app "$install_dir/user/config/plugins/login-ldap.yaml"
 chmod 640 "$install_dir/user/config/plugins/login-ldap.yaml"

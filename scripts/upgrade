@@ -29,6 +29,13 @@ if [ -z "${with_sftp:-}" ] || [ -z "${password:-}" ]; then
  	ynh_app_setting_set --app=$app --key=password --value=$(ynh_string_random)
 fi
 
+# Setup the scheduler config if it is missing from user directory
+if [ ! -f "$install_dir/user/config/scheduler.yaml" ]; then
+    ynh_add_config --template="../conf/scheduler.yaml" --destination="$install_dir/user/config/scheduler.yaml"
+    chown $app:$app "$install_dir/user/config/scheduler.yaml"
+    chmod 640 "$install_dir/user/config/scheduler.yaml"]
+fi
+
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
