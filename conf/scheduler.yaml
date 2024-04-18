@@ -1,4 +1,4 @@
 status:
-  cache-purge: disabled
-  cache-clear: disabled
+  cache-purge: enabled
+  cache-clear: enabled
   default-site-backup: disabled
