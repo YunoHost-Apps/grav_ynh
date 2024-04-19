@@ -33,7 +33,7 @@ fi
 if [ ! -f "$install_dir/user/config/scheduler.yaml" ]; then
     ynh_add_config --template="../conf/scheduler.yaml" --destination="$install_dir/user/config/scheduler.yaml"
     chown $app:$app "$install_dir/user/config/scheduler.yaml"
-    chmod 640 "$install_dir/user/config/scheduler.yaml"]
+    chmod 640 "$install_dir/user/config/scheduler.yaml"
 fi
 
 #=================================================
