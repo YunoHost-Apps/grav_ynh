@@ -19,7 +19,7 @@ cpe = "cpe:2.3:a:getgrav:grav"
 fund = "https://opencollective.com/grav"
 
 [integration]
-yunohost = ">= 11.1"
+yunohost = ">= 11.1.9"
 architectures = "all"
 multi_instance = true
 ldap = true
