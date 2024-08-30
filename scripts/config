@@ -3,7 +3,7 @@
 source _common.sh
 source /usr/share/yunohost/helpers
 
-ynh_abort_if_errors
+#REMOVEME? ynh_abort_if_errors
 
 #=================================================
 # SPECIFIC SETTERS FOR TOML SHORT KEYS
@@ -12,12 +12,10 @@ ynh_abort_if_errors
 set__password() {
     if [ "$password" == "" ]
     then
-        ynh_app_setting_set --app=$app --key=password --value="$password"
+        ynh_app_setting_set --key=password --value="$password"
     fi
 }
 
-#=================================================
-# GENERIC FINALIZATION
 #=================================================
 
 ynh_app_config_validate() {
@@ -25,7 +23,7 @@ ynh_app_config_validate() {
 
     if [ "${changed[with_sftp]}" == "true" ] && [ $with_sftp -eq 1 ] && [ "$password" == "" ]
     then
-        ynh_die --message="You need to set a password to enable SSH and SFTP"
+        ynh_die "You need to set a password to enable SSH and SFTP"
     fi
 }
 
