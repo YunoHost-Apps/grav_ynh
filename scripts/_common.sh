@@ -1,20 +1,12 @@
 #!/bin/bash
 
 #=================================================
-# COMMON VARIABLES
-#=================================================
-
-#=================================================
-# PERSONAL HELPERS
-#=================================================
-
-#=================================================
-# EXPERIMENTAL HELPERS
+# COMMON VARIABLES AND CUSTOM HELPERS
 #=================================================
 
 ynh_system_user_add_group() {
     # Declare an array to define the options of this helper.
-    local legacy_args=uhs
+    #REMOVEME? local legacy_args=uhs
     local -A args_array=([u]=username= [g]=groups=)
     local username
     local groups
@@ -29,10 +21,9 @@ ynh_system_user_add_group() {
 	done
 }
 
-
 ynh_system_user_del_group() {
     # Declare an array to define the options of this helper.
-    local legacy_args=uhs
+    #REMOVEME? local legacy_args=uhs
     local -A args_array=([u]=username= [g]=groups=)
     local username
     local groups
