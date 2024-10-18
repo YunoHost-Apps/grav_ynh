@@ -5,7 +5,7 @@ Il NE doit PAS être modifié à la main.
 
 # Grav pour YunoHost
 
-[![Niveau d’intégration](https://dash.yunohost.org/integration/grav.svg)](https://dash.yunohost.org/appci/app/grav) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/grav.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/grav.maintain.svg)
+[![Niveau d’intégration](https://dash.yunohost.org/integration/grav.svg)](https://ci-apps.yunohost.org/ci/apps/grav/) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/grav.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/grav.maintain.svg)
 
 [![Installer Grav avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=grav)
 

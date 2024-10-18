@@ -5,7 +5,7 @@
 
 # YunoHost 上的 Grav
 
-[![集成程度](https://dash.yunohost.org/integration/grav.svg)](https://dash.yunohost.org/appci/app/grav) ![工作状态](https://ci-apps.yunohost.org/ci/badges/grav.status.svg) ![维护状态](https://ci-apps.yunohost.org/ci/badges/grav.maintain.svg)
+[![集成程度](https://dash.yunohost.org/integration/grav.svg)](https://ci-apps.yunohost.org/ci/apps/grav/) ![工作状态](https://ci-apps.yunohost.org/ci/badges/grav.status.svg) ![维护状态](https://ci-apps.yunohost.org/ci/badges/grav.maintain.svg)
 
 [![使用 YunoHost 安装 Grav](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=grav)
 

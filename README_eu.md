@@ -5,7 +5,7 @@ EZ editatu eskuz.
 
 # Grav YunoHost-erako
 
-[![Integrazio maila](https://dash.yunohost.org/integration/grav.svg)](https://dash.yunohost.org/appci/app/grav) ![Funtzionamendu egoera](https://ci-apps.yunohost.org/ci/badges/grav.status.svg) ![Mantentze egoera](https://ci-apps.yunohost.org/ci/badges/grav.maintain.svg)
+[![Integrazio maila](https://dash.yunohost.org/integration/grav.svg)](https://ci-apps.yunohost.org/ci/apps/grav/) ![Funtzionamendu egoera](https://ci-apps.yunohost.org/ci/badges/grav.status.svg) ![Mantentze egoera](https://ci-apps.yunohost.org/ci/badges/grav.maintain.svg)
 
 [![Instalatu Grav YunoHost-ekin](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=grav)
 
