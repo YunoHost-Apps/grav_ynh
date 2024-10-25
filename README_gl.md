@@ -5,7 +5,7 @@ NON debe editarse manualmente.
 
 # Grav para YunoHost
 
-[![Nivel de integración](https://dash.yunohost.org/integration/grav.svg)](https://dash.yunohost.org/appci/app/grav) ![Estado de funcionamento](https://ci-apps.yunohost.org/ci/badges/grav.status.svg) ![Estado de mantemento](https://ci-apps.yunohost.org/ci/badges/grav.maintain.svg)
+[![Nivel de integración](https://dash.yunohost.org/integration/grav.svg)](https://ci-apps.yunohost.org/ci/apps/grav/) ![Estado de funcionamento](https://ci-apps.yunohost.org/ci/badges/grav.status.svg) ![Estado de mantemento](https://ci-apps.yunohost.org/ci/badges/grav.maintain.svg)
 
 [![Instalar Grav con YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=grav)
 
@@ -19,7 +19,7 @@ NON debe editarse manualmente.
 Grav is a modern open source flat-file CMS.
 
 
-**Versión proporcionada:** 1.7.46~ynh1
+**Versión proporcionada:** 1.7.47~ynh1
 
 **Demo:** <https://getgrav.org/downloads/themes>
 
