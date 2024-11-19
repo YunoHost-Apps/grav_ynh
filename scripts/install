@@ -1,15 +1,8 @@
 #!/bin/bash
 
-#=================================================
-# GENERIC START
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
 source _common.sh
 source /usr/share/yunohost/helpers
 
-# Initialize the SFTP setting for the config panel
 ynh_app_setting_set --app=$app --key=with_sftp --value="false"
 ynh_app_setting_set --app=$app --key=password --value=$(ynh_string_random)
 
@@ -48,8 +41,6 @@ ynh_script_progression --message="Configuring NGINX web server..." --weight=1
 ynh_add_nginx_config
 
 #=================================================
-# SPECIFIC SETUP
-#=================================================
 # ADD A CONFIGURATION
 #=================================================
 ynh_script_progression --message="Adding a configuration file..." --weight=1
@@ -74,7 +65,6 @@ chmod 640 "$install_dir/user/config/plugins/login-ldap.yaml"
 ynh_script_progression --message="Creating a cron task..." --weight=1
 
 echo "* *  *  *  * $app php$phpversion $install_dir/bin/grav scheduler 1>> /dev/null 2>&1" > /etc/cron.d/$app
-
 chmod 644 /etc/cron.d/$app
 
 #=================================================
