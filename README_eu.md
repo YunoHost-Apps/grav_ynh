@@ -19,7 +19,7 @@ EZ editatu eskuz.
 Grav is a modern open source flat-file CMS.
 
 
-**Paketatutako bertsioa:** 1.7.47~ynh1
+**Paketatutako bertsioa:** 1.7.48~ynh1
 
 **Demoa:** <https://getgrav.org/downloads/themes>
 

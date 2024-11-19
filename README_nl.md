@@ -19,7 +19,7 @@ Hij mag NIET handmatig aangepast worden.
 Grav is a modern open source flat-file CMS.
 
 
-**Geleverde versie:** 1.7.47~ynh1
+**Geleverde versie:** 1.7.48~ynh1
 
 **Demo:** <https://getgrav.org/downloads/themes>
 
