@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Keep this path for calling _common.sh inside the execution's context of backup and restore scripts
 source ../settings/scripts/_common.sh
 source /usr/share/yunohost/helpers
 
@@ -15,23 +14,9 @@ for f in $(ls "$install_dir" -I backup -I cache); do
     ynh_backup "${install_dir}/$f"
 done
 
-#=================================================
-# BACKUP THE NGINX CONFIGURATION
-#=================================================
-
 ynh_backup "/etc/nginx/conf.d/$domain.d/$app.conf"
 
-#=================================================
-# BACKUP THE PHP-FPM CONFIGURATION
-#=================================================
-
 ynh_backup "/etc/php/$php_version/fpm/pool.d/$app.conf"
-
-#=================================================
-# SPECIFIC BACKUP
-#=================================================
-# BACKUP VARIOUS FILES
-#=================================================
 
 ynh_backup "/etc/cron.d/$app"
 

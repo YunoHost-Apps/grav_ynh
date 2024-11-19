@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Keep this path for calling _common.sh inside the execution's context of backup and restore scripts
 source ../settings/scripts/_common.sh
 source /usr/share/yunohost/helpers
 
@@ -14,7 +13,7 @@ ynh_restore "$install_dir"
 # Grav will complain about missing backup directory, let's create it
 mkdir -p "$install_dir/backup"
 
-#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown -R $app:www-data "$install_dir"
+chown -R $app:www-data "$install_dir"
 find "$install_dir" -type f -exec chmod 640 {} \;
 find "$install_dir/bin" -type f -exec chmod 750 {} \;
 find "$install_dir" -type d -exec chmod 750 {} \;
@@ -27,20 +26,10 @@ ynh_script_progression "Restoring the PHP-FPM configuration..."
 
 ynh_restore "/etc/php/$php_version/fpm/pool.d/$app.conf"
 
-#=================================================
-# RESTORE THE NGINX CONFIGURATION
-#=================================================
-ynh_script_progression "Restoring the NGINX web server configuration..."
-
 ynh_restore "/etc/nginx/conf.d/$domain.d/$app.conf"
 
-#=================================================
-# RESTORE VARIOUS FILES
-#=================================================
-ynh_script_progression "Restoring various files..."
-
 ynh_restore "/etc/cron.d/$app"
-#REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod 644 /etc/cron.d/$app
+chmod 644 /etc/cron.d/$app
 
 #=================================================
 # RELOAD NGINX AND PHP-FPM

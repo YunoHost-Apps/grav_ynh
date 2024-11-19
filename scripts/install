@@ -12,12 +12,11 @@ ynh_app_setting_set --key=password --value=$(ynh_string_random)
 #=================================================
 ynh_script_progression "Setting up source files..."
 
-# Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$install_dir"
 ynh_setup_source --dest_dir="$install_dir/user/plugins/login-ldap" --source_id="ldap"
 
 # Set permissions on app files
-#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown -R $app:www-data "$install_dir"
+chown -R $app:www-data "$install_dir"
 find "$install_dir" -type f -exec chmod 640 {} \;
 find "$install_dir/bin" -type f -exec chmod 750 {} \;
 find "$install_dir" -type d -exec chmod 750 {} \;
@@ -28,7 +27,6 @@ find "$install_dir" -type d -exec chmod +s {} \;
 #=================================================
 ynh_script_progression "Configuring PHP-FPM..."
 
-# Create a dedicated PHP-FPM config
 ynh_app_setting_set --key=fpm_footprint --value="medium"
 ynh_app_setting_set --key=fpm_usage --value="medium"
 ynh_config_add_phpfpm
@@ -38,11 +36,8 @@ ynh_config_add_phpfpm
 #=================================================
 ynh_script_progression "Configuring NGINX web server..."
 
-# Create a dedicated NGINX config
 ynh_config_add_nginx
 
-#=================================================
-# SPECIFIC SETUP
 #=================================================
 # ADD A CONFIGURATION
 #=================================================
@@ -54,13 +49,13 @@ ynh_exec_as_app touch "$install_dir/user/accounts/admin.yaml"
 
 # Setting up scheduler config
 ynh_config_add --template="scheduler.yaml" --destination="$install_dir/user/config/scheduler.yaml"
-#REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown $app:$app "$install_dir/user/config/scheduler.yaml"
-#REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod 640 "$install_dir/user/config/scheduler.yaml"
+chown $app:$app "$install_dir/user/config/scheduler.yaml"
+chmod 640 "$install_dir/user/config/scheduler.yaml"
 
 # Setting up LDAP config
 ynh_config_add --template="login-ldap.yaml" --destination="$install_dir/user/config/plugins/login-ldap.yaml"
-#REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown $app:$app "$install_dir/user/config/plugins/login-ldap.yaml"
-#REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod 640 "$install_dir/user/config/plugins/login-ldap.yaml"
+chown $app:$app "$install_dir/user/config/plugins/login-ldap.yaml"
+chmod 640 "$install_dir/user/config/plugins/login-ldap.yaml"
 
 #=================================================
 # CREATE A CRON TASK
@@ -68,8 +63,7 @@ ynh_config_add --template="login-ldap.yaml" --destination="$install_dir/user/con
 ynh_script_progression "Creating a cron task..."
 
 echo "* *  *  *  * $app php$php_version $install_dir/bin/grav scheduler 1>> /dev/null 2>&1" > /etc/cron.d/$app
-
-#REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod 644 /etc/cron.d/$app
+chmod 644 /etc/cron.d/$app
 
 #=================================================
 # END OF SCRIPT
