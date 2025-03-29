@@ -5,7 +5,9 @@ Hij mag NIET handmatig aangepast worden.
 
 # Grav voor Yunohost
 
-[![Integratieniveau](https://dash.yunohost.org/integration/grav.svg)](https://ci-apps.yunohost.org/ci/apps/grav/) ![Mate van functioneren](https://ci-apps.yunohost.org/ci/badges/grav.status.svg) ![Onderhoudsstatus](https://ci-apps.yunohost.org/ci/badges/grav.maintain.svg)
+[![Integratieniveau](https://apps.yunohost.org/badge/integration/grav)](https://ci-apps.yunohost.org/ci/apps/grav/)
+![Mate van functioneren](https://apps.yunohost.org/badge/state/grav)
+![Onderhoudsstatus](https://apps.yunohost.org/badge/maintained/grav)
 
 [![Grav met Yunohost installeren](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=grav)
 
