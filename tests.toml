@@ -1,5 +1,21 @@
+#:schema https://raw.githubusercontent.com/YunoHost/apps/master/schemas/tests.v1.schema.json
+
 test_format = 1.0
 
 [default]
 
+    # ------------
+    # Tests to run
+    # ------------
+
+    # -------------------------------
+    # Default args to use for install
+    # -------------------------------
+
     args.init_admin_permission = "package_checker"
+
+    # -------------------------------
+    # Commits to test upgrade from
+    # -------------------------------
+
+    test_upgrade_from.31dd95e949566c01a731198527c925a0fe8931c3.name = "Upgrade from 1.7.48~ynh1"
