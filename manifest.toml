@@ -1,3 +1,5 @@
+#:schema https://raw.githubusercontent.com/YunoHost/apps/master/schemas/manifest.v2.schema.json
+
 packaging_format = 2
 
 id = "grav"
@@ -22,8 +24,11 @@ fund = "https://opencollective.com/grav"
 yunohost = ">= 11.1.30"
 architectures = "all"
 multi_instance = true
+
 ldap = true
+
 sso = false
+
 disk = "50M"
 ram.build = "50M"
 ram.runtime = "50M"
@@ -56,23 +61,23 @@ ram.runtime = "50M"
 
 [resources]
     [resources.sources]
-        [resources.sources.ldap]
-        url = "https://github.com/trilbymedia/grav-plugin-login-ldap/archive/refs/tags/1.1.0.tar.gz"
-        sha256 = "bf6f7684fc7d605241f66772875f77b8e3977c0db9c50010d78385495c7ec335"
-        autoupdate.strategy = "latest_github_tag"
-        autoupdate.upstream = "https://github.com/trilbymedia/grav-plugin-login-ldap"
+    [resources.sources.ldap]
+    url = "https://github.com/trilbymedia/grav-plugin-login-ldap/archive/refs/tags/1.1.0.tar.gz"
+    sha256 = "bf6f7684fc7d605241f66772875f77b8e3977c0db9c50010d78385495c7ec335"
+    autoupdate.strategy = "latest_github_tag"
+    autoupdate.upstream = "https://github.com/trilbymedia/grav-plugin-login-ldap"
 
-        [resources.sources.main]
-        url = "https://github.com/getgrav/grav/releases/download/1.7.48/grav-admin-v1.7.48.zip"
-        sha256 = "5376a89b4f03b169bff3803ce24c9aacc33ccf842f0f35b54ba7c84dd334f18a"
-        autoupdate.strategy = "latest_github_release"
-        autoupdate.asset = "grav-admin.*.zip"
+    [resources.sources.main]
+    url = "https://github.com/getgrav/grav/releases/download/1.7.48/grav-admin-v1.7.48.zip"
+    sha256 = "5376a89b4f03b169bff3803ce24c9aacc33ccf842f0f35b54ba7c84dd334f18a"
+    autoupdate.strategy = "latest_github_release"
+    autoupdate.asset = "grav-admin.*.zip"
 
-        [resources.sources.app-upgrade]
-        url = "https://github.com/getgrav/grav/releases/download/1.7.48/grav-update-v1.7.48.zip"
-        sha256 = "a8636a599b99be12610a91a99948be53c0d58e04d4ed364f36fc90ead07cb3fa"
-        autoupdate.strategy = "latest_github_release"
-        autoupdate.asset = "grav-update.*.zip"
+    [resources.sources.app-upgrade]
+    url = "https://github.com/getgrav/grav/releases/download/1.7.48/grav-update-v1.7.48.zip"
+    sha256 = "a8636a599b99be12610a91a99948be53c0d58e04d4ed364f36fc90ead07cb3fa"
+    autoupdate.strategy = "latest_github_release"
+    autoupdate.asset = "grav-update.*.zip"
 
     [resources.system_user]
 
@@ -84,4 +89,4 @@ ram.runtime = "50M"
     user.show_tile = false
 
     [resources.apt]
-    packages = "php8.2-zip, php8.2-mbstring, php8.2-curl, php8.2-dom, php8.2-gd, php8.2-xml, php8.2-ldap, php8.2-sqlite3, php8.2-mysql"
+    packages = "php8.2-zip, php8.2-mbstring, php8.2-curl, php8.2-dom, php8.2-gd, php8.2-xml, php8.2-ldap, php8.2-sqlite3, php8.2-mysql, php8.2-intl, php8.2-yaml"
