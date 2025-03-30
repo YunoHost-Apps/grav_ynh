@@ -5,7 +5,9 @@ EZ editatu eskuz.
 
 # Grav YunoHost-erako
 
-[![Integrazio maila](https://dash.yunohost.org/integration/grav.svg)](https://ci-apps.yunohost.org/ci/apps/grav/) ![Funtzionamendu egoera](https://ci-apps.yunohost.org/ci/badges/grav.status.svg) ![Mantentze egoera](https://ci-apps.yunohost.org/ci/badges/grav.maintain.svg)
+[![Integrazio maila](https://apps.yunohost.org/badge/integration/grav)](https://ci-apps.yunohost.org/ci/apps/grav/)
+![Funtzionamendu egoera](https://apps.yunohost.org/badge/state/grav)
+![Mantentze egoera](https://apps.yunohost.org/badge/maintained/grav)
 
 [![Instalatu Grav YunoHost-ekin](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=grav)
 
@@ -19,7 +21,7 @@ EZ editatu eskuz.
 Grav is a modern open source flat-file CMS.
 
 
-**Paketatutako bertsioa:** 1.7.48~ynh1
+**Paketatutako bertsioa:** 1.7.48~ynh2
 
 **Demoa:** <https://getgrav.org/downloads/themes>
 
@@ -39,7 +41,7 @@ Grav is a modern open source flat-file CMS.
 
 Bidali `pull request`a [`testing` abarrera](https://github.com/YunoHost-Apps/grav_ynh/tree/testing).
 
-`testing` abarra probatzeko, ondorengoa egin:
+`testing` abarra probatzeko, honakoa egin:
 
 ```bash
 sudo yunohost app install https://github.com/YunoHost-Apps/grav_ynh/tree/testing --debug

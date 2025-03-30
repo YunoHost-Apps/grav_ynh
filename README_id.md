@@ -5,7 +5,9 @@ Ini TIDAK boleh diedit dengan tangan.
 
 # Grav untuk YunoHost
 
-[![Tingkat integrasi](https://dash.yunohost.org/integration/grav.svg)](https://ci-apps.yunohost.org/ci/apps/grav/) ![Status kerja](https://ci-apps.yunohost.org/ci/badges/grav.status.svg) ![Status pemeliharaan](https://ci-apps.yunohost.org/ci/badges/grav.maintain.svg)
+[![Tingkat integrasi](https://apps.yunohost.org/badge/integration/grav)](https://ci-apps.yunohost.org/ci/apps/grav/)
+![Status kerja](https://apps.yunohost.org/badge/state/grav)
+![Status pemeliharaan](https://apps.yunohost.org/badge/maintained/grav)
 
 [![Pasang Grav dengan YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=grav)
 
@@ -19,7 +21,7 @@ Ini TIDAK boleh diedit dengan tangan.
 Grav is a modern open source flat-file CMS.
 
 
-**Versi terkirim:** 1.7.48~ynh1
+**Versi terkirim:** 1.7.48~ynh2
 
 **Demo:** <https://getgrav.org/downloads/themes>
 

@@ -1,8 +1,6 @@
 #!/bin/bash
 
 #=================================================
-# GENERIC START
-#=================================================
 # IMPORT GENERIC HELPERS
 #=================================================
 
@@ -25,8 +23,6 @@ ynh_script_progression --message="Removing PHP-FPM configuration..." --weight=2
 # Remove the dedicated PHP-FPM config
 ynh_remove_fpm_config
 
-#=================================================
-# SPECIFIC REMOVE
 #=================================================
 # REMOVE VARIOUS FILES
 #=================================================

@@ -3,9 +3,11 @@ Este archivo README esta generado automaticamente<https://github.com/YunoHost/ap
 No se debe editar a mano.
 -->
 
-# Grav para Yunohost
+# Grav para YunoHost
 
-[![Nivel de integración](https://dash.yunohost.org/integration/grav.svg)](https://ci-apps.yunohost.org/ci/apps/grav/) ![Estado funcional](https://ci-apps.yunohost.org/ci/badges/grav.status.svg) ![Estado En Mantención](https://ci-apps.yunohost.org/ci/badges/grav.maintain.svg)
+[![Nivel de integración](https://apps.yunohost.org/badge/integration/grav)](https://ci-apps.yunohost.org/ci/apps/grav/)
+![Estado funcional](https://apps.yunohost.org/badge/state/grav)
+![Estado En Mantención](https://apps.yunohost.org/badge/maintained/grav)
 
 [![Instalar Grav con Yunhost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=grav)
 
@@ -19,7 +21,7 @@ No se debe editar a mano.
 Grav is a modern open source flat-file CMS.
 
 
-**Versión actual:** 1.7.48~ynh1
+**Versión actual:** 1.7.48~ynh2
 
 **Demo:** <https://getgrav.org/downloads/themes>
 
