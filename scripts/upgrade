@@ -23,23 +23,16 @@ fi
 # Setup the scheduler config if it is missing from user directory
 if [ ! -f "$install_dir/user/config/scheduler.yaml" ]; then
     ynh_config_add --template="scheduler.yaml" --destination="$install_dir/user/config/scheduler.yaml"
-    #REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown $app:$app "$install_dir/user/config/scheduler.yaml"
-    #REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod 640 "$install_dir/user/config/scheduler.yaml"
 fi
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
+ynh_script_progression "Upgrading source files..."
 
-# FIXME: this is still supported but the recommendation is now to *always* re-setup the app sources wether or not the upstream sources changed
-if ynh_app_upstream_version_changed
-then
-	ynh_script_progression "Upgrading source files..."
-
-	# Download, check integrity, uncompress and patch the source from app.src
-	ynh_setup_source --dest_dir="$install_dir" --source_id="app-upgrade"
-	ynh_setup_source --dest_dir="$install_dir/user/plugins/login-ldap" --source_id="ldap"
-fi
+# Download, check integrity, uncompress and patch the source from app.src
+ynh_setup_source --dest_dir="$install_dir" --source_id="app-upgrade"
+ynh_setup_source --dest_dir="$install_dir/user/plugins/login-ldap" --source_id="ldap"
 
 # Set permissions on app files
 #REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown -R $app:www-data "$install_dir"
@@ -56,11 +49,6 @@ ynh_script_progression "Upgrading PHP-FPM configuration..."
 # Create a dedicated PHP-FPM config
 ynh_config_add_phpfpm
 
-#=================================================
-# NGINX CONFIGURATION
-#=================================================
-ynh_script_progression "Upgrading NGINX web server configuration..."
-
 # Create a dedicated NGINX config
 ynh_config_add_nginx
 
@@ -73,8 +61,6 @@ mkdir -p "$install_dir/user/config/plugins/login-ldap"
 touch "$install_dir/user/accounts/admin.yaml"
 
 ynh_config_add --template="login-ldap.yaml" --destination="$install_dir/user/config/plugins/login-ldap.yaml"
-#REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown $app:$app "$install_dir/user/config/plugins/login-ldap.yaml"
-#REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod 640 "$install_dir/user/config/plugins/login-ldap.yaml"
 
 #=================================================
 # UPGRADE PLUGINS
@@ -91,7 +77,7 @@ popd
 ynh_script_progression "Updating a cron task..."
 
 echo "* *  *  *  * $app php${php_version} $install_dir/bin/grav scheduler 1>> /dev/null 2>&1" > /etc/cron.d/$app
-#REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod 644 /etc/cron.d/$app
+chmod 644 /etc/cron.d/$app
 
 #=================================================
 # END OF SCRIPT
