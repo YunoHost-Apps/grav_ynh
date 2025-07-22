@@ -35,7 +35,6 @@ ynh_setup_source --dest_dir="$install_dir" --source_id="app-upgrade"
 ynh_setup_source --dest_dir="$install_dir/user/plugins/login-ldap" --source_id="ldap"
 
 # Set permissions on app files
-#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown -R $app:www-data "$install_dir"
 find "$install_dir" -type f -exec chmod 640 {} \;
 find "$install_dir/bin" -type f -exec chmod 750 {} \;
 find "$install_dir" -type d -exec chmod 750 {} \;
