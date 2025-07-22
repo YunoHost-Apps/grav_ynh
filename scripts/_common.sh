@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #=================================================
-# EXPERIMENTAL HELPERS
+# COMMON VARIABLES AND CUSTOM HELPERS
 #=================================================
 
 ynh_system_user_add_group() {
@@ -20,7 +20,6 @@ ynh_system_user_add_group() {
 		usermod -a -G "$group" "$username"
 	done
 }
-
 
 ynh_system_user_del_group() {
     # Declare an array to define the options of this helper.
