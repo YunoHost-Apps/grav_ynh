@@ -20,4 +20,3 @@ store_ldap_data: false
 default_access_levels:
   access:
     groups: "__APP__.admin:\r\n    admin:\r\n      login: true\r\n      super: true\r\n    site:\r\n      login: true\r\n__APP__.user:\r\n    admin:\r\n      login: true\r\n    site:\r\n      login: true"
-
