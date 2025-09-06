@@ -21,12 +21,12 @@ cpe = "cpe:2.3:a:getgrav:grav"
 fund = "https://opencollective.com/grav"
 
 [integration]
-yunohost = ">= 11.1.30"
+yunohost = ">= 12.0.9"
+helpers_version = "2.1"
 architectures = "all"
 multi_instance = true
 
 ldap = true
-
 sso = false
 
 disk = "50M"
@@ -82,6 +82,7 @@ ram.runtime = "50M"
     [resources.system_user]
 
     [resources.install_dir]
+    group = "www-data:r-x"
 
     [resources.permissions]
     main.url = "/"
@@ -89,4 +90,4 @@ ram.runtime = "50M"
     user.show_tile = false
 
     [resources.apt]
-    packages = "php8.2-zip, php8.2-mbstring, php8.2-curl, php8.2-dom, php8.2-gd, php8.2-xml, php8.2-ldap, php8.2-sqlite3, php8.2-mysql, php8.2-intl, php8.2-yaml"
+    packages = "php8.4-zip, php8.4-mbstring, php8.4-curl, php8.4-dom, php8.4-gd, php8.4-xml, php8.4-ldap, php8.4-sqlite3, php8.4-mysql, php8.4-intl, php8.4-yaml"
