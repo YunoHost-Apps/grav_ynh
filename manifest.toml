@@ -7,7 +7,7 @@ name = "Grav"
 description.en = "Modern open source flat-file CMS"
 description.fr = "CMS moderne basé sur des fichiers plats"
 
-version = "1.7.50.8~ynh1"
+version = "1.7.50.8~ynh2"
 
 maintainers = ["tituspijean"]
 
@@ -74,8 +74,8 @@ ram.runtime = "50M"
     autoupdate.asset = "grav-admin.*.zip"
 
     [resources.sources.app-upgrade]
-    url = "https://github.com/getgrav/grav/releases/download/1.7.50.8/grav-update-v1.7.50.8.zip"
-    sha256 = "a8740f6baf1446321751e02a042a55be514f70e9a4fc4131f1ff1491bbea0875"
+    url = "https://github.com/getgrav/grav/releases/download/1.7.49.5/grav-update-v1.7.49.5.zip"
+    sha256 = "46ff97ed5fc7171042c0c4b28b78e61d52368e5166bd871a763df6d2b981e464"
     autoupdate.strategy = "latest_github_release"
     autoupdate.asset = "grav-update.*.zip"
 
