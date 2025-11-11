@@ -7,76 +7,60 @@
 source _common.sh
 source /usr/share/yunohost/helpers
 
-#=================================================
-# INITIALIZE AND STORE SETTINGS
-#=================================================
-
-ynh_app_setting_set --app=$app --key=with_sftp --value="false"
-ynh_app_setting_set --app=$app --key=password --value=$(ynh_string_random)
+# Initialize the SFTP setting for the config panel
+ynh_app_setting_set --key=with_sftp --value="false"
+ynh_app_setting_set --key=password --value=$(ynh_string_random)
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
-ynh_script_progression --message="Setting up source files..." --weight=2
+ynh_script_progression "Setting up source files..."
 
-# Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$install_dir"
 ynh_setup_source --dest_dir="$install_dir/user/plugins/login-ldap" --source_id="ldap"
 
 # Set permissions on app files
-chown -R $app:www-data "$install_dir"
 find "$install_dir" -type f -exec chmod 640 {} \;
 find "$install_dir/bin" -type f -exec chmod 750 {} \;
 find "$install_dir" -type d -exec chmod 750 {} \;
 find "$install_dir" -type d -exec chmod +s {} \;
 
 #=================================================
-# PHP-FPM CONFIGURATION
+# SYSTEM CONFIGURATION
 #=================================================
-ynh_script_progression --message="Configuring PHP-FPM..." --weight=3
+ynh_script_progression "Adding system configurations related to $app..."
 
-# Create a dedicated PHP-FPM config
-ynh_app_setting_set --app=$app --key=fpm_footprint --value="medium"
-ynh_app_setting_set --app=$app --key=fpm_usage --value="medium"
-ynh_add_fpm_config
+ynh_config_add_phpfpm
 
-#=================================================
-# NGINX CONFIGURATION
-#=================================================
-ynh_script_progression --message="Configuring NGINX web server..." --weight=1
-
-# Create a dedicated NGINX config
-ynh_add_nginx_config
+ynh_config_add_nginx
 
 #=================================================
 # ADD A CONFIGURATION
 #=================================================
-ynh_script_progression --message="Adding a configuration file..." --weight=1
+ynh_script_progression "Adding $app's configuration..."
 
 # Preparing config
-ynh_exec_as $app mkdir -p "$install_dir/user/config/plugins/login-ldap"
-ynh_exec_as $app touch "$install_dir/user/accounts/admin.yaml"
+ynh_exec_as_app mkdir -p "$install_dir/user/config/plugins/login-ldap"
+ynh_exec_as_app touch "$install_dir/user/accounts/admin.yaml"
 
 # Setting up scheduler config
-ynh_add_config --template="../conf/scheduler.yaml" --destination="$install_dir/user/config/scheduler.yaml"
-chown $app:$app "$install_dir/user/config/scheduler.yaml"
+ynh_config_add --template="scheduler.yaml" --destination="$install_dir/user/config/scheduler.yaml"
 chmod 640 "$install_dir/user/config/scheduler.yaml"
 
 # Setting up LDAP config
-ynh_add_config --template="../conf/login-ldap.yaml" --destination="$install_dir/user/config/plugins/login-ldap.yaml"
-chown $app:$app "$install_dir/user/config/plugins/login-ldap.yaml"
+ynh_config_add --template="login-ldap.yaml" --destination="$install_dir/user/config/plugins/login-ldap.yaml"
 chmod 640 "$install_dir/user/config/plugins/login-ldap.yaml"
 
 #=================================================
 # CREATE A CRON TASK
 #=================================================
-ynh_script_progression --message="Creating a cron task..." --weight=1
+ynh_script_progression "Creating a cron task..."
 
-echo "* *  *  *  * $app php$phpversion $install_dir/bin/grav scheduler 1>> /dev/null 2>&1" > /etc/cron.d/$app
+echo "* *  *  *  * $app php$php_version $install_dir/bin/grav scheduler 1>> /dev/null 2>&1" > /etc/cron.d/$app
 chmod 644 /etc/cron.d/$app
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Installation of $app completed" --last
+ynh_script_progression "Installation of $app completed"
