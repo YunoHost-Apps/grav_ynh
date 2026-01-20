@@ -66,6 +66,7 @@ ynh_script_progression "Updating all plugins..."
 
 pushd "$install_dir"
 	ynh_hide_warnings yes N | ynh_hide_warnings ynh_exec_as_app php${php_version} bin/gpm update --all-yes --no-interaction || ynh_print_warn "Automatic plugin upgrade has failed, you can upgrade them from your Grav admin panel."
+    bin/grav cache
 popd
 
 #=================================================
