@@ -3,7 +3,7 @@
 source _common.sh
 source /usr/share/yunohost/helpers
 
-#REMOVEME? ynh_abort_if_errors
+ynh_abort_if_errors
 
 #=================================================
 # SPECIFIC SETTERS FOR TOML SHORT KEYS
