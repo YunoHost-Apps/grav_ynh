@@ -68,7 +68,7 @@ chown $app:$app "$install_dir/user/config/plugins/login-ldap.yaml"
 chmod 640 "$install_dir/user/config/plugins/login-ldap.yaml"
 
 # temporary fix : removing admin2 plugin
-ynh_exec_as_app bin/gpm uninstall admin2 -n
+ynh_exec_as_app php${phpversion} bin/gpm uninstall admin2 -n
 
 #=================================================
 # CREATE A CRON TASK
