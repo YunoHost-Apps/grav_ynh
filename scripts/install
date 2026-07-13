@@ -67,6 +67,9 @@ ynh_add_config --template="../conf/login-ldap.yaml" --destination="$install_dir/
 chown $app:$app "$install_dir/user/config/plugins/login-ldap.yaml"
 chmod 640 "$install_dir/user/config/plugins/login-ldap.yaml"
 
+# temporary fix : removing admin2 plugin
+ynh_exec_as_app bin/gpm uninstall admin2 -n
+
 #=================================================
 # CREATE A CRON TASK
 #=================================================
