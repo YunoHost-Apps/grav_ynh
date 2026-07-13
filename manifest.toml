@@ -68,13 +68,13 @@ ram.runtime = "50M"
     autoupdate.upstream = "https://github.com/trilbymedia/grav-plugin-login-ldap"
 
     [resources.sources.main]
-    url = "https://github.com/getgrav/grav/releases/download/2.0.8/grav-admin-v2.0.10.zip"
+    url = "https://github.com/getgrav/grav/releases/download/2.0.10/grav-admin-v2.0.10.zip"
     sha256 = "bfa2cb7e26b4df5e1bf18eceea1ae04bd5ce1ef64cc0eef2ff5d89116eb1915e"
     autoupdate.strategy = "latest_github_release"
     autoupdate.asset = "grav-admin.*.zip"
 
     [resources.sources.app-upgrade]
-    url = "https://github.com/getgrav/grav/releases/download/2.0.8/grav-update-v2.0.10.zip"
+    url = "https://github.com/getgrav/grav/releases/download/2.0.10/grav-update-v2.0.10.zip"
     sha256 = "2ace35613008352d394ce966d076dcbaa8f6e66764f7171f248cde5056dc944c"
     autoupdate.strategy = "latest_github_release"
     autoupdate.asset = "grav-update.*.zip"
