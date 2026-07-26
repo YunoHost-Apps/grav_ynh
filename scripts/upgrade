@@ -32,23 +32,6 @@ ynh_script_progression "Upgrading source files..."
 ynh_setup_source --dest_dir="$install_dir" --source_id="app-upgrade"
 ynh_setup_source --dest_dir="$install_dir/user/plugins/login-ldap" --source_id="ldap"
 
-# Set permissions on app files
-find "$install_dir" -type f -exec chmod 640 {} \;
-find "$install_dir/bin" -type f -exec chmod 750 {} \;
-find "$install_dir" -type d -exec chmod 750 {} \;
-find "$install_dir" -type d -exec chmod +s {} \;
-
-#=================================================
-# REAPPLY SYSTEM CONFIGURATIONS
-#=================================================
-ynh_script_progression "Upgrading system configurations related to $app..."
-
-# Create a dedicated PHP-FPM config
-ynh_config_add_phpfpm
-
-# Create a dedicated NGINX config
-ynh_config_add_nginx
-
 #=================================================
 # UPDATE A CONFIG FILE
 #=================================================
@@ -57,7 +40,15 @@ ynh_script_progression "Updating configuration..."
 mkdir -p "$install_dir/user/config/plugins/login-ldap"
 touch "$install_dir/user/accounts/admin.yaml"
 
+# Set permissions on app files
+find "$install_dir" -type f -exec chmod 640 {} \;
+find "$install_dir/bin" -type f -exec chmod 750 {} \;
+find "$install_dir" -type d -exec chmod 750 {} \;
+find "$install_dir" -type d -exec chmod +s {} \;
+chown $app:www-data -R $install_dir
+
 ynh_config_add --template="login-ldap.yaml" --destination="$install_dir/user/config/plugins/login-ldap.yaml"
+chmod 640 "$install_dir/user/config/plugins/login-ldap.yaml"
 
 #=================================================
 # UPGRADE PLUGINS
@@ -74,6 +65,16 @@ pushd "$install_dir"
     fi
 popd
 
+#=================================================
+# REAPPLY SYSTEM CONFIGURATIONS
+#=================================================
+ynh_script_progression "Upgrading system configurations related to $app..."
+
+# Create a dedicated PHP-FPM config
+ynh_config_add_phpfpm
+
+# Create a dedicated NGINX config
+ynh_config_add_nginx
 
 #=================================================
 # UPDATE A CRON TASK

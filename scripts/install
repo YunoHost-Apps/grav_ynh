@@ -19,21 +19,6 @@ ynh_script_progression "Setting up source files..."
 ynh_setup_source --dest_dir="$install_dir"
 ynh_setup_source --dest_dir="$install_dir/user/plugins/login-ldap" --source_id="ldap"
 
-# Set permissions on app files
-find "$install_dir" -type f -exec chmod 640 {} \;
-find "$install_dir/bin" -type f -exec chmod 750 {} \;
-find "$install_dir" -type d -exec chmod 750 {} \;
-find "$install_dir" -type d -exec chmod +s {} \;
-
-#=================================================
-# SYSTEM CONFIGURATION
-#=================================================
-ynh_script_progression "Adding system configurations related to $app..."
-
-ynh_config_add_phpfpm
-
-ynh_config_add_nginx
-
 #=================================================
 # ADD A CONFIGURATION
 #=================================================
@@ -43,6 +28,13 @@ ynh_script_progression "Adding $app's configuration..."
 ynh_exec_as_app mkdir -p "$install_dir/user/config/plugins/login-ldap"
 ynh_exec_as_app touch "$install_dir/user/accounts/admin.yaml"
 
+# Set permissions on app files
+find "$install_dir" -type f -exec chmod 640 {} \;
+find "$install_dir/bin" -type f -exec chmod 750 {} \;
+find "$install_dir" -type d -exec chmod 750 {} \;
+find "$install_dir" -type d -exec chmod +s {} \;
+chown $app:www-data -R $install_dir
+
 # Setting up scheduler config
 ynh_config_add --template="scheduler.yaml" --destination="$install_dir/user/config/scheduler.yaml"
 chmod 640 "$install_dir/user/config/scheduler.yaml"
@@ -50,6 +42,15 @@ chmod 640 "$install_dir/user/config/scheduler.yaml"
 # Setting up LDAP config
 ynh_config_add --template="login-ldap.yaml" --destination="$install_dir/user/config/plugins/login-ldap.yaml"
 chmod 640 "$install_dir/user/config/plugins/login-ldap.yaml"
+
+#=================================================
+# SYSTEM CONFIGURATION
+#=================================================
+ynh_script_progression "Adding system configurations related to $app..."
+
+ynh_config_add_phpfpm
+
+ynh_config_add_nginx
 
 #=================================================
 # CREATE A CRON TASK
