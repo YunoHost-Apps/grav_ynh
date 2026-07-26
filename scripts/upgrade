@@ -28,14 +28,17 @@ fi
 #=================================================
 ynh_script_progression "Upgrading source files..."
 
+<<<<<<< Updated upstream
 if [ "$upgrade_type" == "UPGRADE_APP" ]
 then
     ynh_script_progression "Upgrading source files..."
+=======
+ynh_script_progression --message="Upgrading source files..." --weight=2
+>>>>>>> Stashed changes
 
-    # Download, check integrity, uncompress and patch the source from app.src
-    ynh_setup_source --dest_dir="$install_dir" --source_id="app-upgrade"
-    ynh_setup_source --dest_dir="$install_dir/user/plugins/login-ldap" --source_id="ldap"
-fi
+# Download, check integrity, uncompress and patch the source from app.src
+ynh_setup_source --dest_dir="$install_dir" --source_id="app-upgrade"
+ynh_setup_source --dest_dir="$install_dir/user/plugins/login-ldap" --source_id="ldap"
 
 # Set permissions on app files
 find "$install_dir" -type f -exec chmod 640 {} \;
