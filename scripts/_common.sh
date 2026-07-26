@@ -15,10 +15,10 @@ ynh_system_user_add_group() {
     ynh_handle_getopts_args "$@"
     groups="${groups:-}"
 
-	local group
-	for group in $groups; do
-		usermod -a -G "$group" "$username"
-	done
+    local group
+    for group in $groups; do
+        usermod -a -G "$group" "$username"
+    done
 }
 
 ynh_system_user_del_group() {
@@ -32,8 +32,8 @@ ynh_system_user_del_group() {
     ynh_handle_getopts_args "$@"
     groups="${groups:-}"
 
-	local group
-	for group in $groups; do
-		gpasswd -d "$username" "$group"
-	done
+    local group
+    for group in $groups; do
+        gpasswd -d "$username" "$group"
+    done
 }

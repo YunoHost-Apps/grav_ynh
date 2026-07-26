@@ -15,8 +15,10 @@ map_fullname: givenName lastName
 map_email: mail
 map_dn: displayName
 
-save_grav_user: false
+save_grav_user: true
 store_ldap_data: false
 default_access_levels:
   access:
-    groups: "__APP__.admin:\r\n    admin:\r\n      login: true\r\n      super: true\r\n    site:\r\n      login: true\r\n__APP__.user:\r\n    admin:\r\n      login: true\r\n    site:\r\n      login: true"
+    site:
+      login: false
+    groups: "__APP__.admin:\r\n    admin:\r\n      login: true\r\n      super: true\r\n    api:\r\n      super: true\r\n    site:\r\n      login: true\r\n__APP__.user:\r\n    admin:\r\n      login: true\r\n    site:\r\n      login: true"

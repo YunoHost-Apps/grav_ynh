@@ -14,8 +14,8 @@ ynh_script_progression "Ensuring downward compatibility..."
 
 # If with_sftp or password don't exist, create them
 if [ -z "${with_sftp:-}" ] || [ -z "${password:-}" ]; then
-	ynh_app_setting_set --key=with_sftp --value="false"
- 	ynh_app_setting_set --key=password --value=$(ynh_string_random)
+    ynh_app_setting_set --key=with_sftp --value="false"
+    ynh_app_setting_set --key=password --value=$(ynh_string_random)
 fi
 
 # Setup the scheduler config if it is missing from user directory
@@ -28,9 +28,14 @@ fi
 #=================================================
 ynh_script_progression "Upgrading source files..."
 
-# Download, check integrity, uncompress and patch the source from app.src
-ynh_setup_source --dest_dir="$install_dir" --source_id="app-upgrade"
-ynh_setup_source --dest_dir="$install_dir/user/plugins/login-ldap" --source_id="ldap"
+if [ "$upgrade_type" == "UPGRADE_APP" ]
+then
+    ynh_script_progression "Upgrading source files..."
+
+    # Download, check integrity, uncompress and patch the source from app.src
+    ynh_setup_source --dest_dir="$install_dir" --source_id="app-upgrade"
+    ynh_setup_source --dest_dir="$install_dir/user/plugins/login-ldap" --source_id="ldap"
+fi
 
 # Set permissions on app files
 find "$install_dir" -type f -exec chmod 640 {} \;
@@ -65,9 +70,14 @@ ynh_config_add --template="login-ldap.yaml" --destination="$install_dir/user/con
 ynh_script_progression "Updating all plugins..."
 
 pushd "$install_dir"
-	ynh_hide_warnings yes N | ynh_hide_warnings ynh_exec_as_app php${php_version} bin/gpm update --all-yes --no-interaction || ynh_print_warn "Automatic plugin upgrade has failed, you can upgrade them from your Grav admin panel."
-    bin/grav cache
+    ynh_hide_warnings yes N | ynh_hide_warnings ynh_exec_as_app php${php_version} bin/gpm update --all-yes --no-interaction || ynh_print_warn "Automatic plugin upgrade has failed, you can upgrade them from your Grav admin panel."
 popd
+
+# Install the new admin panel for v2, remove the old one
+if ynh_app_upgrading_from_version_before 2.0~ynh1; then
+    ynh_exec_as $app bin/gpm install admin2 -n
+    ynh_exec_as $app bin/gpm uninstall admin -n
+fi
 
 #=================================================
 # UPDATE A CRON TASK
