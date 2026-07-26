@@ -70,8 +70,8 @@ popd
 
 # Install the new admin panel for v2, remove the old one
 if ynh_app_upgrading_from_version_before 2.0~ynh1; then
-    ynh_exec_as $app bin/gpm install admin2 -n
-    ynh_exec_as $app bin/gpm uninstall admin -n
+    ynh_exec_as_app bin/gpm install admin2 -n
+    ynh_exec_as_app bin/gpm uninstall admin -n
 fi
 
 #=================================================
