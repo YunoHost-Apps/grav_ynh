@@ -62,8 +62,8 @@ ram.runtime = "50M"
 [resources]
     [resources.sources]
     [resources.sources.ldap]
-    url = "https://github.com/trilbymedia/grav-plugin-login-ldap/archive/refs/tags/1.2.1.tar.gz"
-    sha256 = "204f3b931c68024bc3a0540a2693de39eabf2fab0ba019810e3740d3bc929d20"
+    url = "https://github.com/trilbymedia/grav-plugin-login-ldap/archive/refs/tags/1.2.2.tar.gz"
+    sha256 = "180c0bde22307ef3a53f926fb6214ca2aea1dc0c00fe279a82c0791d6403c751"
     autoupdate.strategy = "latest_github_tag"
     autoupdate.upstream = "https://github.com/trilbymedia/grav-plugin-login-ldap"
 
