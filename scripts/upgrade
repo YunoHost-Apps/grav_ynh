@@ -59,7 +59,7 @@ pushd "$install_dir"
     ynh_hide_warnings yes N | ynh_hide_warnings ynh_exec_as_app php${php_version} bin/gpm update --all-yes --no-interaction || ynh_print_warn "Automatic plugin upgrade has failed, you can upgrade them from your Grav admin panel."
 
     # Install the new admin panel for v2, remove the old one
-    if ynh_app_upgrading_from_version_before 2.0~ynh1; then
+    if ynh_app_upgrading_from_version_before 2.0.12~ynh2; then
         ynh_exec_as_app bin/gpm install admin2 -n
         ynh_exec_as_app bin/gpm uninstall admin -n
     fi
