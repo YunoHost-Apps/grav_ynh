@@ -21,8 +21,8 @@ ynh_script_progression --message="Ensuring downward compatibility..." --weight=1
 
 # If with_sftp or password don't exist, create them
 if [ -z "${with_sftp:-}" ] || [ -z "${password:-}" ]; then
-	ynh_app_setting_set --app=$app --key=with_sftp --value="false"
- 	ynh_app_setting_set --app=$app --key=password --value=$(ynh_string_random)
+    ynh_app_setting_set --app=$app --key=with_sftp --value="false"
+    ynh_app_setting_set --app=$app --key=password --value=$(ynh_string_random)
 fi
 
 # Setup the scheduler config if it is missing from user directory
@@ -38,11 +38,11 @@ fi
 
 if [ "$upgrade_type" == "UPGRADE_APP" ]
 then
-	ynh_script_progression --message="Upgrading source files..." --weight=2
+    ynh_script_progression --message="Upgrading source files..." --weight=2
 
-	# Download, check integrity, uncompress and patch the source from app.src
-	ynh_setup_source --dest_dir="$install_dir" --source_id="app-upgrade"
-	ynh_setup_source --dest_dir="$install_dir/user/plugins/login-ldap" --source_id="ldap"
+    # Download, check integrity, uncompress and patch the source from app.src
+    ynh_setup_source --dest_dir="$install_dir" --source_id="app-upgrade"
+    ynh_setup_source --dest_dir="$install_dir/user/plugins/login-ldap" --source_id="ldap"
 fi
 
 # Set permissions on app files
@@ -86,7 +86,7 @@ chmod 640 "$install_dir/user/config/plugins/login-ldap.yaml"
 ynh_script_progression --message="Updating all plugins..." --weight=1
 
 pushd "$install_dir"
-	ynh_exec_warn_less yes N | ynh_exec_warn_less ynh_exec_as $app php${phpversion} bin/gpm update --all-yes --no-interaction || ynh_print_warn --message="Automatic plugin upgrade has failed, you can upgrade them from your Grav admin panel."
+    ynh_exec_warn_less yes N | ynh_exec_warn_less ynh_exec_as $app php${phpversion} bin/gpm update --all-yes --no-interaction || ynh_print_warn --message="Automatic plugin upgrade has failed, you can upgrade them from your Grav admin panel."
 popd
 
 #=================================================
