@@ -7,7 +7,7 @@ name = "Grav"
 description.en = "Modern open source flat-file CMS"
 description.fr = "CMS moderne basé sur des fichiers plats"
 
-version = "2.0.24~ynh1"
+version = "2.0.24~ynh2"
 
 maintainers = ["tituspijean"]
 
@@ -62,8 +62,8 @@ ram.runtime = "50M"
 [resources]
     [resources.sources]
     [resources.sources.ldap]
-    url = "https://github.com/trilbymedia/grav-plugin-login-ldap/archive/refs/tags/1.2.3.tar.gz"
-    sha256 = "0d6312a3af552fd36f4fa8beab3a98b424c165468f01085da47090069950da6d"
+    url = "https://github.com/trilbymedia/grav-plugin-login-ldap/archive/refs/tags/1.2.4.tar.gz"
+    sha256 = "48932ee929317724edcfd78158a5383aceaf1b0b7df1b841a5bff8c4589408eb"
     autoupdate.strategy = "latest_github_tag"
     autoupdate.upstream = "https://github.com/trilbymedia/grav-plugin-login-ldap"
 
