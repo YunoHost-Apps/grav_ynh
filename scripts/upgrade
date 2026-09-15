@@ -23,6 +23,8 @@ if [ ! -f "$install_dir/user/config/scheduler.yaml" ]; then
     ynh_config_add --template="scheduler.yaml" --destination="$install_dir/user/config/scheduler.yaml"
 fi
 
+ynh_app_setting_set_default --key=php_memory_limit --value=256M
+
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
