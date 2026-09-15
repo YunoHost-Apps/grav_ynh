@@ -11,6 +11,8 @@ source /usr/share/yunohost/helpers
 ynh_app_setting_set --key=with_sftp --value="false"
 ynh_app_setting_set --key=password --value=$(ynh_string_random)
 
+ynh_app_setting_set_default --key=php_memory_limit --value=256M
+
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
