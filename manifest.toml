@@ -7,7 +7,7 @@ name = "Grav"
 description.en = "Modern open source flat-file CMS"
 description.fr = "CMS moderne basé sur des fichiers plats"
 
-version = "2.2.32~ynh1"
+version = "2.2.35~ynh1"
 
 maintainers = ["tituspijean"]
 
@@ -68,14 +68,14 @@ ram.runtime = "50M"
     autoupdate.upstream = "https://github.com/trilbymedia/grav-plugin-login-ldap"
 
     [resources.sources.main]
-    url = "https://github.com/getgrav/grav/releases/download/2.2.32/grav-admin-v2.2.32.zip"
-    sha256 = "c90240f21cfe2f4c1761c260edaa57aa7c40821921a5fc0b49204b89285f8794"
+    url = "https://github.com/getgrav/grav/releases/download/2.2.35/grav-admin-v2.2.35.zip"
+    sha256 = "f5de9e864417fd62e0be4293cf5320ef0ac9fdcce1b6b4fbc8b9c0c0d33be0d8"
     autoupdate.strategy = "latest_github_release"
     autoupdate.asset = "grav-admin.*.zip"
 
     [resources.sources.app-upgrade]
-    url = "https://github.com/getgrav/grav/releases/download/2.2.32/grav-update-v2.2.32.zip"
-    sha256 = "6901cdda31c3d76ff74b0f4ebb06794a10b83c8a325b2b82cff770d6c14dc8b2"
+    url = "https://github.com/getgrav/grav/releases/download/2.2.35/grav-update-v2.2.35.zip"
+    sha256 = "2523a7cb7fcfda73e6ebbffb5a45ffbc97b6a7ac1bd09246cfec472cc1c7916f"
     autoupdate.strategy = "latest_github_release"
     autoupdate.asset = "grav-update.*.zip"
 
